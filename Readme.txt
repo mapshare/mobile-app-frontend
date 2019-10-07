@@ -1,4 +1,4 @@
-  Configure sdk path (When Environment Varable not works) - Oly required for testing
+  Configure sdk path (When Environment Varable not works) - Only required for testing
       • Open local.properties file under PinIT\Andriod
       • Change the Path to your installed Andriod SDK
 
