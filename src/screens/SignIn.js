@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, ImageBackground, Image} from "react-native"
 import SignInForm from './SignInFrom';
 
 // Creating Component
-class Login extends Component {
+class SignIn extends Component {
     render(){
         return (
             <View>
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login
+export default SignIn
