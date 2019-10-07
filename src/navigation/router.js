@@ -1,10 +1,5 @@
 import React from "react";
 import { Platform, StatusBar } from "react-native";
-import {
-  StackNavigator,
-  TabNavigator,
-  SwitchNavigator
-} from "react-navigation";
 import { FontAwesome } from "react-native-vector-icons";
 
 import SignUp from "./screens/SignUp";
