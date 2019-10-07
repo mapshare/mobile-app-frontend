@@ -1,0 +1,12 @@
+Each folder and their intended use:
+
+      • assets: Images, fonts, etc…
+      • components: Presentational/reusable components
+      • config: Configuration of the app (constants, colors)
+      • navigation: React Navigation settings and navigators
+      • screens (AKA containers): Smart components that handles the logic of the app
+      • services: Wrappers on API calls to external servicess
+      • utils: Reusable utilities
+      • context: Use to store data which will be global to the React components
+                 e.g. Current Authenticated user or Theme
+      • dev: Tester components
