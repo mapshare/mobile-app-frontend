@@ -2,6 +2,7 @@
 import React, { Component } from "react"
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard} from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import axios from 'axios';
 
 // Creating Component
 class LogInForm extends Component {
@@ -12,7 +13,47 @@ class LogInForm extends Component {
             password: ""
         }
     }
-    saveData =async()=>{
+
+    LoginUser = () => {
+
+        fetch("http://myvmlab.senecacollege.ca:10034/login", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+                body: JSON.stringify({
+                    userEmail: this.state.email,
+                    userPassword: this.state.password,
+                })
+        })
+        .then((response) => response.text())
+        .then((res) => {
+
+
+            console.log(res.status)
+            // If our response is true
+            if (res.success == true) {
+                var email = res.message;
+                // Storing Email Address
+                AsyncStorage.setItem('email', email);
+
+                // Redirecting to Home Page
+                Actions.Home();
+
+            // If login fail. Show error message    
+            } else {
+                alert(res.message)
+            }
+        }).catch((error) => {
+            console.error(error);
+        })
+        .done()
+        
+
+    }
+
+    SaveData =async()=>{
         const {email,password} = this.state;
  
         //save data with asyncstorage
@@ -66,6 +107,7 @@ class LogInForm extends Component {
 
                 <TextInput style={styles.inputBox}
                 onChangeText={(email) => this.setState({email})} 
+                value={this.state.email}
                 placeholder="Email"
                 placeholderTextColor='rgba(225,225,225,0.7)'
                 selectionColor="#fff"
@@ -76,7 +118,8 @@ class LogInForm extends Component {
                 onSubmitEditing={()=> this.password.focus()}/>
 
                 <TextInput style={styles.inputBox}
-                onChangeText={(password) => this.setState({password})}  
+                onChangeText={(password) => this.setState({password})}
+                value={this.state.password}  
                 placeholder="Password"
                 secureTextEntry={true}
                 placeholderTextColor='rgba(225,225,225,0.7)'
@@ -85,7 +128,7 @@ class LogInForm extends Component {
                 />
 
                 <TouchableOpacity style={styles.button}> 
-                    <Text style={styles.buttonText} onPress={this.saveData}>{this.props.type}</Text>
+                    <Text style={styles.buttonText} onPress={this.LoginUser}>{this.props.type}</Text>
                 </TouchableOpacity>
             </View>
         );

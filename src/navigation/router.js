@@ -5,7 +5,7 @@ import {Router, Stack, Scene} from 'react-native-router-flux';
 
 import SignUp from "../screens/SignUp/SignUp";
 import LogIn from "../screens/Login/Login";
-import Home from "../screens/Home/Home";
+import Home from "../screens/Home/home";
 // import Profile from "";
 
 const headerStyle = {
