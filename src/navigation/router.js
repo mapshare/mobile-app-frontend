@@ -1,75 +1,28 @@
-import React from "react";
+import React, { Component} from "react";
 import { Platform, StatusBar } from "react-native";
-import { FontAwesome } from "react-native-vector-icons";
+import {Router, Stack, Scene} from 'react-native-router-flux';
 
-import SignUp from "./screens/SignUp";
-import SignIn from "./screens/LoginScreen";
-import Home from "";
-import Profile from "";
+
+import SignUp from "../screens/SignUp/SignUp";
+import LogIn from "../screens/Login/Login";
+import Home from "../screens/Home/Home";
+// import Profile from "";
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
 };
 
-export const SignedOut = createStackNavigator({
-  SignUp: {
-    screen: SignUp,
-    navigationOptions: {
-      title: "Sign Up",
-      headerStyle
-    }
-  },
-  SignIn: {
-    screen: SignIn,
-    navigationOptions: {
-      title: "Sign In",
-      headerStyle
-    }
-  }
-});
+const App = () => {
+  return (
+    <Router hideNavBar={true} titleStyle={{color: 'white',}} navigationBarStyle={{backgroundColor: '#33C1FF',}}>
+      <Stack key="root">
+        <Scene key="login" component={LogIn} title="Login"/>
+        <Scene key="signup" component={SignUp} title="SignUp"/>
+        <Scene key="home" component={Home} title="Home"/>
 
-export const SignedIn = createBottomTabNavigator(
-  {
-    Home: {
-      screen: Home,
-      navigationOptions: {
-        tabBarLabel: "Home",
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesome name="home" size={30} color={tintColor} />
-        )
-      }
-    },
-    Profile: {
-      screen: Profile,
-      navigationOptions: {
-        tabBarLabel: "Profile", 
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesome name="user" size={30} color={tintColor} />
-        )
-      }
-    }
-  },
-  {
-    tabBarOptions: {
-      style: {
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-      }
-    }
-  }
-);
+      </Stack>
+    </Router>
+  )
+}
 
-export const createRootNavigator = (signedIn = false) => {
-  return createSwitchNavigator(
-    {
-      SignedIn: {
-        screen: SignedIn
-      },
-      SignedOut: {
-        screen: SignedOut
-      }
-    },
-    {
-      initialRouteName: signedIn ? "SignedIn" : "SignedOut"
-    }
-  );
-};
+export default App;
