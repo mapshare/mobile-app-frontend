@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
-import { AppRegistry,StyleSheet,Text ,View} from 'react-native';
+import React, {Component} from 'react';
+import {AppRegistry} from 'react-native';
+import {Provider} from 'react-redux';
+import configureStore from './src/reduxStore/configureStore';
 
 // Import Libraries
 
@@ -7,16 +9,16 @@ import { AppRegistry,StyleSheet,Text ,View} from 'react-native';
 // import SignUp from './src/screens/SignUp/SignUp';
 import Routes from './src/navigation/router';
 
-import { Router } from 'react-native-router-flux';
-
+const store = configureStore();
 
 export default class signIn extends Component {
-
-    render() {
-        return ( 
-            <Routes/>
-        )
-    }
+  render() {
+    return (
+      <Provider store={store}>
+        <Routes />
+      </Provider>
+    );
+  }
 }
 
 AppRegistry.registerComponent('Login', () => signIn);
