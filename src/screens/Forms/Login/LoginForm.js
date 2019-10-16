@@ -12,6 +12,9 @@ import {
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 
+//Redux actions
+import {logInUser, logInSuccess} from '../../../actions/logInActions';
+
 // Creating Component
 class LogInForm extends Component {
   constructor(props) {
@@ -129,6 +132,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+// Redux Getter to use: this.props.(name of any return)
+const mapStateToProps = state => {
+  return {
+    getUserData: state.logInReducer.userData,
+    logInStatus: state.logInReducer.status,
+  };
+};
+
+// Redux Setter to use: this.props.(name of any return)
+const mapDispatchToProps = dispatch => {
+  return {
+    logInSuccess: bool => dispatch(logInSuccess(bool)),
+    logInUser: data => dispatch(logInUser(data)),
+  };
+};
 
 export default connect(
   mapStateToProps,

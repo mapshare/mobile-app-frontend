@@ -1,4 +1,6 @@
 import axios from 'axios';
+import Config from 'react-native-config';
+
 import keys from '../data/key';
 
 export const logInSuccess = bool => {
@@ -23,7 +25,7 @@ export const logInUser = data => {
 
   return dispatch => {
     axios
-      .post(process.env.API_ROUTE + '/login', userData)
+      .post(Config.API_ROUTE + '/login', userData)
       .then(res => {
         console.log('data after logInUser request return: ', res.data);
         dispatch(logInUserDataSuccess(res.data));

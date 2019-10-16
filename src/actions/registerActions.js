@@ -1,4 +1,6 @@
 import axios from 'axios';
+import Config from 'react-native-config';
+
 import keys from '../data/key';
 
 export const registerSuccess = bool => {
@@ -25,7 +27,7 @@ export const registerUser = data => {
 
   return dispatch => {
     axios
-      .post(process.env.API_ROUTE + '/register', userData)
+      .post(Config.API_ROUTE + '/register', userData)
       .then(res => {
         console.log('data after registerUser request return: ', res.data);
         dispatch(registerUserDataSuccess(res.data));

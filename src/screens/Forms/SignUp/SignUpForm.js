@@ -156,6 +156,22 @@ const styles = StyleSheet.create({
   },
 });
 
+// Redux Getter to use: this.props.(name of any return)
+const mapStateToProps = state => {
+  return {
+    getUserData: state.registerReducer.userData,
+    logInStatus: state.registerReducer.status,
+  };
+};
+
+// Redux Setter to use: this.props.(name of any return)
+const mapDispatchToProps = dispatch => {
+  return {
+    registerSuccess: bool => dispatch(registerSuccess(bool)),
+    registerUser: data => dispatch(registerUser(data)),
+  };
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
