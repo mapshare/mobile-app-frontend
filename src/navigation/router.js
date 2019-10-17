@@ -9,7 +9,7 @@ import Home from "../screens/Home/home";
 import Events from "../screens/Events/Event";
 import Chat from "../screens/GroupChat/GroupChat";
 import Map from "../screens/Map/Map"
-// import Profile from "";
+import Profile from "../screens/Profile/Profile";
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
@@ -25,6 +25,7 @@ const App = () => {
         <Scene key="events" component={Events} title="Events"/>
         <Scene key="chat" component={Chat} title="Group Chat"/>
         <Scene key="map" component={Map} title="World View :P"/>
+        <Scene key="profile" component={Profile} title="Profile"/>
 
       </Stack>
     </Router>

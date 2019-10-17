@@ -25,6 +25,10 @@ class Home extends Component {
         Actions.chat()
     }
 
+    goProfile() {
+        Actions.profile()
+    }
+
     render(){
         return (
             <View style = {styles.container}>
@@ -40,7 +44,7 @@ class Home extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button}> 
-                    <Text style={styles.buttonText} onPress={this.AlertMessage}>Profile</Text>
+                    <Text style={styles.buttonText} onPress={this.goProfile}>Profile</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button}> 
