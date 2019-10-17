@@ -146,4 +146,23 @@ class LogInForm extends Component {
   }
 }
 
-export default LogInForm;
+// Redux Getter to use: this.props.(name of any return)
+const mapStateToProps = state => {
+  return {
+    getUserData: state.logInReducer.userData,
+    logInStatus: state.logInReducer.status,
+  };
+};
+
+// Redux Setter to use: this.props.(name of any return)
+const mapDispatchToProps = dispatch => {
+  return {
+    logInSuccess: bool => dispatch(logInSuccess(bool)),
+    logInUser: data => dispatch(logInUser(data)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LogInForm);
