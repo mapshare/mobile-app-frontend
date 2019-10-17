@@ -4,6 +4,9 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyb
 import {Actions} from 'react-native-router-flux';
 import axios from 'axios';
 
+// Componenets Style
+import styles from "../Stylesheet"
+
 // Creating Component
 class LogInForm extends Component {
     constructor (props) {
@@ -14,43 +17,30 @@ class LogInForm extends Component {
         }
     }
 
-    LoginUser = () => {
-
-        fetch("http://myvmlab.senecacollege.ca:10034/login", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
+    LoginUser = async () => {
+        try {
+            let response = await fetch("http://myvmlab.senecacollege.ca:6556/api/login", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
                     userEmail: this.state.email,
                     userPassword: this.state.password,
-                })
-        })
-        .then((response) => response.text())
-        .then((res) => {
-
-
-            console.log(res.status)
-            // If our response is true
-            if (res.success == true) {
-                var email = res.message;
-                // Storing Email Address
-                AsyncStorage.setItem('email', email);
-
-                // Redirecting to Home Page
-                Actions.Home();
-
-            // If login fail. Show error message    
+                }),
+            });
+            let token = await response.headers.get('authentication')
+            if (token) {
+                Keyboard.dismiss();
+                alert("You successfully LogedIn. Email: " + this.state.email + ' password: ' + this.state.password  + ' token: ' + token);
+                Actions.home()
             } else {
-                alert(res.message)
+                throw "Incorrect Login Credentials.";
             }
-        }).catch((error) => {
-            console.error(error);
-        })
-        .done()
-        
-
+        } catch (error) {
+            alert("Failed to login user: " + error);
+        }
     }
 
     SaveData =async()=>{
@@ -80,7 +70,7 @@ class LogInForm extends Component {
                 {
                     if (ld.email == email && ld.password == password)
                     {
-                        alert('Go in!');
+                        alert('BackEnd Server Connection Error');
                     }
                     else
                     {
@@ -134,33 +124,5 @@ class LogInForm extends Component {
         );
     }
 }
-
-// Componenets Style
-const styles = StyleSheet.create({
-    container: {
-     padding: 20,
-    },
-    inputBox:{
-        height: 40,
-        backgroundColor: 'rgba(225,225,225,0.2)',
-        marginBottom: 10,
-        padding: 10,
-        color: '#fff'
-    },
-    buttonContainer:{
-        backgroundColor: '#2980b6',
-        paddingVertical: 15
-    },
-    buttonText:{
-        backgroundColor: '#2980b6',
-        paddingVertical: 12,
-        color: '#fff',
-        textAlign: 'center',
-        fontWeight: '700'
-    },
-    Text: {
-        textAlign: 'center'
-    }
-});
 
 export default LogInForm

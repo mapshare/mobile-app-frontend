@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@mapbox/react-native-mapbox-gl": "github:nitaliano/react-native-mapbox-gl#master",
     "axios": "^0.19.0",
     "prop-types": "^15.7.2",
     "react": "16.9.0",

@@ -3,6 +3,9 @@ import React, { Component } from "react"
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
+// Componenets Style
+import styles from "../Stylesheet"
+
 // Creating Component
 class LogInForm extends Component {
     constructor (props) {
@@ -14,6 +17,35 @@ class LogInForm extends Component {
             password: ""
         }
     }
+
+    register = async () => {
+        try {
+            let response = await fetch("http://myvmlab.senecacollege.ca:6556/api/register", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: this.state.email,
+                    userPassword: this.state.password,
+                    userFirstName: this.state.FirstName,
+                    userLastName: this.state.LastName,
+                }),
+            });
+            let responseJson = await response.json();
+            if (responseJson.success == true) {
+                Keyboard.dismiss();
+                alert("You successfully registered. Email: " + this.state.email + ' password: ' + this.state.password);
+                Actions.login()
+            } else {
+                throw "Could not register user.";
+            }
+        } catch (error) {
+            alert("Failed to register user: " + error);
+        }
+    }
+
     saveData =async()=>{
         const {email,password} = this.state;
  
@@ -108,39 +140,11 @@ class LogInForm extends Component {
                 />
 
                 <TouchableOpacity style={styles.button}> 
-                    <Text style={styles.buttonText} onPress={this.saveData}>{this.props.type}</Text>
+                    <Text style={styles.buttonText} onPress={this.register}>{this.props.type}</Text>
                 </TouchableOpacity>
             </View>
         );
     }
 }
-
-// Componenets Style
-const styles = StyleSheet.create({
-    container: {
-     padding: 20,
-    },
-    inputBox:{
-        height: 40,
-        backgroundColor: 'rgba(225,225,225,0.2)',
-        marginBottom: 10,
-        padding: 10,
-        color: '#fff'
-    },
-    buttonContainer:{
-        backgroundColor: '#2980b6',
-        paddingVertical: 15
-    },
-    buttonText:{
-        backgroundColor: '#2980b6',
-        paddingVertical: 12,
-        color: '#fff',
-        textAlign: 'center',
-        fontWeight: '700'
-    },
-    Text: {
-        textAlign: 'center'
-    }
-});
 
 export default LogInForm

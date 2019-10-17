@@ -1,17 +1,59 @@
-import React, { Component } from 'react';
-import { AppRegistry,StyleSheet,Text ,View} from 'react-native';
-
 // Import Libraries
+import React, { Component } from "react"
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard} from 'react-native';
+import {Actions} from 'react-native-router-flux';
 
-// import Login from "./src/screens/Login/Login"
-// import SignUp from './src/screens/SignUp/SignUp';
+// Componenets Style
+import styles from "./Stylesheet"
 
+// Creating Component
+class Home extends Component {
 
-export default class Home extends Component {
+    AlertMessage() {
+        alert("WIP")
+    }
 
-    render() {
-        return ( 
-            <Text>Welcome to Home</Text>
-        )
+    goEvents() {
+        Actions.events()
+    }
+
+    goMap() {
+        Actions.map()
+    }
+
+    goChat() {
+        Actions.chat()
+    }
+
+    render(){
+        return (
+            <View style = {styles.container}>
+
+                <Text>This is just a Tester Page which Links different screens</Text>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.goEvents}>Events</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.goMap}>Map</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.AlertMessage}>Profile</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.goChat}>Group Chat</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.AlertMessage}>Group Feed</Text>
+                </TouchableOpacity>
+
+            </View>
+        );
     }
 }
+
+export default Home
