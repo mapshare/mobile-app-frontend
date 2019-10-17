@@ -11,6 +11,8 @@ export const logInReducer = (state = INITIAL_LOG_IN_STATE, action) => {
       return {...state, status: action.status};
     case keys.LOG_IN_DATA_SUCCESS:
       return {...state, userData: action.data};
+    case keys.LOG_IN_TOKEN:
+      return {...state, token: action.token};
     default:
       return state;
   }
