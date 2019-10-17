@@ -175,7 +175,7 @@ class SignUpForm extends Component {
 const mapStateToProps = state => {
   return {
     getUserData: state.registerReducer.userData,
-    logInStatus: state.registerReducer.status,
+    registerStatus: state.registerReducer.status,
   };
 };
 
