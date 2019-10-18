@@ -1,5 +1,5 @@
 // Import Libraries
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,11 +9,11 @@ import {
   AsyncStorage,
   Keyboard,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
-import {connect} from 'react-redux';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 
 //Redux actions
-import {logInUser, logInSuccess} from '../../../actions/logInActions';
+import { logInUser, logInSuccess } from '../../../actions/logInActions';
 
 // Componenets Style
 import styles from '../Stylesheet';
@@ -23,83 +23,22 @@ class LogInForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      userEmail: '',
+      userPassword: '',
     };
   }
 
-  LoginUser = async () => {
-    try {
-      let response = await fetch(
-        'http://myvmlab.senecacollege.ca:6556/api/login',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userEmail: this.state.email,
-            userPassword: this.state.password,
-          }),
-        },
-      );
-      let token = await response.headers.get('authentication');
-      if (token) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.logInStatus !== this.props.logInStatus) {
+      if (this.props.logInStatus) {
         Keyboard.dismiss();
-        alert(
-          'You successfully LogedIn. Email: ' +
-            this.state.email +
-            ' password: ' +
-            this.state.password +
-            ' token: ' +
-            token,
-        );
         Actions.home();
-      } else {
-        throw 'Incorrect Login Credentials.';
-      }
-    } catch (error) {
-      alert('Failed to login user: ' + error);
-    }
-  };
-
-  SaveData = async () => {
-    const {email, password} = this.state;
-
-    //save data with asyncstorage
-    let loginDetails = {
-      email: email,
-      password: password,
-    };
-
-    if (this.props.type !== 'Login') {
-      AsyncStorage.setItem('loginDetails', JSON.stringify(loginDetails));
-
-      Keyboard.dismiss();
-      alert(
-        'You successfully registered. Email: ' +
-          email +
-          ' password: ' +
-          password,
-      );
-      Actions.login();
-    } else if (this.props.type == 'Login') {
-      try {
-        let loginDetails = await AsyncStorage.getItem('loginDetails');
-        let ld = JSON.parse(loginDetails);
-
-        if (ld.email != null && ld.password != null) {
-          if (ld.email == email && ld.password == password) {
-            alert('BackEnd Server Connection Error');
-          } else {
-            alert('Email and Password does not exist!');
-          }
-        }
-      } catch (error) {
-        alert(error);
       }
     }
+  }
+
+  LoginUser = async () => {
+    this.props.logInUser(this.state);
   };
 
   showData = async () => {
@@ -113,7 +52,7 @@ class LogInForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          onChangeText={email => this.setState({email})}
+          onChangeText={email => this.setState({ userEmail: email })}
           value={this.state.email}
           placeholder="Email"
           placeholderTextColor="rgba(225,225,225,0.7)"
@@ -127,7 +66,7 @@ class LogInForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={password => this.setState({password})}
+          onChangeText={password => this.setState({ userPassword: password })}
           value={this.state.password}
           placeholder="Password"
           secureTextEntry={true}
@@ -151,6 +90,7 @@ const mapStateToProps = state => {
   return {
     getUserData: state.logInReducer.userData,
     logInStatus: state.logInReducer.status,
+    getToken: state.logInReducer.token,
   };
 };
 

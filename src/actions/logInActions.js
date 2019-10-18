@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Config from 'react-native-config';
+import { API_URL } from 'react-native-dotenv'
 
 import keys from '../data/key';
 
@@ -17,6 +17,13 @@ export const logInUserDataSuccess = data => {
   };
 };
 
+export const logInToken = data => {
+  return {
+    type: keys.LOG_IN_TOKEN,
+    token: data,
+  };
+};
+
 export const logInUser = data => {
   let userData = {
     userEmail: data.userEmail,
@@ -25,14 +32,16 @@ export const logInUser = data => {
 
   return dispatch => {
     axios
-      .post(Config.API_ROUTE + '/login', userData)
+      .post(API_URL + '/login', userData)
       .then(res => {
-        console.log('data after logInUser request return: ', res.data);
+        //console.log('data after logInUser request return data: ', res.data);
+        //console.log('data after logInUser request return header: ', res.headers.authentication);
         dispatch(logInUserDataSuccess(res.data));
+        dispatch(logInToken(res.headers.authentication));
         dispatch(logInSuccess(true));
       })
       .catch(err => {
-        console.log('logInUser errors: ', err.response);
+        console.log('logInUser errors: ', err);
       });
   };
 };

@@ -1,5 +1,5 @@
 // Import Libraries
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,11 +9,11 @@ import {
   AsyncStorage,
   Keyboard,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
-import {connect} from 'react-redux';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 
 //Redux actions
-import {registerUser, registerSuccess} from '../../../actions/registerActions';
+import { registerUser, registerSuccess } from '../../../actions/registerActions';
 
 // Componenets Style
 import styles from '../Stylesheet';
@@ -23,86 +23,29 @@ class SignUpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fname: '',
-      lname: '',
-      email: '',
-      password: '',
+      userFirstName: '',
+      userLastName: '',
+      userEmail: '',
+      userPassword: '',
     };
   }
 
-  register = async () => {
-    try {
-      let response = await fetch(
-        'http://myvmlab.senecacollege.ca:6556/api/register',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userEmail: this.state.email,
-            userPassword: this.state.password,
-            userFirstName: this.state.FirstName,
-            userLastName: this.state.LastName,
-          }),
-        },
-      );
-      let responseJson = await response.json();
-      if (responseJson.success == true) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.registerStatus !== this.props.registerStatus) {
+      if (this.props.registerStatus) {
         Keyboard.dismiss();
         alert(
-          'You successfully registered. Email: ' +
-            this.state.email +
-            ' password: ' +
-            this.state.password,
+          'Thank you for Registering to Pin It!\n' +
+          'Please check your email to finish setting up your account.'
         );
+
         Actions.login();
-      } else {
-        throw 'Could not register user.';
-      }
-    } catch (error) {
-      alert('Failed to register user: ' + error);
-    }
-  };
-
-  saveData = async () => {
-    const {email, password} = this.state;
-
-    //save data with asyncstorage
-    let loginDetails = {
-      email: email,
-      password: password,
-    };
-
-    if (this.props.type !== 'Login') {
-      AsyncStorage.setItem('loginDetails', JSON.stringify(loginDetails));
-
-      Keyboard.dismiss();
-      alert(
-        'You successfully registered. Email: ' +
-          email +
-          ' password: ' +
-          password,
-      );
-      Actions.login();
-    } else if (this.props.type == 'Login') {
-      try {
-        let loginDetails = await AsyncStorage.getItem('loginDetails');
-        let ld = JSON.parse(loginDetails);
-
-        if (ld.email != null && ld.password != null) {
-          if (ld.email == email && ld.password == password) {
-            // alert('Go in!');
-            Actions.Home();
-          } else {
-            alert('Email and Password does not exist!');
-          }
-        }
-      } catch (error) {
-        alert(error);
       }
     }
+  }
+
+  register = async () => {
+    this.props.registerUser(this.state);
   };
 
   showData = async () => {
@@ -116,7 +59,7 @@ class SignUpForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          onChangeText={FirstName => this.setState({FirstName})}
+          onChangeText={FirstName => this.setState({ userFirstName: FirstName })}
           placeholder="First Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -128,7 +71,7 @@ class SignUpForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={LastName => this.setState({LastName})}
+          onChangeText={LastName => this.setState({ userLastName: LastName })}
           placeholder="Last Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -140,7 +83,7 @@ class SignUpForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={email => this.setState({email})}
+          onChangeText={email => this.setState({ userEmail: email })}
           placeholder="Email"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -153,7 +96,7 @@ class SignUpForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={password => this.setState({password})}
+          onChangeText={password => this.setState({ userPassword: password })}
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="rgba(225,225,225,0.7)"

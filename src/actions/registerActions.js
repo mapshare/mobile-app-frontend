@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Config from 'react-native-config';
+import { API_URL } from 'react-native-dotenv'
 
 import keys from '../data/key';
 
@@ -24,17 +24,17 @@ export const registerUser = data => {
     userLastName: data.userLastName,
     userPassword: data.userPassword,
   };
-
+  console.log(API_URL);
   return dispatch => {
     axios
-      .post(Config.API_ROUTE + '/register', userData)
+      .post(API_URL + '/register', userData)
       .then(res => {
-        console.log('data after registerUser request return: ', res.data);
+        //console.log('data after registerUser request return: ', res.data);
         dispatch(registerUserDataSuccess(res.data));
         dispatch(registerSuccess(true));
       })
       .catch(err => {
-        console.log('registerUser errors: ', err.response);
+        console.log('registerUser errors: ', err);
       });
   };
 };
