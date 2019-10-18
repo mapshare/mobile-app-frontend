@@ -23,8 +23,8 @@ class LogInForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      userEmail: '',
+      userPassword: '',
     };
   }
 
@@ -38,10 +38,7 @@ class LogInForm extends Component {
   }
 
   LoginUser = async () => {
-    this.props.logInUser({
-      userEmail: this.state.email,
-      userPassword: this.state.password,
-    })
+    this.props.logInUser(this.state);
   };
 
   showData = async () => {
@@ -55,7 +52,7 @@ class LogInForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          onChangeText={email => this.setState({ email })}
+          onChangeText={email => this.setState({ userEmail: email })}
           value={this.state.email}
           placeholder="Email"
           placeholderTextColor="rgba(225,225,225,0.7)"
@@ -69,7 +66,7 @@ class LogInForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={password => this.setState({ password })}
+          onChangeText={password => this.setState({ userPassword: password })}
           value={this.state.password}
           placeholder="Password"
           secureTextEntry={true}

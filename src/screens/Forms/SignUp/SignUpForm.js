@@ -23,10 +23,10 @@ class SignUpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      FirstName: '',
-      LastName: '',
-      email: '',
-      password: '',
+      userFirstName: '',
+      userLastName: '',
+      userEmail: '',
+      userPassword: '',
     };
   }
 
@@ -45,12 +45,7 @@ class SignUpForm extends Component {
   }
 
   register = async () => {
-    this.props.registerUser({
-      userEmail: this.state.email,
-      userPassword: this.state.password,
-      userFirstName: this.state.FirstName,
-      userLastName: this.state.LastName,
-    });
+    this.props.registerUser(this.state);
   };
 
   showData = async () => {
@@ -64,7 +59,7 @@ class SignUpForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          onChangeText={FirstName => this.setState({ FirstName: FirstName })}
+          onChangeText={FirstName => this.setState({ userFirstName: FirstName })}
           placeholder="First Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -76,7 +71,7 @@ class SignUpForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={LastName => this.setState({ LastName: LastName })}
+          onChangeText={LastName => this.setState({ userLastName: LastName })}
           placeholder="Last Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -88,7 +83,7 @@ class SignUpForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={email => this.setState({ email: email })}
+          onChangeText={email => this.setState({ userEmail: email })}
           placeholder="Email"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -101,7 +96,7 @@ class SignUpForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={password => this.setState({ password: password })}
+          onChangeText={password => this.setState({ userPassword: password })}
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="rgba(225,225,225,0.7)"
