@@ -1,17 +1,22 @@
-import React, { Component } from 'react';
-import { AppRegistry,StyleSheet,Text ,View} from 'react-native';
+import React, {Component} from 'react';
+import {AppRegistry} from 'react-native';
+import {Provider} from 'react-redux';
+import configureStore from './src/reduxStore/configureStore';
 
 // Import Libraries
 
 import Routes from './src/navigation/router';
 
-export default class signIn extends Component {
+const store = configureStore();
 
-    render() {
-        return ( 
-            <Routes/>
-        )
-    }
+export default class signIn extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <Routes />
+      </Provider>
+    );
+  }
 }
 
 AppRegistry.registerComponent('Login', () => signIn);
