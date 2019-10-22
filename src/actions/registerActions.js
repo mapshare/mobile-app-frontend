@@ -17,6 +17,14 @@ export const registerUserDataSuccess = data => {
   };
 };
 
+export const registerUserError = data => {
+  console.log(data)
+  return {
+    type: keys.REGISTER_ERROR,
+    error: data,
+  };
+};
+
 export const registerUser = data => {
   let userData = {
     userEmail: data.userEmail,
@@ -24,7 +32,6 @@ export const registerUser = data => {
     userLastName: data.userLastName,
     userPassword: data.userPassword,
   };
-  console.log(API_URL);
   return dispatch => {
     axios
       .post(API_URL + '/register', userData)
@@ -34,7 +41,9 @@ export const registerUser = data => {
         dispatch(registerSuccess(true));
       })
       .catch(err => {
-        console.log('registerUser errors: ', err);
+        // console.log('registerUser errors: ', err.response.data);
+        dispatch(registerUserError(err.response.data));
+        dispatch(registerSuccess(false));
       });
   };
 };
