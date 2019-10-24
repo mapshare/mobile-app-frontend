@@ -137,6 +137,49 @@ export const addGroupMember = data => {
 };
 
 /*
+* UPDATE GROUP
+*/
+export const updateGroupSuccess = bool => {
+    return {
+        type: keys.UPDATE_GROUP_SUCCESS,
+        updateGroupStatus: bool,
+    };
+};
+
+export const updateGroupPostDataSuccess = data => {
+    return {
+        type: keys.UPDATE_GROUP_DATA_SUCCESS,
+        updateGroupData: data,
+    };
+};
+
+export const updateGroupPostError = data => {
+    return {
+        type: keys.UPDATE_GROUP_ERROR,
+        updateGroupError: data,
+    };
+};
+
+export const updateGroup = data => {
+    let groupData = {
+        groupName: data.groupName,
+    };
+
+    return dispatch => {
+        axios
+            .post(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(updateGroupPostDataSuccess(res.data));
+                dispatch(updateGroupPostSuccess(true));
+            })
+            .catch(err => {
+                dispatch(updateGroupPostSuccess(false));
+                dispatch(updateGroupPostError(err.response.data));
+            });
+    };
+};
+
+/*
 *   LEAVE GROUP
 */
 export const leaveGroupSuccess = bool => {
@@ -146,14 +189,14 @@ export const leaveGroupSuccess = bool => {
     };
 };
 
-export const deleteGroupPostDataSuccess = data => {
+export const leaveGroupPostDataSuccess = data => {
     return {
         type: keys.LEAVE_GROUP_DATA_SUCCESS,
         leaveGroupData: data,
     };
 };
 
-export const deleteGroupPostError = data => {
+export const leaveGroupPostError = data => {
     return {
         type: keys.LEAVE_GROUP_ERROR,
         leaveGroupError: data,
@@ -165,12 +208,12 @@ export const leaveGroup = data => {
         axios
             .post(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } })
             .then(res => {
-                dispatch(deleteGroupPostDataSuccess(res.data));
-                dispatch(deleteGroupPostSuccess(true));
+                dispatch(leaveGroupPostDataSuccess(res.data));
+                dispatch(leaveGroupPostSuccess(true));
             })
             .catch(err => {
-                dispatch(deleteGroupPostSuccess(false));
-                dispatch(deleteGroupPostError(err.response.data));
+                dispatch(leaveGroupPostSuccess(false));
+                dispatch(leaveGroupPostError(err.response.data));
             });
     };
 };

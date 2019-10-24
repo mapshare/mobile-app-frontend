@@ -27,6 +27,13 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, addGroupMemberData: action.addGroupMemberData };
         case keys.ADD_GROUP_MEMBER_ERROR:
             return { ...state, addGroupMemberError: action.addGroupMemberError };
+        // UPDATE GROUP
+        case keys.UPDATE_GROUP_SUCCESS:
+            return { ...state, updateGroupStatus: action.updateGroupStatus };
+        case keys.UPDATE_GROUP_DATA_SUCCESS:
+            return { ...state, updateGroupData: action.updateGroupData };
+        case keys.UPDATE_GROUP_ERROR:
+            return { ...state, updateGroupError: action.updateGroupError };
         // LEAVE GROUP
         case keys.LEAVE_GROUP_SUCCESS:
             return { ...state, leaveGroupStatus: action.leaveGroupStatus };
