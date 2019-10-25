@@ -8,9 +8,11 @@ const INITIAL_REGISTER_STATE = {
 export const registerReducer = (state = INITIAL_REGISTER_STATE, action) => {
   switch (action.type) {
     case keys.REGISTER_SUCCESS:
-      return {...state, status: action.status};
+      return { ...state, status: action.status };
+    case keys.REGISTER_ERROR:
+      return { ...state, registerError: action.error };
     case keys.REGISTER_DATA_SUCCESS:
-      return {...state, userData: action.data};
+      return { ...state, userData: action.data };
     default:
       return state;
   }

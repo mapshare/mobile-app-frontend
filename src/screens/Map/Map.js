@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View } from "react-native";
-import Mapbox from "@mapbox/react-native-mapbox-gl";
+import Mapbox from "@react-native-mapbox-gl/maps";
 
 // Componenets Style
 import { containerStyles, mapStyles, annotationStyles } from "./Stylesheet";

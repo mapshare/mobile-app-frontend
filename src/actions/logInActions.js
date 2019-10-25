@@ -17,6 +17,13 @@ export const logInUserDataSuccess = data => {
   };
 };
 
+export const logInUserError = data => {
+  return {
+    type: keys.LOG_IN_ERROR,
+    error: data,
+  };
+};
+
 export const logInToken = data => {
   return {
     type: keys.LOG_IN_TOKEN,
@@ -41,7 +48,9 @@ export const logInUser = data => {
         dispatch(logInSuccess(true));
       })
       .catch(err => {
-        console.log('logInUser errors: ', err);
+        // console.log('logInUser errors: ', err.response.data);
+        dispatch(logInSuccess(false));
+        dispatch(logInUserError(err.response.data));
       });
   };
 };

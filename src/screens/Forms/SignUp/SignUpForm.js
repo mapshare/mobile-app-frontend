@@ -12,11 +12,18 @@ import {
 import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
 
+import validator from '../validate/validation_wrapper'
+
+
 //Redux actions
+<<<<<<< HEAD
 import {
   registerUser,
   registerSuccess
 } from "../../../actions/registerActions";
+=======
+import { registerUser, registerSuccess, registerUserError } from '../../../actions/registerActions';
+>>>>>>> develop
 
 // Componenets Style
 import styles from "../Stylesheet";
@@ -26,10 +33,23 @@ class SignUpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+<<<<<<< HEAD
       userFirstName: "",
       userLastName: "",
       userEmail: "",
       userPassword: ""
+=======
+      user: {
+        userFirstName: '',
+        userLastName: '',
+        userEmail: '',
+        userPassword: '',
+      },
+      userFirstNameError: '',
+      userLastNameError: '',
+      emailError: '',
+      passwordError: '',
+>>>>>>> develop
     };
   }
 
@@ -45,10 +65,37 @@ class SignUpForm extends Component {
         Actions.login();
       }
     }
+
+    if (this.props.getRegisterError) {
+      alert(this.props.getRegisterError);
+      this.props.registerUserError("");
+    }
   }
 
   register = async () => {
-    this.props.registerUser(this.state);
+
+    const userFirstNameError = validator('firstName', this.state.user.userFirstName);
+    const userLastNameError = validator('lastName', this.state.user.userLastName);
+    const emailError = validator('email', this.state.user.userEmail);
+    const passwordError = validator('password', this.state.user.userPassword);
+
+    this.setState({
+      userFirstNameError: userFirstNameError,
+      userLastNameError: userLastNameError,
+      emailError: emailError,
+      passwordError: passwordError
+    }, () => {
+
+      if (!userFirstNameError && !userLastNameError && !emailError && !passwordError) {
+        this.props.registerUser(this.state.user);
+      } else {
+        /* console.log("this.state.userFirstNameError " + this.state.userFirstNameError)
+        console.log("this.state.userLastNameError " + this.state.userLastNameError)
+        console.log("this.state.emailError " + this.state.emailError)
+        console.log("this.state.passwordError " + this.state.passwordError) */
+      }
+
+    });
   };
 
   showData = async () => {
@@ -62,9 +109,13 @@ class SignUpForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
+<<<<<<< HEAD
           onChangeText={FirstName =>
             this.setState({ userFirstName: FirstName })
           }
+=======
+          onChangeText={FirstName => this.setState({ user: { ...this.state.user, userFirstName: FirstName } })}
+>>>>>>> develop
           placeholder="First Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -73,10 +124,11 @@ class SignUpForm extends Component {
           autoCapitalize="none"
           onSubmitEditing={() => this.password.focus()}
         />
+        {this.state.userFirstNameError ? <Text>{this.state.userFirstNameError}</Text> : null}
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={LastName => this.setState({ userLastName: LastName })}
+          onChangeText={LastName => this.setState({ user: { ...this.state.user, userLastName: LastName } })}
           placeholder="Last Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -85,10 +137,11 @@ class SignUpForm extends Component {
           autoCapitalize="none"
           onSubmitEditing={() => this.password.focus()}
         />
+        {this.state.userLastNameError ? <Text>{this.state.userLastNameError}</Text> : null}
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={email => this.setState({ userEmail: email })}
+          onChangeText={email => this.setState({ user: { ...this.state.user, userEmail: email } })}
           placeholder="Email"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -98,16 +151,18 @@ class SignUpForm extends Component {
           autoCapitalize="none"
           onSubmitEditing={() => this.password.focus()}
         />
+        {this.state.emailError ? <Text>{this.state.emailError}</Text> : null}
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={password => this.setState({ userPassword: password })}
+          onChangeText={password => this.setState({ user: { ...this.state.user, userPassword: password } })}
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="rgba(225,225,225,0.7)"
           // returnKeyType="Login"
           ref={input => (this.password = input)}
         />
+        {this.state.passwordError ? <Text>{this.state.passwordError}</Text> : null}
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.register}>
@@ -123,7 +178,12 @@ class SignUpForm extends Component {
 const mapStateToProps = state => {
   return {
     getUserData: state.registerReducer.userData,
+<<<<<<< HEAD
     registerStatus: state.registerReducer.status
+=======
+    getRegisterError: state.registerReducer.registerError,
+    registerStatus: state.registerReducer.status,
+>>>>>>> develop
   };
 };
 
@@ -131,7 +191,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     registerSuccess: bool => dispatch(registerSuccess(bool)),
+<<<<<<< HEAD
     registerUser: data => dispatch(registerUser(data))
+=======
+    registerUser: data => dispatch(registerUser(data)),
+    registerUserError: data => dispatch(registerUserError(data)),
+>>>>>>> develop
   };
 };
 

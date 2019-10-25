@@ -5,8 +5,6 @@ import configureStore from './src/reduxStore/configureStore';
 
 // Import Libraries
 
-// import Login from "./src/screens/Login/Login"
-// import SignUp from './src/screens/SignUp/SignUp';
 import Routes from './src/navigation/router';
 
 const store = configureStore();

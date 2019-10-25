@@ -13,18 +13,33 @@ import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
 
 //Redux actions
+<<<<<<< HEAD
 import { logInUser, logInSuccess } from "../../../actions/logInActions";
+=======
+import { logInUser, logInSuccess, logInUserError } from '../../../actions/logInActions';
+>>>>>>> develop
 
 // Componenets Style
 import styles from "../Stylesheet";
+
+import validator from '../validate/validation_wrapper'
 
 // Creating Component
 class LogInForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+<<<<<<< HEAD
       userEmail: "",
       userPassword: ""
+=======
+      user: {
+        userEmail: '',
+        userPassword: '',
+      },
+      emailError: '',
+      passwordError: '',
+>>>>>>> develop
     };
   }
 
@@ -39,10 +54,30 @@ class LogInForm extends Component {
         Actions.home();
       }
     }
+
+    if (this.props.getLogInError) {
+      alert(this.props.getLogInError);
+      this.props.logInUserError("");
+    }
   }
 
   LoginUser = async () => {
-    this.props.logInUser(this.state);
+    const emailError = validator('email', this.state.user.userEmail);
+    const passwordError = validator('password', this.state.user.userPassword);
+    
+    this.setState({
+      emailError: emailError,
+      passwordError: passwordError
+    }, () => {
+
+      if (!emailError && !passwordError) {
+        this.props.logInUser(this.state.user);
+      } else {
+        console.log("this.state.emailError " + this.state.emailError)
+        console.log("this.state.passwordError " + this.state.passwordError)
+      }
+
+    });
   };
 
   showData = async () => {
@@ -56,7 +91,7 @@ class LogInForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          onChangeText={email => this.setState({ userEmail: email })}
+          onChangeText={email => this.setState({ user: { ...this.state.user, userEmail: email } })}
           value={this.state.email}
           placeholder="Email"
           placeholderTextColor="rgba(225,225,225,0.7)"
@@ -67,10 +102,11 @@ class LogInForm extends Component {
           autoCapitalize="none"
           onSubmitEditing={() => this.password.focus()}
         />
+        {this.state.emailError ? <Text>{this.state.emailError}</Text> : null}
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={password => this.setState({ userPassword: password })}
+          onChangeText={password => this.setState({ user: { ...this.state.user, userPassword: password } })}
           value={this.state.password}
           placeholder="Password"
           secureTextEntry={true}
@@ -78,6 +114,7 @@ class LogInForm extends Component {
           // returnKeyType="Login"
           ref={input => (this.password = input)}
         />
+        {this.state.passwordError ? <Text>{this.state.passwordError}</Text> : null}
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.LoginUser}>
@@ -94,7 +131,12 @@ const mapStateToProps = state => {
   return {
     getUserData: state.logInReducer.userData,
     logInStatus: state.logInReducer.status,
+<<<<<<< HEAD
     getToken: state.logInReducer.token
+=======
+    getLogInError: state.logInReducer.logInError,
+    getToken: state.logInReducer.token,
+>>>>>>> develop
   };
 };
 
@@ -102,7 +144,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     logInSuccess: bool => dispatch(logInSuccess(bool)),
+<<<<<<< HEAD
     logInUser: data => dispatch(logInUser(data))
+=======
+    logInUser: data => dispatch(logInUser(data)),
+    logInUserError: error => dispatch(logInUserError(error)),
+>>>>>>> develop
   };
 };
 
