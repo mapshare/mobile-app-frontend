@@ -23,6 +23,8 @@ class Map extends Component {
     console.log(data);
   };
 
+  addLocationOnClick = () => {};
+
   renderAnnotations() {
     return (
       <Mapbox.PointAnnotation
@@ -43,7 +45,10 @@ class Map extends Component {
       <View id="test" style={containerStyles.container}>
         <View style={containerStyles.optionsContainer}>
           <View style={containerStyles.hamburgerMenu}></View>
-          <View style={containerStyles.addLocation}></View>
+          <View
+            style={containerStyles.addLocation}
+            onPress={this.addLocationOnClick}
+          ></View>
           <View style={containerStyles.geolocation}></View>
         </View>
         <Mapbox.MapView
