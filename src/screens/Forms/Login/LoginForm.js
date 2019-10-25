@@ -1,5 +1,5 @@
 // Import Libraries
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,25 +7,29 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
-  Keyboard,
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
+  Keyboard
+} from "react-native";
+import { Actions } from "react-native-router-flux";
+import { connect } from "react-redux";
 
 //Redux actions
-import { logInUser, logInSuccess } from '../../../actions/logInActions';
+import { logInUser, logInSuccess } from "../../../actions/logInActions";
 
 // Componenets Style
-import styles from '../Stylesheet';
+import styles from "../Stylesheet";
 
 // Creating Component
 class LogInForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userEmail: '',
-      userPassword: '',
+      userEmail: "",
+      userPassword: ""
     };
+  }
+
+  componentDidMount() {
+    this.props.logInSuccess(true);
   }
 
   componentDidUpdate(prevProps) {
@@ -42,9 +46,9 @@ class LogInForm extends Component {
   };
 
   showData = async () => {
-    let loginDetails = await AsyncStorage.getItem('loginDetails');
+    let loginDetails = await AsyncStorage.getItem("loginDetails");
     let ld = JSON.parse(loginDetails);
-    alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
+    alert("email: " + ld.email + " " + "password: " + ld.password);
   };
 
   render() {
@@ -90,7 +94,7 @@ const mapStateToProps = state => {
   return {
     getUserData: state.logInReducer.userData,
     logInStatus: state.logInReducer.status,
-    getToken: state.logInReducer.token,
+    getToken: state.logInReducer.token
   };
 };
 
@@ -98,11 +102,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     logInSuccess: bool => dispatch(logInSuccess(bool)),
-    logInUser: data => dispatch(logInUser(data)),
+    logInUser: data => dispatch(logInUser(data))
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(LogInForm);

@@ -1,5 +1,5 @@
 // Import Libraries
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,26 +7,29 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
-  Keyboard,
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
+  Keyboard
+} from "react-native";
+import { Actions } from "react-native-router-flux";
+import { connect } from "react-redux";
 
 //Redux actions
-import { registerUser, registerSuccess } from '../../../actions/registerActions';
+import {
+  registerUser,
+  registerSuccess
+} from "../../../actions/registerActions";
 
 // Componenets Style
-import styles from '../Stylesheet';
+import styles from "../Stylesheet";
 
 // Creating Component
 class SignUpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userFirstName: '',
-      userLastName: '',
-      userEmail: '',
-      userPassword: '',
+      userFirstName: "",
+      userLastName: "",
+      userEmail: "",
+      userPassword: ""
     };
   }
 
@@ -35,8 +38,8 @@ class SignUpForm extends Component {
       if (this.props.registerStatus) {
         Keyboard.dismiss();
         alert(
-          'Thank you for Registering to Pin It!\n' +
-          'Please check your email to finish setting up your account.'
+          "Thank you for Registering to Pin It!\n" +
+            "Please check your email to finish setting up your account."
         );
 
         Actions.login();
@@ -49,9 +52,9 @@ class SignUpForm extends Component {
   };
 
   showData = async () => {
-    let loginDetails = await AsyncStorage.getItem('loginDetails');
+    let loginDetails = await AsyncStorage.getItem("loginDetails");
     let ld = JSON.parse(loginDetails);
-    alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
+    alert("email: " + ld.email + " " + "password: " + ld.password);
   };
 
   render() {
@@ -59,7 +62,9 @@ class SignUpForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          onChangeText={FirstName => this.setState({ userFirstName: FirstName })}
+          onChangeText={FirstName =>
+            this.setState({ userFirstName: FirstName })
+          }
           placeholder="First Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -118,7 +123,7 @@ class SignUpForm extends Component {
 const mapStateToProps = state => {
   return {
     getUserData: state.registerReducer.userData,
-    registerStatus: state.registerReducer.status,
+    registerStatus: state.registerReducer.status
   };
 };
 
@@ -126,11 +131,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     registerSuccess: bool => dispatch(registerSuccess(bool)),
-    registerUser: data => dispatch(registerUser(data)),
+    registerUser: data => dispatch(registerUser(data))
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(SignUpForm);
