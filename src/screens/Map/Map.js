@@ -1,9 +1,18 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, Button } from "react-native";
 import Mapbox from "@react-native-mapbox-gl/maps";
+import { connect } from "react-redux";
+
+//Redux actions
+import { addGroupMarkOnClick } from "../../actions/groupMarkAction";
+import { displayModalWindow } from "../../actions/modalWindowAction";
 
 // Componenets Style
 import { containerStyles, mapStyles, annotationStyles } from "./Stylesheet";
+
+// Screens
+import ModalWindow from "../ModalWindow/ModalWindow";
+import LogInForm from "../Forms/Login/LoginForm";
 
 Mapbox.setAccessToken(
   "sk.eyJ1IjoiendhaGFiMTE0IiwiYSI6ImNrMXR2cWRxZDB2MjUzY25zdTZkdHg1MGEifQ.pGh19KR7GqfLCg1qoga5rg"
@@ -12,18 +21,20 @@ Mapbox.setAccessToken(
 class Map extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      coordinates: {}
-    };
-
-    this.map = null;
+    this.data = null;
   }
 
   mapOnClick = data => {
-    console.log(data);
+    if (this.props.addGroupMarkOnClickStatus) {
+      this.props.displayModalWindow(true);
+      this.data = data;
+      console.log(this.data);
+    }
   };
 
-  addLocationOnClick = () => {};
+  addLocationOnClick = () => {
+    this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
+  };
 
   renderAnnotations() {
     return (
@@ -42,27 +53,58 @@ class Map extends Component {
 
   render() {
     return (
-      <View id="test" style={containerStyles.container}>
-        <View style={containerStyles.optionsContainer}>
-          <View style={containerStyles.hamburgerMenu}></View>
+      <View style={containerStyles.container}>
+        {this.props.modalWindowStatus ? (
+          <ModalWindow modalContent={<LogInForm type="login" />} />
+        ) : (
           <View
-            style={containerStyles.addLocation}
-            onPress={this.addLocationOnClick}
-          ></View>
-          <View style={containerStyles.geolocation}></View>
-        </View>
-        <Mapbox.MapView
-          styleURL={Mapbox.StyleURL.Light}
-          zoomLevel={12}
-          centerCoordinate={[-79.39503177338315, 43.63353993681244]}
-          style={mapStyles.container}
-          onPress={data => this.mapOnClick(data)}
-        >
-          {this.renderAnnotations()}
-        </Mapbox.MapView>
+            style={[
+              containerStyles.container,
+              this.props.addGroupMarkOnClickStatus
+                ? containerStyles.addMarkTrue
+                : null
+            ]}
+          >
+            <View style={containerStyles.optionsContainer}>
+              <View style={containerStyles.hamburgerMenu}></View>
+              <View style={containerStyles.addLocation}>
+                <Button title="+" onPress={this.addLocationOnClick} />
+              </View>
+              <View style={containerStyles.geolocation}></View>
+            </View>
+            <Mapbox.MapView
+              styleURL={Mapbox.StyleURL.Light}
+              zoomLevel={3}
+              centerCoordinate={[-79.39503177338315, 43.63353993681244]}
+              style={mapStyles.container}
+              onPress={data => this.mapOnClick(data)}
+            >
+              {this.renderAnnotations()}
+            </Mapbox.MapView>
+          </View>
+        )}
       </View>
     );
   }
 }
 
-export default Map;
+// Redux Getter to use: this.props.(name of any return)
+const mapStateToProps = state => {
+  return {
+    addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
+    modalWindowStatus: state.modalWindowReducer.status
+  };
+};
+
+// Redux Setter to use: this.props.(name of any return)
+const mapDispatchToProps = dispatch => {
+  return {
+    addGroupMarkOnClick: bool => dispatch(addGroupMarkOnClick(bool)),
+    displayModalWindow: bool => dispatch(displayModalWindow(bool))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Map);

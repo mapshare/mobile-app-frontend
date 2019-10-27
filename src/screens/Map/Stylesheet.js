@@ -1,11 +1,18 @@
 // Import Libraries
 import { StyleSheet } from "react-native";
-import sharedStyles from "../../util/sharedStyles";
+import { reponsiveStyle } from "../../util/sharedStyles";
 
 // Componenets Style
 const containerStyles = StyleSheet.create({
   container: {
     flex: 1
+  },
+
+  addMarkTrue: {
+    borderWidth: 3,
+    borderColor: "red",
+    opacity: 0.7,
+    zIndex: 2
   },
 
   optionsContainer: {
@@ -14,27 +21,29 @@ const containerStyles = StyleSheet.create({
     alignSelf: "flex-end",
     justifyContent: "space-between",
     alignItems: "center",
-    width: sharedStyles.wp("10%"),
-    height: sharedStyles.hp("93%"),
-    zIndex: 1
+    width: reponsiveStyle.wp("10%"),
+    height: reponsiveStyle.hp("93%")
   },
 
   hamburgerMenu: {
     backgroundColor: "red",
-    width: sharedStyles.wp("10%"),
-    height: sharedStyles.hp("8%")
+    width: reponsiveStyle.wp("10%"),
+    height: reponsiveStyle.hp("8%"),
+    zIndex: 1
   },
 
   addLocation: {
     backgroundColor: "red",
-    width: sharedStyles.wp("10%"),
-    height: sharedStyles.hp("20%")
+    width: reponsiveStyle.wp("10%"),
+    height: reponsiveStyle.hp("20%"),
+    zIndex: 1
   },
 
   geolocation: {
     backgroundColor: "red",
-    width: sharedStyles.wp("10%"),
-    height: sharedStyles.hp("5%")
+    width: reponsiveStyle.wp("10%"),
+    height: reponsiveStyle.hp("5%"),
+    zIndex: 1
   }
 });
 
@@ -62,5 +71,7 @@ const annotationStyles = StyleSheet.create({
     transform: [{ scale: 0.6 }]
   }
 });
+
+const buttonStyles = StyleSheet.create({});
 
 export { containerStyles, mapStyles, annotationStyles };

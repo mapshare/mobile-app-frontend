@@ -5,11 +5,11 @@ import {
   removeOrientationListener as rol
 } from "react-native-responsive-screen";
 
-const sharedStyle = {
+const reponsiveStyle = {
   wp,
   hp,
   loc,
   rol
 };
 
-export default sharedStyle;
+export { reponsiveStyle };
