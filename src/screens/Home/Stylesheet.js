@@ -3,28 +3,45 @@ import { StyleSheet } from 'react-native';
 
 // Componenets Style
 export default StyleSheet.create({
-    container: {
-     padding: 20,
+    root: {
+        flex: 1,
     },
-    inputBox:{
+    Body: {
+        flex: 1,
+    },
+    image: {
+        flex: 1
+    },
+    Overlay: {
+        backgroundColor: "rgba(30,26,26,0.4)",
+        opacity: 1,
+        flex: 1,
+    },
+    GroupName: {
+        color: "rgba(255,255,255,1)",
+        fontSize: 24,
+        marginTop: 41,
+        textAlign:"center",
+    },
+    button:{
+        width: 105,
         height: 40,
-        backgroundColor: 'rgba(225,225,225,0.2)',
-        marginBottom: 10,
-        padding: 10,
-        color: '#fff'
-    },
-    buttonContainer:{
-        backgroundColor: '#2980b6',
-        paddingVertical: 15
-    },
-    buttonText:{
-        backgroundColor: '#2980b6',
-        paddingVertical: 12,
+        alignSelf:"center",
+        backgroundColor: "rgba(255,255,255,1)",
+        paddingVertical: 10,
         color: '#fff',
         textAlign: 'center',
-        fontWeight: '700'
+        borderRadius: 5
     },
-    Text: {
-        textAlign: 'center'
-    }
+    text: {
+        color: "rgba(31,178,204,1)",
+        fontSize: 14,
+        textAlign:"center"
+    },
+    Message: {
+        color: "rgba(255,255,255,1)",
+        fontSize: 16,
+        marginTop: 22,
+        alignSelf: "center"
+    },
 });

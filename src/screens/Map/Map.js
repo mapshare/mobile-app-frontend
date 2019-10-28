@@ -30,8 +30,10 @@ export default class MyComponent extends Component {
 			<View style={styles.container}>
 				<Mapbox.MapView
 					styleURL={Mapbox.StyleURL.Light}
-					zoomLevel={10}
+					zoomLevel={15}
 					centerCoordinate={[-79.39503177338315, 43.63353993681244]}
+					attributionEnabled={false}
+                    logoEnabled={false}
 					style={styles.container}>
 					{this.renderAnnotations()}
 				</Mapbox.MapView>

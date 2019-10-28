@@ -38,6 +38,7 @@ class LogInForm extends Component {
     if (prevProps.logInStatus !== this.props.logInStatus) {
       if (this.props.logInStatus) {
         Keyboard.dismiss();
+        // Actions.tester();
         Actions.home();
       }
     }

@@ -16,8 +16,8 @@ export default combineReducers({
   groupReducer,
   groupPostReducer,
   groupMarkReducer,
-  groupMarkCategoryReducer,
-  groupEventReducer,
+  // groupMarkCategoryReducer,
+  // groupEventReducer,
   groupChatRoomReducer,
   //  form: formReducer,
 });

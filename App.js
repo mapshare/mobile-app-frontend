@@ -5,7 +5,7 @@ import configureStore from './src/reduxStore/configureStore';
 
 // Import Libraries
 
-import Routes from './src/navigation/router';
+import Routes from './src/navigation/Router/router';
 
 const store = configureStore();
 

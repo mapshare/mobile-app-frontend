@@ -1,11 +1,12 @@
 import React, { Component} from "react";
 import { Platform, StatusBar } from "react-native";
-import {Router, Stack, Scene} from 'react-native-router-flux';
+import {Router, Stack, Scene, ActionConst, Tabs} from 'react-native-router-flux';
 
 
 import SignUp from "../screens/SignUp/SignUp";
 import LogIn from "../screens/Login/Login";
 import Home from "../screens/Home/home";
+import Tester from "../screens/Tester Screen/Tester";
 import Events from "../screens/Events/Event";
 import Chat from "../screens/GroupChat/GroupChat";
 import Map from "../screens/Map/Map"
@@ -21,12 +22,14 @@ const App = () => {
       <Stack key="root">
         <Scene key="login" component={LogIn} title="Login"/>
         <Scene key="signup" component={SignUp} title="SignUp"/>
-        <Scene key="home" component={Home} title="Home"/>
-        <Scene key="events" component={Events} title="Events"/>
-        <Scene key="chat" component={Chat} title="Group Chat"/>
-        <Scene key="map" component={Map} title="World View :P"/>
-        <Scene key="profile" component={Profile} title="Profile"/>
-
+        <Scene key="tester" component={Tester} title="Debug Page" type={ActionConst.RESET}/>
+        <Stack Key="NavTab" tabs={true} showNavigationBar={false}>
+          <Scene key="home" component={Home} title="Home"/>
+          <Scene key="map" component={Map} title="Map"/>
+          <Scene key="chat" component={Chat} title="Chat"/>
+          <Scene key="events" component={Events} title="Events"/>
+          <Scene key="profile" component={Profile} title="Profile"/>
+        </Stack>
       </Stack>
     </Router>
   )
