@@ -8,8 +8,10 @@ import keys from '../data/key';
 * GROUP
 * -----
 * Create Group
-* Search Group        
+* Search Group       
+* GET ACTIVE GROUP 
 * ADD GROUP MEMBER
+* GET GROUP MEMBER
 * LEAVE GROUP
 * DELETE GROUP
 *
@@ -83,16 +85,59 @@ export const searchGroupError = data => {
 };
 
 export const searchGroup = data => {
+    let searchArg = {
+        groupName: data.groupName,
+    };
     return dispatch => {
         axios
-            .post(API_URL + '/groups/search/' + data.searchArg, { headers: { 'authentication': data.token } })
+            .post(API_URL + '/groups/search', searchArg, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(searchGroupDataSuccess(res.data));
                 dispatch(searchGroupSuccess(true));
             })
             .catch(err => {
                 dispatch(searchGroupSuccess(false));
-                dispatch(searchGroupError(err.response.data));
+                dispatch(searchGroupError(err.response));
+            });
+    };
+};
+
+
+/*
+*   GET ACTIVE GROUP
+*/
+export const getActiveGroupSuccess = bool => {
+    return {
+        type: keys.GET_ACTIVE_GROUP_SUCCESS,
+        getActiveGroupStatus: bool,
+    };
+};
+
+export const getActiveGroupDataSuccess = data => {
+    return {
+        type: keys.GET_ACTIVE_GROUP_DATA_SUCCESS,
+        getActiveGroupData: data,
+    };
+};
+
+export const getActiveGroupError = data => {
+    return {
+        type: keys.GET_ACTIVE_GROUP_ERROR,
+        getActiveGroupError: data,
+    };
+};
+
+export const getActiveGroup = data => {
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(getActiveGroupDataSuccess(res.data));
+                dispatch(getActiveGroupSuccess(true));
+            })
+            .catch(err => {
+                dispatch(getActiveGroupSuccess(false));
+                dispatch(getActiveGroupError(err.response));
             });
     };
 };
@@ -135,6 +180,46 @@ export const addGroupMember = data => {
             });
     };
 };
+
+/*
+*   GET GROUP MEMBER
+*/
+export const getGroupMemberSuccess = bool => {
+    return {
+        type: keys.GET_GROUP_MEMBER_SUCCESS,
+        getGroupMemberStatus: bool,
+    };
+};
+
+export const getGroupMemberDataSuccess = data => {
+    return {
+        type: keys.GET_GROUP_MEMBER_DATA_SUCCESS,
+        getGroupMemberData: data,
+    };
+};
+
+export const getGroupMemberError = data => {
+    return {
+        type: keys.GET_GROUP_MEMBER_ERROR,
+        getGroupMemberError: data,
+    };
+};
+
+export const getGroupMember = data => {
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(getGroupMemberDataSuccess(res.data));
+                dispatch(getGroupMemberSuccess(true));
+            })
+            .catch(err => {
+                dispatch(getGroupMemberSuccess(false));
+                dispatch(getGroupMemberError(err.response.data));
+            });
+    };
+};
+
 
 /*
 * UPDATE GROUP

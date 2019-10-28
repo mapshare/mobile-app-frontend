@@ -1,12 +1,16 @@
 import axios from 'axios';
-import { API_URL } from 'react-native-dotenv'
+import { API_URL, CHAT_URL } from 'react-native-dotenv'
+
+import io from 'socket.io-client';
 
 import keys from '../data/key';
+import { voidTypeAnnotation } from '@babel/types';
 
 /* Routes
 *
 * CHATROOM
 * --------
+* CONNECT TO GROUP CHAT
 * ADD GROUP CHATROOM
 * JOIN GROUP CHATROOM
 * SEND MESSAGE TO GROUP CHATROOM
@@ -18,6 +22,61 @@ import keys from '../data/key';
 * DELETE GROUP CHATROOM
 *
 */
+
+
+/*
+*   CONNECT TO GROUP CHAT
+*/
+export const connectToGroupChatSuccess = bool => {
+    return {
+        type: keys.CONNECT_TO_GROUP_CHAT_SUCCESS,
+        connectToGroupChatStatus: bool,
+    };
+};
+
+export const connectToGroupChatDataSuccess = data => {
+    return {
+        type: keys.CONNECT_TO_GROUP_CHAT_DATA_SUCCESS,
+        socket: data,
+    };
+};
+
+export const connectToGroupChatError = data => {
+    return {
+        type: keys.CONNECT_TO_GROUP_CHAT_ERROR,
+        connectToGroupChatError: data,
+    };
+};
+
+export const connectToGroupChat = data => {
+    return dispatch => {
+        try {
+            const socket = io.connect(CHAT_URL + '/' + data.groupId);
+            if (!socket) throw ("Unable to connect to server");
+
+            socket.on('connect', () => {
+                socket.emit('authenticate', data.token)
+                    .on('authenticated', () => {
+                        console.log("authenticated")
+                        dispatch(connectToGroupChatDataSuccess(socket));
+                        dispatch(connectToGroupChatSuccess(true));
+                    })
+                    .on('unauthorized', (msg) => {
+                        throw ("Unable to connect to server " + msg);
+                    })
+                    .on('new message', (data) => {
+                        console.log("NEW MESSAGE")
+                        console.log(data)
+                        //dispatch(newMessageData(data));
+                        //dispatch(newMessageSuccess(true));
+                    });
+            });
+        } catch (error) {
+            dispatch(connectToGroupChatSuccess(false));
+            dispatch(connectToGroupChatError(error));
+        }
+    }
+};
 
 /*
 *   ADD GROUP CHATROOM
@@ -87,17 +146,22 @@ export const joinGroupChatRoomError = data => {
 };
 
 export const joinGroupChatRoom = data => {
+    const param = {
+        groupId: data.groupId,
+        chatRoomId: data.chatRoomId
+    }
     return dispatch => {
-        axios
-            .post(API_URL + '/groups/' + data.groupId + '/chat', { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(joinGroupChatRoomDataSuccess(res.data));
+        try {
+            data.socket.emit('join room', param);
+            data.socket.on('join room', (data) => {
+                dispatch(joinGroupChatRoomDataSuccess(data));
                 dispatch(joinGroupChatRoomSuccess(true));
-            })
-            .catch(err => {
-                dispatch(joinGroupChatRoomSuccess(false));
-                dispatch(joinGroupChatRoomError(err.response.data));
             });
+        } catch (error) {
+            console.log("ERROR: " + error)
+            dispatch(joinGroupChatRoomSuccess(false));
+            dispatch(joinGroupChatRoomError(error));
+        }
     };
 };
 
@@ -127,62 +191,99 @@ export const sendMessageToGroupChatRoomError = data => {
 };
 
 export const sendMessageToGroupChatRoom = data => {
-    const messageData = {
-        messageBody: data.messageBody
-    }
-
     return dispatch => {
-        axios
-            .post(API_URL + '/groups/' + data.groupId + '/chat/' + data.chatRoomId + '/message', messageData, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(sendMessageToGroupChatRoomDataSuccess(res.data));
-                dispatch(sendMessageToGroupChatRoomSuccess(true));
-            })
-            .catch(err => {
-                dispatch(sendMessageToGroupChatRoomSuccess(false));
-                dispatch(sendMessageToGroupChatRoomError(err.response.data));
-            });
+        try {
+            data.socket.emit('new message', data.messageBody);
+            dispatch(sendMessageToGroupChatRoomSuccess(true));
+        } catch (error) {
+            dispatch(sendMessageToGroupChatRoomSuccess(false));
+            dispatch(sendMessageToGroupChatRoomError(error));
+        }
     };
 };
 
 /*
-*   GET GROUP CHAT ROOM
+*   GET ACTIVE GROUP CHAT ROOM
 */
-export const getGroupChatRoomSuccess = bool => {
+export const getActiveGroupChatRoomSuccess = bool => {
     return {
-        type: keys.GET_GROUP_CHAT_ROOM_SUCCESS,
-        getGroupChatRoomStatus: bool,
+        type: keys.GET_ACTIVE_GROUP_CHAT_ROOM_SUCCESS,
+        getActiveGroupChatRoomStatus: bool,
     };
 };
 
-export const getGroupChatRoomDataSuccess = data => {
+export const getActiveGroupChatRoomDataSuccess = data => {
     return {
-        type: keys.GET_GROUP_CHAT_ROOM_DATA_SUCCESS,
-        getGroupChatRoomData: data,
+        type: keys.GET_ACTIVE_GROUP_CHAT_ROOM_DATA_SUCCESS,
+        getActiveGroupChatRoomData: data,
     };
 };
 
-export const getGroupChatRoomError = data => {
+export const getActiveGroupChatRoomError = data => {
     return {
-        type: keys.GET_GROUP_CHAT_ROOM_ERROR,
-        getGroupChatRoomError: data,
+        type: keys.GET_ACTIVE_GROUP_CHAT_ROOM_ERROR,
+        getActiveGroupChatRoomError: data,
     };
 };
 
-export const getGroupChatRoom = data => {
+export const getActiveGroupChatRoom = data => {
     return dispatch => {
         axios
             .get(API_URL + '/groups/' + data.groupId + '/chat/' + data.chatRoomId, { headers: { 'authentication': data.token } })
             .then(res => {
-                dispatch(getGroupChatRoomDataSuccess(res.data));
-                dispatch(getGroupChatRoomSuccess(true));
+                dispatch(getActiveGroupChatRoomDataSuccess(res.data));
+                dispatch(getActiveGroupChatRoomSuccess(true));
             })
             .catch(err => {
-                dispatch(getGroupChatRoomSuccess(false));
-                dispatch(getGroupChatRoomError(err.response.data));
+                dispatch(getActiveGroupChatRoomSuccess(false));
+                dispatch(getActiveGroupChatRoomError(err.response.data));
             });
     };
 };
+
+
+/*
+*   SEARCH FOR GROUP CHATROOM
+*/
+export const searchGroupChatRoomSuccess = bool => {
+    return {
+        type: keys.SEARCH_GROUP_CHAT_ROOM_SUCCESS,
+        searchGroupChatRoomStatus: bool,
+    };
+};
+
+export const searchGroupChatRoomDataSuccess = data => {
+    return {
+        type: keys.SEARCH_GROUP_CHAT_ROOM_DATA_SUCCESS,
+        searchGroupChatRoomData: data,
+    };
+};
+
+export const searchGroupChatRoomError = data => {
+    return {
+        type: keys.SEARCH_GROUP_CHAT_ROOM_ERROR,
+        searchGroupChatRoomError: data,
+    };
+};
+
+export const searchGroupChatRoom = data => {
+    let searchArg = {
+        chatRoomName: data.chatRoomName,
+    };
+    return dispatch => {
+        axios
+            .post(API_URL + '/groups/' + data.groupId + '/chat/search', searchArg, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(searchGroupChatRoomDataSuccess(res.data));
+                dispatch(searchGroupChatRoomSuccess(true));
+            })
+            .catch(err => {
+                dispatch(searchGroupChatRoomSuccess(false));
+                dispatch(searchGroupChatRoomError(err.response));
+            });
+    };
+};
+
 
 /*
 *   UPDATE GROUP CHAT ROOM
@@ -252,21 +353,21 @@ export const updateMessageInGroupChatRoomError = data => {
 };
 
 export const updateMessageInGroupChatRoom = data => {
-    const messageData = {
+    const newMessageData = {
         messageBody: data.messageBody
     }
 
     return dispatch => {
-        axios
-            .put(API_URL + '/groups/' + data.groupId + '/chat/' + data.chatRoomId + '/' + data.messageId, messageData, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(updateMessageInGroupChatRoomDataSuccess(res.data));
+        try {
+            data.socket.emit('update message', data.messageId, newMessageData);
+            data.socket.on('update message', (data) => {
+                dispatch(updateMessageInGroupChatRoomDataSuccess(data));
                 dispatch(updateMessageInGroupChatRoomSuccess(true));
-            })
-            .catch(err => {
-                dispatch(updateMessageInGroupChatRoomSuccess(false));
-                dispatch(updateMessageInGroupChatRoomError(err.response.data));
             });
+        } catch (error) {
+            dispatch(updateMessageInGroupChatRoomSuccess(false));
+            dispatch(updateMessageInGroupChatRoomError(error));
+        }
     };
 };
 
@@ -296,22 +397,21 @@ export const deleteMessageInGroupChatRoomError = data => {
 
 export const deleteMessageInGroupChatRoom = data => {
     return dispatch => {
-        axios
-            .delete(API_URL + '/groups/' + data.groupId + '/chat/' + data.chatRoomId + '/message/' + data.messageId, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(deleteMessageInGroupChatRoomDataSuccess(res.data));
+        try {
+            data.socket.emit('delete message', data.messageId);
+            data.socket.on('delete message', (data) => {
+                dispatch(deleteMessageInGroupChatRoomDataSuccess(data));
                 dispatch(deleteMessageInGroupChatRoomSuccess(true));
-            })
-            .catch(err => {
-                dispatch(deleteMessageInGroupChatRoomSuccess(false));
-                dispatch(deleteMessageInGroupChatRoomError(err.response.data));
             });
+        } catch (error) {
+            dispatch(deleteMessageInGroupChatRoomSuccess(false));
+            dispatch(deleteMessageInGroupChatRoomError(error));
+        }
     };
 };
 
 /*
 *   LEAVE GROUP CHATROOM
-*/
 export const leaveGroupChatRoomSuccess = bool => {
     return {
         type: keys.LEAVE_GROUP_CHAT_ROOM_SUCCESS,
@@ -347,6 +447,8 @@ export const leaveGroupChatRoom = data => {
             });
     };
 };
+
+*/
 
 /*
 *   DELETE GROUP CHATROOM

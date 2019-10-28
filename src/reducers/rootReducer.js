@@ -4,7 +4,7 @@ import { registerReducer } from './registerReducer';
 import { groupReducer } from './groupReducer';
 import { groupPostReducer } from './groupPostReducer';
 import { groupMarkReducer } from './groupMarkReducer';
-import { groupMarkCategoryReducer } from './groupCustomMarkCategoryReducer';
+import { groupCustomMarkCategoryReducer } from './groupCustomMarkCategoryReducer';
 import { groupEventReducer } from './groupEventReducer';
 import { groupChatRoomReducer } from './groupChatRoomReducer';
 // for future form implementation
@@ -16,7 +16,7 @@ export default combineReducers({
   groupReducer,
   groupPostReducer,
   groupMarkReducer,
-  groupMarkCategoryReducer,
+  groupCustomMarkCategoryReducer,
   groupEventReducer,
   groupChatRoomReducer,
   //  form: formReducer,

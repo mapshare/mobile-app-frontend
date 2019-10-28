@@ -13,6 +13,13 @@ export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, acti
             return { ...state, addGroupChatRoomData: action.addGroupChatRoomData };
         case keys.ADD_GROUP_CHAT_ROOM_ERROR:
             return { ...state, addGroupChatRoomError: action.addGroupChatRoomError };
+        // CONNECT TO GROUP CHAT
+        case keys.CONNECT_TO_GROUP_CHAT_SUCCESS:
+            return { ...state, connectToGroupChatStatus: action.connectToGroupChatStatus };
+        case keys.CONNECT_TO_GROUP_CHAT_DATA_SUCCESS:
+            return { ...state, socket: action.socket };
+        case keys.CONNECT_TO_GROUP_CHAT_ERROR:
+            return { ...state, addGroupChatRoomError: action.connectToGroupChatError };
         // JOIN GROUP CHATROOM
         case keys.JOIN_GROUP_CHAT_ROOM_SUCCESS:
             return { ...state, joinGroupChatRoomStatus: action.joinGroupChatRoomStatus };
@@ -27,13 +34,20 @@ export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, acti
             return { ...state, sendMessageToGroupChatRoomData: action.sendMessageToGroupChatRoomData };
         case keys.SEND_MESSAGE_TO_GROUP_CHAT_ROOM_ERROR:
             return { ...state, sendMessageToGroupChatRoomError: action.sendMessageToGroupChatRoomError };
-        // GET GROUP CHAT ROOM
-        case keys.GET_GROUP_CHAT_ROOM_SUCCESS:
-            return { ...state, getGroupChatRoomStatus: action.getGroupChatRoomStatus };
-        case keys.GET_GROUP_CHAT_ROOM_DATA_SUCCESS:
-            return { ...state, getGroupChatRoomData: action.getGroupChatRoomData };
-        case keys.GET_GROUP_CHAT_ROOM_ERROR:
-            return { ...state, getGroupChatRoomError: action.getGroupChatRoomError };
+        // GET ACTIVE GROUP CHAT ROOM
+        case keys.GET_ACTIVE_GROUP_CHAT_ROOM_SUCCESS:
+            return { ...state, getActiveGroupChatRoomStatus: action.getActiveGroupChatRoomStatus };
+        case keys.GET_ACTIVE_GROUP_CHAT_ROOM_DATA_SUCCESS:
+            return { ...state, getActiveGroupChatRoomData: action.getActiveGroupChatRoomData };
+        case keys.GET_ACTIVE_GROUP_CHAT_ROOM_ERROR:
+            return { ...state, getActiveGroupChatRoomError: action.getActiveGroupChatRoomError };
+        // SEARCH GROUP CHAT ROOM
+        case keys.SEARCH_GROUP_CHAT_ROOM_SUCCESS:
+            return { ...state, searchGroupChatRoomStatus: action.searchGroupChatRoomStatus };
+        case keys.SEARCH_GROUP_CHAT_ROOM_DATA_SUCCESS:
+            return { ...state, searchGroupChatRoomData: action.searchGroupChatRoomData };
+        case keys.SEARCH_GROUP_CHAT_ROOM_ERROR:
+            return { ...state, searchGroupChatRoomError: action.searchGroupChatRoomError };
         // UPDATE GROUP CHAT ROOM
         case keys.UPDATE_GROUP_CHAT_ROOM_SUCCESS:
             return { ...state, updateGroupChatRoomStatus: action.updateGroupChatRoomStatus };
