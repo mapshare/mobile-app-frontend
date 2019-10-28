@@ -94,7 +94,7 @@ class LogInForm extends Component {
           }
           value={this.state.email}
           placeholder="Email"
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
@@ -114,7 +114,7 @@ class LogInForm extends Component {
           value={this.state.password}
           placeholder="Password"
           secureTextEntry={true}
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           // returnKeyType="Login"
           ref={input => (this.password = input)}
         />

@@ -8,9 +8,10 @@ import LogIn from "../../screens/Login/Login";
 import Home from "../../screens/Home/home";
 import Tester from "../../screens/Tester Screen/Tester";
 import Events from "../../screens/Events/Event";
-import Chat from "../../screens/GroupChat/GroupChat";
+import Chat from "../../screens/Groups/GroupChat/GroupChat";
 import Map from "../../screens/Map/Map"
 import Profile from "../../screens/Profile/Profile";
+import crtgrp from "../../screens/Groups/CreateGroup/CreateGroup"
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
@@ -23,6 +24,7 @@ const App = () => {
         <Scene key="login" component={LogIn} title="Login" type={ActionConst.RESET}/>
         <Scene key="signup" component={SignUp} title="SignUp"/>
         <Scene key="tester" component={Tester} title="Debug Page" type={ActionConst.RESET}/>
+        <Scene key="crtgrp" component={crtgrp} title="Create Group Page"/>
 
         <Router hideNavBar={true} titleStyle={{color: 'white',}} navigationBarStyle={{backgroundColor: '#33C1FF',}}>
           <Stack Key="NavTab" tabs={true} showNavigationBar={false}>

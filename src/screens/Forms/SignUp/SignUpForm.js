@@ -115,7 +115,7 @@ class SignUpForm extends Component {
             })
           }
           placeholder="First Name"
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
@@ -134,7 +134,7 @@ class SignUpForm extends Component {
             })
           }
           placeholder="Last Name"
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
@@ -151,7 +151,7 @@ class SignUpForm extends Component {
             this.setState({ user: { ...this.state.user, userEmail: email } })
           }
           placeholder="Email"
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
@@ -170,7 +170,7 @@ class SignUpForm extends Component {
           }
           placeholder="Password"
           secureTextEntry={true}
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           // returnKeyType="Login"
           ref={input => (this.password = input)}
         />
