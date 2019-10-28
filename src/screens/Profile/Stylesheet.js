@@ -70,4 +70,15 @@ export default StyleSheet.create({
         borderRadius:30,
         backgroundColor: "#ff0000",
       },
+      testerMode: {
+        marginTop:10,
+        height:45,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom:20,
+        width:250,
+        borderRadius:30,
+        backgroundColor: "#FFBF00",
+      },
   });

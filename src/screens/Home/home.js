@@ -1,97 +1,46 @@
-// Import Libraries
-import React, { Component } from "react"
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import React, { Component } from "react";
+import {Text, View, ImageBackground, TouchableOpacity } from "react-native";
+import Mapbox from '@react-native-mapbox-gl/maps';
 
 // Componenets Style
 import styles from "./Stylesheet"
+import { Actions } from "react-native-router-flux";
 
-//Redux actions
-import { connect } from 'react-redux';
-import {
-} from '../../actions/groupActions';
+export default class Home extends Component {
 
-// Creating Component
-class Home extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            activeGroup: "None"
-        };
-    }
-    
-    componentDidMount() {
-        if (this.props.getActiveGroupStatus) {
-            this.setState({ activeGroup: this.props.getActiveGroupData.groupName });
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.getActiveGroupStatus !== this.props.getActiveGroupStatus) {
-            if (this.props.getActiveGroupStatus) {
-                this.setState({ activeGroup: this.props.getActiveGroupData.groupName });
-            }
-        }
-    }
-
-    AlertMessage() {
-        alert("WIP")
-    }
-
-    goEvents() {
-        Actions.events()
-    }
-
-    goManageGroup() {
-        Actions.manageGroup()
-    }
-
-    goMap() {
+    goMap(){
         Actions.map()
-    }
-
-    goChat() {
-        Actions.manageGroupChat()
-    }
-
-    goProfile() {
-        Actions.profile()
     }
 
     render() {
         return (
-            <View style={styles.container}>
-
-                <Text>This is just a Tester Page which Links different screens</Text>
-
-                <Text>Active Group: {this.state.activeGroup}</Text>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.goManageGroup}>Manage Group</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.goEvents}>Events</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.goMap}>Map</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.goProfile}>Profile</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.goChat}>Manage Group Chat</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.AlertMessage}>Group Feed</Text>
-                </TouchableOpacity>
-
+            <View style={styles.root}>
+                <View style={styles.Body}>
+                    <ImageBackground source={require("../../assests/images/food.jpg")} resizeMode="cover" style={styles.image}>
+                        <View style={styles.Overlay}>
+                            <Text style={styles.GroupName}>Spartans {"\n"}</Text>
+                            <TouchableOpacity style={styles.button}>
+                                <Text style={styles.text}>Group Page</Text>
+                            </TouchableOpacity>
+                            <Text style={styles.Message}>Did I give you permission to eat, soldier?</Text>
+                        </View>
+                    </ImageBackground>
+                    <Mapbox.MapView 
+                    styleURL={Mapbox.StyleURL.Light}
+                    zoomLevel={10} 
+                    centerCoordinate={[-79.39503177338315, 43.63353993681244]}
+                    showUserLocation={true}
+                    zoomEnabled={false}
+                    scrollEnabled={false}
+                    pitchEnabled={false}
+                    rotateEnabled={false}
+                    attributionEnabled={false}
+                    logoEnabled={false}
+                    style={styles.Body} 
+                    onPress={this.goMap} ></Mapbox.MapView>
+                </View>
             </View>
-        );
+        )
     }
 }
 
