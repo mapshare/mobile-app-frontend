@@ -1,10 +1,12 @@
 // Import Libraries
 import React, { Component } from "react"
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard} from 'react-native';
+import { Text, View, TouchableOpacity} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
 // Componenets Style
 import styles from "./Stylesheet"
+
+import crtgrp from "../Groups/CreateGroup/CreateGroup"
 
 // Creating Component
 class Tester extends Component {
@@ -31,6 +33,10 @@ class Tester extends Component {
 
     goHome(){
         Actions.home()
+    }
+
+    goCreateGroup(){
+        Actions.crtgrp()
     }
 
     render(){
@@ -72,7 +78,19 @@ class Tester extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.goCreateGroup}>Add/Create Group</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
                     <Text style={styles.buttonText} onPress={this.AlertMessage}>Group Members</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.AlertMessage}>Create Chat Room</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.AlertMessage}>Join Chat Room</Text>
                 </TouchableOpacity>
 
             </View>

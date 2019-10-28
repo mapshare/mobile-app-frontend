@@ -97,7 +97,7 @@ class SignUpForm extends Component {
           style={styles.inputBox}
           onChangeText={FirstName => this.setState({ user: { ...this.state.user, userFirstName: FirstName } })}
           placeholder="First Name"
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
@@ -110,7 +110,7 @@ class SignUpForm extends Component {
           style={styles.inputBox}
           onChangeText={LastName => this.setState({ user: { ...this.state.user, userLastName: LastName } })}
           placeholder="Last Name"
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
@@ -123,7 +123,7 @@ class SignUpForm extends Component {
           style={styles.inputBox}
           onChangeText={email => this.setState({ user: { ...this.state.user, userEmail: email } })}
           placeholder="Email"
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
@@ -138,7 +138,7 @@ class SignUpForm extends Component {
           onChangeText={password => this.setState({ user: { ...this.state.user, userPassword: password } })}
           placeholder="Password"
           secureTextEntry={true}
-          placeholderTextColor="rgba(225,225,225,0.7)"
+          placeholderTextColor="rgba(0,0,0,0.7)"
           // returnKeyType="Login"
           ref={input => (this.password = input)}
         />
