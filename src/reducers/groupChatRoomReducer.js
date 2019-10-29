@@ -18,6 +18,12 @@ export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, acti
             return { ...state, connectToGroupChatStatus: action.connectToGroupChatStatus };
         case keys.CONNECT_TO_GROUP_CHAT_DATA_SUCCESS:
             return { ...state, socket: action.socket };
+        case keys.CHAT_LOG_DATA:
+            return { ...state, chatLogData: action.chatLogData };
+        case keys.NEW_MESSAGE_STATUS:
+            return { ...state, getNewMessageStatus: action.getNewMessageStatus };
+        case keys.NEW_MESSAGE_DATA:
+            return { ...state, newMessageData: action.newMessageData };
         case keys.CONNECT_TO_GROUP_CHAT_ERROR:
             return { ...state, addGroupChatRoomError: action.connectToGroupChatError };
         // JOIN GROUP CHATROOM
@@ -48,6 +54,13 @@ export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, acti
             return { ...state, searchGroupChatRoomData: action.searchGroupChatRoomData };
         case keys.SEARCH_GROUP_CHAT_ROOM_ERROR:
             return { ...state, searchGroupChatRoomError: action.searchGroupChatRoomError };
+        // DISCONNECT GROUP CHAT ROOM
+        case keys.DISCONECT_GROUP_CHAT_ROOM_SUCCESS:
+            return { ...state, disconnectGroupChatRoomStatus: action.disconnectGroupChatRoomStatus };
+        case keys.DISCONECT_GROUP_CHAT_ROOM_DATA_SUCCESS:
+            return { ...state, disconnectGroupChatRoomData: action.disconnectGroupChatRoomData };
+        case keys.DISCONECT_GROUP_CHAT_ROOM_ERROR:
+            return { ...state, disconnectGroupChatRoomError: action.disconnectGroupChatRoomError };
         // UPDATE GROUP CHAT ROOM
         case keys.UPDATE_GROUP_CHAT_ROOM_SUCCESS:
             return { ...state, updateGroupChatRoomStatus: action.updateGroupChatRoomStatus };

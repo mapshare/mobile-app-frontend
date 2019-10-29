@@ -24,10 +24,14 @@ import {
   connectToGroupChat,
   joinGroupChatRoom,
   sendMessageToGroupChatRoom,
-  sendMessageToGroupChatRoomSuccess
+  sendMessageToGroupChatRoomSuccess,
+  newMessageStatus,
+  disconnectGroupChatRoom,
+  disconnectGroupChatRoomSuccess,
 } from '../../../actions/groupChatRoomAction';
 import {
-  getGroupMember
+  getGroupMember,
+  getGroupMemberSuccess
 } from '../../../actions/groupActions';
 
 /*[
@@ -55,8 +59,25 @@ class GroupChat extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.disconnectGroupChatRoomStatus !== this.props.disconnectGroupChatRoomStatus) {
+      if (this.props.disconnectGroupChatRoomStatus) {
+        console.log("RESETTING CONNECTION")
+        const data = {
+          token: this.props.token,
+          groupId: this.props.getActiveGroupData._id,
+        }
+        this.props.joinGroupChatRoomSuccess(false);
+        this.props.connectToGroupChatSuccess(false);
+        this.props.connectToGroupChat(data);
+        this.props.getGroupMemberSuccess(false);
+        this.props.getGroupMember(data);
+        this.props.disconnectGroupChatRoomSuccess(false);
+      }
+    }
+
     if (prevProps.connectToGroupChatStatus !== this.props.connectToGroupChatStatus) {
       if (this.props.connectToGroupChatStatus) {
+        console.log("JOINING ROOM")
         const joinData = {
           socket: this.props.socket,
           groupId: this.props.getActiveGroupData._id,
@@ -66,16 +87,22 @@ class GroupChat extends Component {
       }
     }
 
+    if (prevProps.getGroupMemberStatus !== this.props.getGroupMemberStatus) {
+      if (this.props.getGroupMemberStatus) {
+        this.setState({ groupMember: this.props.getGroupMemberData });
+      }
+    }
+
     if (prevProps.joinGroupChatRoomStatus !== this.props.joinGroupChatRoomStatus) {
       if (this.props.joinGroupChatRoomStatus) {
         this.setState({ data: this.props.joinGroupChatRoomData });
       }
     }
 
-
-    if (prevProps.joinGroupChatRoomStatus !== this.props.joinGroupChatRoomStatus) {
-      if (this.props.joinGroupChatRoomStatus) {
-        this.setState({ data: this.props.joinGroupChatRoomData });
+    if (prevProps.getNewMessageStatus !== this.props.getNewMessageStatus) {
+      if (this.props.getNewMessageStatus) {
+        this.setState({ data: this.props.newMessageData });
+        this.props.newMessageStatus(false);
       }
     }
   }
@@ -85,26 +112,36 @@ class GroupChat extends Component {
       token: this.props.token,
       groupId: this.props.getActiveGroupData._id,
     }
-    // maybe disconnect then connect
-    this.props.joinGroupChatRoomSuccess(false);
-    this.props.connectToGroupChatSuccess(false);
-    this.props.connectToGroupChat(data);
-    //this.setState({ groupMember: this.props.getGroupMemberData })
+
+    if (this.props.connectToGroupChatStatus) {
+      this.props.disconnectGroupChatRoom({ socket: this.props.socket });
+    }
+    else {
+      this.props.joinGroupChatRoomSuccess(false);
+      this.props.connectToGroupChatSuccess(false);
+      this.props.connectToGroupChat(data);
+      this.props.getGroupMemberSuccess(false);
+      this.props.getGroupMember(data);
+      this.props.disconnectGroupChatRoomSuccess(false);
+    }
   }
+
 
   sendMessage() {
     const messageData = {
       socket: this.props.socket,
       messageBody: this.state.newMessage,
     }
+    this.setState({ newMessage: "" })
     this.props.sendMessageToGroupChatRoomSuccess(false)
     this.props.sendMessageToGroupChatRoom(messageData)
   }
 
-  renderDate = (date) => {
+  renderDate = (utcdate) => {
+    var date = new Date(utcdate);
     return (
       <Text style={styles.time}>
-        {date}
+        {date.toLocaleTimeString()}
       </Text>
     );
   }
@@ -113,25 +150,18 @@ class GroupChat extends Component {
     return (
       <View style={styles.container}>
         <FlatList style={styles.list}
+          inverted
           data={this.state.data}
-          keyExtractor={(item) => {
-            return item._id;
-          }}
-          renderItem={(message) => {
-            const item = message.item;
-            let inMessage = item.messageCreatedBy == this.state.groupMember;
+          keyExtractor={(item) => { return item._id; }}
+          renderItem={({ item }) => {
+            let inMessage = item.messageCreatedBy === this.state.groupMember._id;
             let itemStyle = inMessage ? styles.itemIn : styles.itemOut;
-            <View style={[styles.item, itemStyle]}>
-              {!inMessage && this.renderDate(item.messageCreatedAt)}
-              <View style={[styles.balloon]}>
-                <Text>{item.messageBody}</Text>
-              </View>
-              {inMessage && this.renderDate(item.messageCreatedAt)}
-            </View>
             return (
               <View style={[styles.item, itemStyle]}>
                 <View style={[styles.balloon]}>
+                  {!inMessage && this.renderDate(item.messageCreatedAt)}
                   <Text>{item.messageBody}</Text>
+                  {inMessage && this.renderDate(item.messageCreatedAt)}
                 </View>
               </View>
             )
@@ -167,6 +197,10 @@ const mapStateToProps = state => {
     joinGroupChatRoomStatus: state.groupChatRoomReducer.joinGroupChatRoomStatus,
     joinGroupChatRoomData: state.groupChatRoomReducer.joinGroupChatRoomData,
     socket: state.groupChatRoomReducer.socket,
+    newMessageData: state.groupChatRoomReducer.newMessageData,
+    getNewMessageStatus: state.groupChatRoomReducer.getNewMessageStatus,
+    getGroupMemberStatus: state.groupReducer.getGroupMemberStatus,
+    disconnectGroupChatRoomStatus: state.groupChatRoomReducer.disconnectGroupChatRoomStatus,
   };
 };
 
@@ -180,7 +214,10 @@ const mapDispatchToProps = dispatch => {
     getGroupMember: data => dispatch(getGroupMember(data)),
     sendMessageToGroupChatRoom: data => dispatch(sendMessageToGroupChatRoom(data)),
     sendMessageToGroupChatRoomSuccess: data => dispatch(sendMessageToGroupChatRoomSuccess(data)),
-
+    newMessageStatus: data => dispatch(newMessageStatus(data)),
+    getGroupMemberSuccess: data => dispatch(getGroupMemberSuccess(data)),
+    disconnectGroupChatRoom: data => dispatch(disconnectGroupChatRoom(data)),
+    disconnectGroupChatRoomSuccess: data => dispatch(disconnectGroupChatRoomSuccess(data)),
   };
 };
 
