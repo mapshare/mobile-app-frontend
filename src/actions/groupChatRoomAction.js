@@ -41,6 +41,27 @@ export const connectToGroupChatDataSuccess = data => {
     };
 };
 
+export const chatLogData = data => {
+    return {
+        type: keys.CHAT_LOG_DATA,
+        chatLogData: data,
+    };
+};
+
+export const newMessageStatus = data => {
+    return {
+        type: keys.NEW_MESSAGE_STATUS,
+        getNewMessageStatus: data,
+    };
+};
+
+export const newMessageData = data => {
+    return {
+        type: keys.NEW_MESSAGE_DATA,
+        newMessageData: data,
+    };
+};
+
 export const connectToGroupChatError = data => {
     return {
         type: keys.CONNECT_TO_GROUP_CHAT_ERROR,
@@ -51,6 +72,8 @@ export const connectToGroupChatError = data => {
 export const connectToGroupChat = data => {
     return dispatch => {
         try {
+
+            console.log("connecting")
             const socket = io.connect(CHAT_URL + '/' + data.groupId);
             if (!socket) throw ("Unable to connect to server");
 
@@ -65,10 +88,9 @@ export const connectToGroupChat = data => {
                         throw ("Unable to connect to server " + msg);
                     })
                     .on('new message', (data) => {
-                        console.log("NEW MESSAGE")
-                        console.log(data)
-                        //dispatch(newMessageData(data));
-                        //dispatch(newMessageSuccess(true));
+                        console.log("new message responce")
+                        dispatch(newMessageData(data));
+                        dispatch(newMessageStatus(true));
                     });
             });
         } catch (error) {
@@ -154,6 +176,7 @@ export const joinGroupChatRoom = data => {
         try {
             data.socket.emit('join room', param);
             data.socket.on('join room', (data) => {
+                console.log("ROOM Joined")
                 dispatch(joinGroupChatRoomDataSuccess(data));
                 dispatch(joinGroupChatRoomSuccess(true));
             });
@@ -241,6 +264,42 @@ export const getActiveGroupChatRoom = data => {
     };
 };
 
+/*
+*   DISCONNECT GROUP CHATROOM
+*/
+export const disconnectGroupChatRoomSuccess = bool => {
+    return {
+        type: keys.DISCONECT_GROUP_CHAT_ROOM_SUCCESS,
+        disconnectGroupChatRoomStatus: bool,
+    };
+};
+
+export const disconnectGroupChatRoomDataSuccess = data => {
+    return {
+        type: keys.DISCONECT_GROUP_CHAT_ROOM_DATA_SUCCESS,
+        disconnectGroupChatRoomData: data,
+    };
+};
+
+export const disconnectGroupChatRoomError = data => {
+    return {
+        type: keys.DISCONECT_GROUP_CHAT_ROOM_ERROR,
+        disconnectGroupChatRoomError: data,
+    };
+};
+
+export const disconnectGroupChatRoom = data => {
+    return dispatch => {
+        try {
+            data.socket.emit('disconnect', true);
+            data.socket.removeAllListeners();
+            dispatch(disconnectGroupChatRoomSuccess(true));
+        } catch (error) {
+            dispatch(disconnectGroupChatRoomSuccess(false));
+            dispatch(disconnectGroupChatRoomError(error));
+        }
+    };
+};
 
 /*
 *   SEARCH FOR GROUP CHATROOM

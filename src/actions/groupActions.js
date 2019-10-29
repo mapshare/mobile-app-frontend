@@ -208,7 +208,7 @@ export const getGroupMemberError = data => {
 export const getGroupMember = data => {
     return dispatch => {
         axios
-            .get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
+            .get(API_URL + '/groups/' + data.groupId +'/member', { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(getGroupMemberDataSuccess(res.data));
                 dispatch(getGroupMemberSuccess(true));
