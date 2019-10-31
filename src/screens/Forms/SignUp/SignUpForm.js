@@ -1,5 +1,5 @@
 // Import Libraries
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,19 +7,22 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
-  Keyboard,
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
+  Keyboard
+} from "react-native";
+import { Actions } from "react-native-router-flux";
+import { connect } from "react-redux";
 
-import validator from '../validate/validation_wrapper'
-
+import validator from "../validate/validation_wrapper";
 
 //Redux actions
-import { registerUser, registerSuccess, registerUserError } from '../../../actions/registerActions';
+import {
+  registerUser,
+  registerSuccess,
+  registerUserError
+} from "../../../actions/registerActions";
 
 // Componenets Style
-import styles from '../Stylesheet';
+import styles from "../Stylesheet";
 
 // Creating Component
 class SignUpForm extends Component {
@@ -27,15 +30,15 @@ class SignUpForm extends Component {
     super(props);
     this.state = {
       user: {
-        userFirstName: '',
-        userLastName: '',
-        userEmail: '',
-        userPassword: '',
+        userFirstName: "",
+        userLastName: "",
+        userEmail: "",
+        userPassword: ""
       },
-      userFirstNameError: '',
-      userLastNameError: '',
-      emailError: '',
-      passwordError: '',
+      userFirstNameError: "",
+      userLastNameError: "",
+      emailError: "",
+      passwordError: ""
     };
   }
 
@@ -44,8 +47,8 @@ class SignUpForm extends Component {
       if (this.props.registerStatus) {
         Keyboard.dismiss();
         alert(
-          'Thank you for Registering to Pin It!\n' +
-          'Please check your email to finish setting up your account.'
+          "Thank you for Registering to Pin It!\n" +
+            "Please check your email to finish setting up your account."
         );
 
         Actions.login();
@@ -59,35 +62,46 @@ class SignUpForm extends Component {
   }
 
   register = async () => {
+    const userFirstNameError = validator(
+      "firstName",
+      this.state.user.userFirstName
+    );
+    const userLastNameError = validator(
+      "lastName",
+      this.state.user.userLastName
+    );
+    const emailError = validator("email", this.state.user.userEmail);
+    const passwordError = validator("password", this.state.user.userPassword);
 
-    const userFirstNameError = validator('firstName', this.state.user.userFirstName);
-    const userLastNameError = validator('lastName', this.state.user.userLastName);
-    const emailError = validator('email', this.state.user.userEmail);
-    const passwordError = validator('password', this.state.user.userPassword);
-
-    this.setState({
-      userFirstNameError: userFirstNameError,
-      userLastNameError: userLastNameError,
-      emailError: emailError,
-      passwordError: passwordError
-    }, () => {
-
-      if (!userFirstNameError && !userLastNameError && !emailError && !passwordError) {
-        this.props.registerUser(this.state.user);
-      } else {
-        /* console.log("this.state.userFirstNameError " + this.state.userFirstNameError)
+    this.setState(
+      {
+        userFirstNameError: userFirstNameError,
+        userLastNameError: userLastNameError,
+        emailError: emailError,
+        passwordError: passwordError
+      },
+      () => {
+        if (
+          !userFirstNameError &&
+          !userLastNameError &&
+          !emailError &&
+          !passwordError
+        ) {
+          this.props.registerUser(this.state.user);
+        } else {
+          /* console.log("this.state.userFirstNameError " + this.state.userFirstNameError)
         console.log("this.state.userLastNameError " + this.state.userLastNameError)
         console.log("this.state.emailError " + this.state.emailError)
         console.log("this.state.passwordError " + this.state.passwordError) */
+        }
       }
-
-    });
+    );
   };
 
   showData = async () => {
-    let loginDetails = await AsyncStorage.getItem('loginDetails');
+    let loginDetails = await AsyncStorage.getItem("loginDetails");
     let ld = JSON.parse(loginDetails);
-    alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
+    alert("email: " + ld.email + " " + "password: " + ld.password);
   };
 
   render() {
@@ -95,7 +109,11 @@ class SignUpForm extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          onChangeText={FirstName => this.setState({ user: { ...this.state.user, userFirstName: FirstName } })}
+          onChangeText={FirstName =>
+            this.setState({
+              user: { ...this.state.user, userFirstName: FirstName }
+            })
+          }
           placeholder="First Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -104,11 +122,17 @@ class SignUpForm extends Component {
           autoCapitalize="none"
           onSubmitEditing={() => this.password.focus()}
         />
-        {this.state.userFirstNameError ? <Text>{this.state.userFirstNameError}</Text> : null}
+        {this.state.userFirstNameError ? (
+          <Text>{this.state.userFirstNameError}</Text>
+        ) : null}
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={LastName => this.setState({ user: { ...this.state.user, userLastName: LastName } })}
+          onChangeText={LastName =>
+            this.setState({
+              user: { ...this.state.user, userLastName: LastName }
+            })
+          }
           placeholder="Last Name"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -117,11 +141,15 @@ class SignUpForm extends Component {
           autoCapitalize="none"
           onSubmitEditing={() => this.password.focus()}
         />
-        {this.state.userLastNameError ? <Text>{this.state.userLastNameError}</Text> : null}
+        {this.state.userLastNameError ? (
+          <Text>{this.state.userLastNameError}</Text>
+        ) : null}
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={email => this.setState({ user: { ...this.state.user, userEmail: email } })}
+          onChangeText={email =>
+            this.setState({ user: { ...this.state.user, userEmail: email } })
+          }
           placeholder="Email"
           placeholderTextColor="rgba(225,225,225,0.7)"
           selectionColor="#fff"
@@ -135,14 +163,20 @@ class SignUpForm extends Component {
 
         <TextInput
           style={styles.inputBox}
-          onChangeText={password => this.setState({ user: { ...this.state.user, userPassword: password } })}
+          onChangeText={password =>
+            this.setState({
+              user: { ...this.state.user, userPassword: password }
+            })
+          }
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="rgba(225,225,225,0.7)"
           // returnKeyType="Login"
           ref={input => (this.password = input)}
         />
-        {this.state.passwordError ? <Text>{this.state.passwordError}</Text> : null}
+        {this.state.passwordError ? (
+          <Text>{this.state.passwordError}</Text>
+        ) : null}
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.register}>
@@ -159,7 +193,7 @@ const mapStateToProps = state => {
   return {
     getUserData: state.registerReducer.userData,
     getRegisterError: state.registerReducer.registerError,
-    registerStatus: state.registerReducer.status,
+    registerStatus: state.registerReducer.status
   };
 };
 
@@ -168,11 +202,11 @@ const mapDispatchToProps = dispatch => {
   return {
     registerSuccess: bool => dispatch(registerSuccess(bool)),
     registerUser: data => dispatch(registerUser(data)),
-    registerUserError: data => dispatch(registerUserError(data)),
+    registerUserError: data => dispatch(registerUserError(data))
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(SignUpForm);

@@ -1,9 +1,9 @@
-import keys from '../data/key';
+import keys from "../data/key";
 
 const INITIAL_GROUP_STATE = {
-    status: false,
-    groupData: {},
-    createGroupError: "",
+  status: false,
+  groupData: {},
+  createGroupError: ""
 };
 
 export const groupEventReducer = (state = INITIAL_GROUP_STATE, action) => {
