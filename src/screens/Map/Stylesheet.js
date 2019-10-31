@@ -24,5 +24,10 @@ export default StyleSheet.create({
 		borderRadius: 15,
 		backgroundColor: 'blue',
 		transform: [{ scale: 0.6 }]
+	},
+	locationButton: {
+		position: 'absolute',
+		bottom:10,
+		right:10,
 	}
 });

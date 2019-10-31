@@ -9,6 +9,9 @@ export default StyleSheet.create({
     Body: {
         flex: 1,
     },
+    InfoBody: {
+        flex: 0.5
+    },
     image: {
         flex: 1
     },

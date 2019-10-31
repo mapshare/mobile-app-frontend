@@ -1,6 +1,7 @@
 import React, { Component} from "react";
 import { Platform, StatusBar } from "react-native";
-import {Router, Stack, Scene, ActionConst, Tabs} from 'react-native-router-flux';
+import {Router, Stack, Scene, ActionConst, View} from 'react-native-router-flux';
+import Icon from "react-native-vector-icons/SimpleLineIcons"
 
 
 import SignUp from "../../screens/SignUp/SignUp";
@@ -17,28 +18,38 @@ const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
 };
 
-const App = () => {
-  return (
-    <Router hideNavBar={true} titleStyle={{color: 'white',}} navigationBarStyle={{backgroundColor: '#33C1FF',}}>
-      <Stack key="root">
-        <Scene key="login" component={LogIn} title="Login" type={ActionConst.RESET}/>
-        <Scene key="signup" component={SignUp} title="SignUp"/>
-        <Scene key="tester" component={Tester} title="Debug Page" type={ActionConst.RESET}/>
-        <Scene key="crtgrp" component={crtgrp} title="Create Group Page"/>
+//Create a dedicated class that will manage the tabBar icon
+class TabIcon extends Component{
+  render() {
+    return (
+        <Icon name={this.props.name} size={18}/>
+    );
+  }
+}
+
+export default class App extends Component {
+
+  render() {
+    return(
+      <Router hideNavBar={true} titleStyle={{color: 'white',}} navigationBarStyle={{backgroundColor: '#33C1FF',}}>
+      <Stack key="root" hideNavBar>
+        <Scene key="login" component={LogIn} type={ActionConst.RESET} hideNavBar/>
+        <Scene key="signup" component={SignUp}/>
+        <Scene key="tester" component={Tester} type={ActionConst.RESET} />
+        <Scene key="crtgrp" component={crtgrp}/>
 
         <Router hideNavBar={true} titleStyle={{color: 'white',}} navigationBarStyle={{backgroundColor: '#33C1FF',}}>
-          <Stack Key="NavTab" tabs={true} showNavigationBar={false}>
-            <Scene key="home" component={Home} title="Home"/>
-            <Scene key="map" component={Map} title="Map"/>
-            <Scene key="chat" component={Chat} title="Group Chat"/>
-            <Scene key="events" component={Events} title="Events"/>
-            <Scene key="profile" component={Profile} title="More"/>
+          <Stack Key="NavTab" tabs={true} showNavigationBar={false} hideNavBar>
+            <Scene key="home" component={Home} icon={TabIcon} name="home" hideNavBar/>
+            <Scene key="map" component={Map} icon={TabIcon} name="map" hideNavBar/>
+            <Scene key="chat" component={Chat} icon={TabIcon} name="people" hideNavBar/>
+            <Scene key="events" component={Events} icon={TabIcon} name="event" hideNavBar/>
+            <Scene key="profile" component={Profile} icon={TabIcon} name="options" hideNavBar/>
           </Stack>
         </Router>
         
       </Stack>
     </Router>
-  )
+    )
+  }
 }
-
-export default App;
