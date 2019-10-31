@@ -14,6 +14,7 @@ export default class Profile extends Component {
 
   goLogin(){
     Actions.login()
+    
   }
 
   goTester(){
