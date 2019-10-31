@@ -18,6 +18,10 @@ class ManageGroup extends Component {
         Actions.selectGroup()
     }
 
+    goManageGroupJoinRequests() {
+        Actions.manageGroupJoinRequests()
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -30,6 +34,10 @@ class ManageGroup extends Component {
 
                 <TouchableOpacity style={styles.button}> 
                     <Text style={styles.buttonText} onPress={this.goSelectGroup}>Select Group</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.goManageGroupJoinRequests}>Manage Group Join Requests</Text>
                 </TouchableOpacity>
             </View>
         );

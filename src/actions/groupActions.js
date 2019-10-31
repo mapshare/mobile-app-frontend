@@ -208,7 +208,7 @@ export const getGroupMemberError = data => {
 export const getGroupMember = data => {
     return dispatch => {
         axios
-            .get(API_URL + '/groups/' + data.groupId +'/member', { headers: { 'authentication': data.token } })
+            .get(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(getGroupMemberDataSuccess(res.data));
                 dispatch(getGroupMemberSuccess(true));
@@ -220,6 +220,127 @@ export const getGroupMember = data => {
     };
 };
 
+/*
+*   REQUEST TO JOIN GROUP
+*/
+export const requestToJoinGroupSuccess = bool => {
+    return {
+        type: keys.REQUEST_TO_JOIN_GROUP_SUCCESS,
+        getRequestToJoinGroupStatus: bool,
+    };
+};
+
+export const requestToJoinGroupDataSuccess = data => {
+    return {
+        type: keys.REQUEST_TO_JOIN_GROUP_DATA_SUCCESS,
+        getRequestToJoinGroupData: data,
+    };
+};
+
+export const requestToJoinGroupError = data => {
+    return {
+        type: keys.REQUEST_TO_JOIN_GROUP_ERROR,
+        getRequestToJoinGroupError: data,
+    };
+};
+
+export const requestToJoinGroup = data => {
+    return dispatch => {
+        axios
+            .post(API_URL + '/groups/' + data.groupId + '/join', {}, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(requestToJoinGroupDataSuccess(res.data));
+                dispatch(requestToJoinGroupSuccess(true));
+            })
+            .catch(err => {
+                dispatch(requestToJoinGroupSuccess(false));
+                dispatch(requestToJoinGroupError(err.response.data));
+            });
+    };
+};
+
+/*
+*   REVIEW JOIN GROUP REQUESTS
+*/
+export const reviewJoinGroupRequestsSuccess = bool => {
+    return {
+        type: keys.REVIEW_JOIN_GROUP_REQUESTS_SUCCESS,
+        getReviewJoinGroupRequestsStatus: bool,
+    };
+};
+
+export const reviewJoinGroupRequestsDataSuccess = data => {
+    return {
+        type: keys.REVIEW_JOIN_GROUP_REQUESTS_DATA_SUCCESS,
+        getReviewJoinGroupRequestsData: data,
+    };
+};
+
+export const reviewJoinGroupRequestsError = data => {
+    return {
+        type: keys.REVIEW_JOIN_GROUP_REQUESTS_ERROR,
+        getReviewJoinGroupRequestsError: data,
+    };
+};
+
+export const reviewJoinGroupRequests = data => {
+    let accepted = {
+        status: data.status,
+        pendingUserId: data.pendingUserId,
+    }
+    return dispatch => {
+        axios
+            .post(API_URL + '/groups/' + data.groupId + '/reviewPending', accepted, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(reviewJoinGroupRequestsDataSuccess(res.data));
+                dispatch(reviewJoinGroupRequestsSuccess(true));
+            })
+            .catch(err => {
+                dispatch(reviewJoinGroupRequestsSuccess(false));
+                dispatch(reviewJoinGroupRequestsError(err.response.data));
+            });
+    };
+};
+
+
+/*
+*   GET ALL JOIN GROUP REQUESTS
+*/
+export const allJoinGroupRequestsSuccess = bool => {
+    return {
+        type: keys.GET_ALL_JOIN_GROUP_REQUESTS_SUCCESS,
+        getAllJoinGroupRequestsStatus: bool,
+    };
+};
+
+export const allJoinGroupRequestsDataSuccess = data => {
+    return {
+        type: keys.GET_ALL_JOIN_GROUP_REQUESTS_DATA_SUCCESS,
+        getAllJoinGroupRequestsData: data,
+    };
+};
+
+export const allJoinGroupRequestsError = data => {
+    return {
+        type: keys.GET_ALL_JOIN_GROUP_REQUESTS_ERROR,
+        getAllJoinGroupRequestsError: data,
+    };
+};
+
+export const getAllJoinGroupRequests = data => {
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/' + data.groupId + '/reviewPending', { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(allJoinGroupRequestsDataSuccess(res.data));
+                dispatch(allJoinGroupRequestsSuccess(true));
+            })
+            .catch(err => {
+                dispatch(allJoinGroupRequestsSuccess(false));
+                dispatch(allJoinGroupRequestsError(err.response.data));
+            });
+    };
+};
 
 /*
 * UPDATE GROUP

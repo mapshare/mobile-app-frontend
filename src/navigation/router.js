@@ -16,6 +16,7 @@ import Profile from "../screens/Profile/Profile";
 import ManageGroup from "../screens/ManageGroup/ManageGroup";
 import SelectGroup from "../screens/ManageGroup/SelectGroup/SelectGroup";
 import AddGroup from "../screens/ManageGroup/AddGroup/AddGroup";
+import ManageGroupJoinRequests from "../screens/ManageGroup/ManageGroupJoinRequests/ManageGroupJoinRequests";
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
@@ -38,6 +39,7 @@ const App = () => {
         <Scene key="selectChatRoom" component={SelectChatRoom} title="SelectChatRoom"/>
         <Scene key="groupChat" component={GroupChat} title="GroupChat"/>
         <Scene key="addChatRoom" component={AddChatRoom} title="AddChatRoom"/>
+        <Scene key="manageGroupJoinRequests" component={ManageGroupJoinRequests} title="ManageGroupJoinRequests"/>
 
       </Stack>
     </Router>

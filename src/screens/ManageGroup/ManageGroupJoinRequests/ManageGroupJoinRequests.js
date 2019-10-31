@@ -3,10 +3,9 @@ import React, { Component } from "react"
 import { Modal, TouchableHighlight, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ImageBackground, FlatList } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
-import SearchGroupForm from '../../Forms/SearchGroup/SearchGroupForm';
 
 // Componenets Style
-import styles from "./Stylesheet"
+import styles from "./Stylesheet";
 
 
 //Redux actions
@@ -17,33 +16,41 @@ import {
     getActiveGroup,
     getActiveGroupError,
     getActiveGroupSuccess,
-    requestToJoinGroup,
-    requestToJoinGroupSuccess
+    reviewJoinGroupRequests,
+    reviewJoinGroupRequestsSuccess,
+    getAllJoinGroupRequests,
+    allJoinGroupRequestsSuccess
 } from '../../../actions/groupActions';
 
 // Creating Component
-class SelectGroup extends Component {
+class ManageGroupJoinRequests extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: "",
             modalVisible: false,
-            requestedGroupToJoinName: "",
-            requestedGroupToJoinId: "",
+            selectedPendingUserId: ""
         };
     }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.getSearchStatus !== this.props.getSearchStatus) {
-            if (this.props.getSearchStatus) {
-                this.props.setSearchStatus(false);
-                this.setState({ data: this.props.getSearchData });
-            }
+    componentDidMount(){
+        const data = {
+            token: this.props.token,
+            groupId: this.props.getActiveGroupData._id,
         }
-
-        if (this.props.activeGroupError) {
-            this.setModalVisible(true);
-            this.props.getActiveGroupError("");
+        this.props.allJoinGroupRequestsSuccess(false);
+        this.props.getAllJoinGroupRequests(data);
+    }
+    componentDidUpdate(prevProps) {
+        if (prevProps.getAllJoinGroupRequestsStatus !== this.props.getAllJoinGroupRequestsStatus) {
+            if (this.props.getAllJoinGroupRequestsStatus) {
+                const data = {
+                    token: this.props.token,
+                    groupId: this.props.getActiveGroupData._id,
+                }
+                this.props.allJoinGroupRequestsSuccess(false);
+                this.props.getAllJoinGroupRequests(data);
+                this.setState({ data: this.props.getAllJoinGroupRequestsData });
+            }
         }
     }
 
@@ -51,24 +58,20 @@ class SelectGroup extends Component {
         this.setState({ modalVisible: visible });
     }
 
-    setGroup = (groupId, groupname) => {
-        const data = {
-            token: this.props.token,
-            groupId: groupId,
-        }
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroup(data);
-        this.setState({ requestedGroupToJoinName: groupname });
-        this.setState({ requestedGroupToJoinId: groupId });
-    };
+    selectPendingUser(visible, selectedPendingUserId) {
+        this.setState({ modalVisible: visible });
+        this.setState({ selectedPendingUserId: selectedPendingUserId });
+    }
 
-    joinGroup() {
+    reviewRequest(status) {
         const data = {
             token: this.props.token,
-            groupId: this.state.requestedGroupToJoinId,
+            groupId: this.props.getActiveGroupData._id,
+            status: status,
+            pendingUserId: this.state.selectedPendingUserId,
         }
-        this.props.requestToJoinGroupSuccess(false);
-        this.props.requestToJoinGroup(data);
+        this.props.reviewJoinGroupRequestsSuccess(false);
+        this.props.reviewJoinGroupRequests(data);
         this.setModalVisible(!this.state.modalVisible)
     }
 
@@ -85,11 +88,11 @@ class SelectGroup extends Component {
                     <View style={{ marginTop: 22 }}>
                         <View>
                             <Text style={styles.buttonText}>Would you like to request to join group {this.state.requestedGroupToJoinName}?</Text>
-                            <TouchableOpacity style={styles.button} onPress={() => this.joinGroup()}>
+                            <TouchableOpacity style={styles.button} onPress={() => this.reviewRequest(true)}>
                                 <Text style={styles.buttonText}>YES</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.button} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                            <TouchableOpacity style={styles.button} onPress={() => this.reviewRequest(false)}>
                                 <Text style={styles.buttonText}>NO</Text>
                             </TouchableOpacity>
                         </View>
@@ -97,15 +100,14 @@ class SelectGroup extends Component {
                 </Modal>
 
                 <ImageBackground resizeMode="cover" style={styles.backgroundImage} source={require('../../../assests/images/logo.png')}>
-                    <SearchGroupForm type="SearchGroupForm" style={styles.container} />
-
                     <FlatList
                         data={this.state.data}
-                        renderItem={(group) => {
+                        renderItem={(request) => {
                             return (
-                                <TouchableOpacity style={styles.button} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
+                                <TouchableOpacity style={styles.button} onPress={() => this.selectPendingUser(!this.state.modalVisible, request.item._id)}>
                                     <Text style={styles.buttonText}>
-                                        {group.item.groupName}
+                                        {request.item.userFirstName + " " + request.item.userLastName + "\n"}
+                                        {request.item.userEmail}
                                     </Text>
                                 </TouchableOpacity>
                             )
@@ -122,29 +124,24 @@ class SelectGroup extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
     return {
-        getSearchData: state.groupReducer.searchData,
-        getSearchStatus: state.groupReducer.searchStatus,
         token: state.logInReducer.token,
-        getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
-        activeGroupError: state.groupReducer.getActiveGroupError,
-        getRequestToJoinGroupStatus: state.groupReducer.getRequestToJoinGroupStatus,
+        getAllJoinGroupRequestsStatus: state.groupReducer.getAllJoinGroupRequestsStatus,
+        getAllJoinGroupRequestsData: state.groupReducer.getAllJoinGroupRequestsData,
+        getActiveGroupData: state.groupReducer.getActiveGroupData,
     };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
     return {
-        searchGroup: data => dispatch(searchGroup(data)),
-        setSearchStatus: data => dispatch(searchGroupSuccess(data)),
-        getActiveGroup: data => dispatch(getActiveGroup(data)),
-        getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
-        getActiveGroupError: data => dispatch(getActiveGroupError(data)),
-        requestToJoinGroup: data => dispatch(requestToJoinGroup(data)),
-        requestToJoinGroupSuccess: data => dispatch(requestToJoinGroupSuccess(data)),
+        reviewJoinGroupRequests: data => dispatch(reviewJoinGroupRequests(data)),
+        reviewJoinGroupRequestsSuccess: data => dispatch(reviewJoinGroupRequestsSuccess(data)),
+        getAllJoinGroupRequests: data => dispatch(getAllJoinGroupRequests(data)),
+        allJoinGroupRequestsSuccess: data => dispatch(allJoinGroupRequestsSuccess(data)),
     };
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(SelectGroup);
+)(ManageGroupJoinRequests);

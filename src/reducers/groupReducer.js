@@ -34,6 +34,27 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, addGroupMemberData: action.addGroupMemberData };
         case keys.ADD_GROUP_MEMBER_ERROR:
             return { ...state, addGroupMemberError: action.addGroupMemberError };
+        // REQUEST TO JOIN GROUP
+        case keys.REQUEST_TO_JOIN_GROUP_SUCCESS:
+            return { ...state, getRequestToJoinGroupStatus: action.getRequestToJoinGroupStatus };
+        case keys.REQUEST_TO_JOIN_GROUP_DATA_SUCCESS:
+            return { ...state, getRequestToJoinGroupData: action.getRequestToJoinGroupData };
+        case keys.REQUEST_TO_JOIN_GROUP_ERROR:
+            return { ...state, getRequestToJoinGroupError: action.getRequestToJoinGroupError };
+        // REVIEW JOIN GROUP REQUESTS
+        case keys.REQUEST_TO_JOIN_GROUP_SUCCESS:
+            return { ...state, getReviewJoinGroupRequestsStatus: action.getReviewJoinGroupRequestsStatus };
+        case keys.REQUEST_TO_JOIN_GROUP_DATA_SUCCESS:
+            return { ...state, getReviewJoinGroupRequestsData: action.getReviewJoinGroupRequestsData };
+        case keys.REQUEST_TO_JOIN_GROUP_ERROR:
+            return { ...state, getReviewJoinGroupRequestsError: action.getReviewJoinGroupRequestsError };
+        // GET ALL JOIN GROUP REQUESTS
+        case keys.GET_ALL_JOIN_GROUP_REQUESTS_SUCCESS:
+            return { ...state, getAllJoinGroupRequestsStatus: action.getAllJoinGroupRequestsStatus };
+        case keys.GET_ALL_JOIN_GROUP_REQUESTS_DATA_SUCCESS:
+            return { ...state, getAllJoinGroupRequestsData: action.getAllJoinGroupRequestsData };
+        case keys.GET_ALL_JOIN_GROUP_REQUESTS_ERROR:
+            return { ...state, getAllJoinGroupRequestsError: action.getAllJoinGroupRequestsError };
         // GET GROUP MEMBER
         case keys.GET_GROUP_MEMBER_SUCCESS:
             return { ...state, getGroupMemberStatus: action.getGroupMemberStatus };

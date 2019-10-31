@@ -250,6 +250,8 @@ export const getActiveGroupChatRoomError = data => {
 };
 
 export const getActiveGroupChatRoom = data => {
+    
+    console.log(data)
     return dispatch => {
         axios
             .get(API_URL + '/groups/' + data.groupId + '/chat/' + data.chatRoomId, { headers: { 'authentication': data.token } })
@@ -258,6 +260,7 @@ export const getActiveGroupChatRoom = data => {
                 dispatch(getActiveGroupChatRoomSuccess(true));
             })
             .catch(err => {
+                console.log(err.response)
                 dispatch(getActiveGroupChatRoomSuccess(false));
                 dispatch(getActiveGroupChatRoomError(err.response.data));
             });
