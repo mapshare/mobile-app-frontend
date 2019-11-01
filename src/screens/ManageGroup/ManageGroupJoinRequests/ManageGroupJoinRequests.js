@@ -29,7 +29,9 @@ class ManageGroupJoinRequests extends Component {
         this.state = {
             data: "",
             modalVisible: false,
-            selectedPendingUserId: ""
+            selectedPendingUserId: "",
+            selectedPendingUserFirstName: "",
+            selectedPendingUserLastName: ""
         };
     }
     componentDidMount(){
@@ -58,9 +60,11 @@ class ManageGroupJoinRequests extends Component {
         this.setState({ modalVisible: visible });
     }
 
-    selectPendingUser(visible, selectedPendingUserId) {
+    selectPendingUser(visible, selectedPendingUser) {
         this.setState({ modalVisible: visible });
-        this.setState({ selectedPendingUserId: selectedPendingUserId });
+        this.setState({ selectedPendingUserId: selectedPendingUser._id });
+        this.setState({ selectedPendingUserFirstName: selectedPendingUser.userFirstName });
+        this.setState({ selectedPendingUserLastName: selectedPendingUser.userLastName });
     }
 
     reviewRequest(status) {
@@ -87,7 +91,7 @@ class ManageGroupJoinRequests extends Component {
                     }}>
                     <View style={{ marginTop: 22 }}>
                         <View>
-                            <Text style={styles.buttonText}>Would you like to request to join group {this.state.requestedGroupToJoinName}?</Text>
+                            <Text style={styles.buttonText}>Do you accept {this.state.selectedPendingUserFirstName + " " + this.state.selectedPendingUserLastName} request to join your group?</Text>
                             <TouchableOpacity style={styles.button} onPress={() => this.reviewRequest(true)}>
                                 <Text style={styles.buttonText}>YES</Text>
                             </TouchableOpacity>
@@ -104,7 +108,7 @@ class ManageGroupJoinRequests extends Component {
                         data={this.state.data}
                         renderItem={(request) => {
                             return (
-                                <TouchableOpacity style={styles.button} onPress={() => this.selectPendingUser(!this.state.modalVisible, request.item._id)}>
+                                <TouchableOpacity style={styles.button} onPress={() => this.selectPendingUser(!this.state.modalVisible, request.item)}>
                                     <Text style={styles.buttonText}>
                                         {request.item.userFirstName + " " + request.item.userLastName + "\n"}
                                         {request.item.userEmail}

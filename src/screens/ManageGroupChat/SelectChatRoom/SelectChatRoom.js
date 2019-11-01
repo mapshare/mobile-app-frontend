@@ -43,6 +43,12 @@ class SelectGroup extends Component {
                 this.setState({ data: this.props.searchGroupChatRoomData });
             }
         }
+
+        if (prevProps.getActiveGroupChatRoomStatus !== this.props.getActiveGroupChatRoomStatus) {
+            if (this.props.getActiveGroupChatRoomStatus) {
+                Actions.pop();
+            }
+        }
     }
 
 
@@ -88,6 +94,7 @@ const mapStateToProps = state => {
     return {
         searchGroupChatRoomData: state.groupChatRoomReducer.searchGroupChatRoomData,
         searchGroupChatRoomStatus: state.groupChatRoomReducer.searchGroupChatRoomStatus,
+        getActiveGroupChatRoomStatus: state.groupChatRoomReducer.getActiveGroupChatRoomStatus,
         getActiveGroupData: state.groupReducer.getActiveGroupData,
         getActiveGroupChatRoomData: state.groupChatRoomReducer.getActiveGroupChatRoomData,
         token: state.logInReducer.token

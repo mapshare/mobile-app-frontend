@@ -34,7 +34,7 @@ class AddGroupForm extends Component {
         if (prevProps.getGroupChatRoomStatus !== this.props.getGroupChatRoomStatus) {
             if (this.props.getGroupChatRoomStatus) {
                 Keyboard.dismiss();
-                Actions.manageGroupChat();
+                Actions.pop();
             }
         }
 

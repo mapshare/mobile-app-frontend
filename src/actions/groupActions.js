@@ -352,14 +352,14 @@ export const updateGroupSuccess = bool => {
     };
 };
 
-export const updateGroupPostDataSuccess = data => {
+export const updateGroupDataSuccess = data => {
     return {
         type: keys.UPDATE_GROUP_DATA_SUCCESS,
         updateGroupData: data,
     };
 };
 
-export const updateGroupPostError = data => {
+export const updateGroupError = data => {
     return {
         type: keys.UPDATE_GROUP_ERROR,
         updateGroupError: data,
@@ -375,12 +375,12 @@ export const updateGroup = data => {
         axios
             .post(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } })
             .then(res => {
-                dispatch(updateGroupPostDataSuccess(res.data));
-                dispatch(updateGroupPostSuccess(true));
+                dispatch(updateGroupDataSuccess(res.data));
+                dispatch(updateGroupSuccess(true));
             })
             .catch(err => {
-                dispatch(updateGroupPostSuccess(false));
-                dispatch(updateGroupPostError(err.response.data));
+                dispatch(updateGroupSuccess(false));
+                dispatch(updateGroupError(err.response.data));
             });
     };
 };
@@ -395,14 +395,14 @@ export const leaveGroupSuccess = bool => {
     };
 };
 
-export const leaveGroupPostDataSuccess = data => {
+export const leaveGroupDataSuccess = data => {
     return {
         type: keys.LEAVE_GROUP_DATA_SUCCESS,
         leaveGroupData: data,
     };
 };
 
-export const leaveGroupPostError = data => {
+export const leaveGroupError = data => {
     return {
         type: keys.LEAVE_GROUP_ERROR,
         leaveGroupError: data,
@@ -412,14 +412,14 @@ export const leaveGroupPostError = data => {
 export const leaveGroup = data => {
     return dispatch => {
         axios
-            .post(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } })
+            .delete(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } })
             .then(res => {
-                dispatch(leaveGroupPostDataSuccess(res.data));
-                dispatch(leaveGroupPostSuccess(true));
+                dispatch(leaveGroupDataSuccess(res.data));
+                dispatch(leaveGroupSuccess(true));
             })
             .catch(err => {
-                dispatch(leaveGroupPostSuccess(false));
-                dispatch(leaveGroupPostError(err.response.data));
+                dispatch(leaveGroupSuccess(false));
+                dispatch(leaveGroupError(err.response.data));
             });
     };
 };
@@ -434,14 +434,14 @@ export const deleteGroupSuccess = bool => {
     };
 };
 
-export const deleteGroupPostDataSuccess = data => {
+export const deleteGroupDataSuccess = data => {
     return {
         type: keys.DELETE_GROUP_DATA_SUCCESS,
         deleteGroupData: data,
     };
 };
 
-export const deleteGroupPostError = data => {
+export const deleteGroupError = data => {
     return {
         type: keys.DELETE_GROUP_ERROR,
         deleteGroupError: data,
@@ -451,14 +451,14 @@ export const deleteGroupPostError = data => {
 export const deleteGroup = data => {
     return dispatch => {
         axios
-            .post(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
+            .delete(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
             .then(res => {
-                dispatch(deleteGroupPostDataSuccess(res.data));
-                dispatch(deleteGroupPostSuccess(true));
+                dispatch(deleteGroupDataSuccess(res.data));
+                dispatch(deleteGroupSuccess(true));
             })
             .catch(err => {
-                dispatch(deleteGroupPostSuccess(false));
-                dispatch(deleteGroupPostError(err.response.data));
+                dispatch(deleteGroupSuccess(false));
+                dispatch(deleteGroupError(err.response.data));
             });
     };
 };
