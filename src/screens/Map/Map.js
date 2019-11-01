@@ -106,7 +106,7 @@ class Map extends Component {
               attributionEnabled={false}
               showUserLocation={true}
               logoEnabled={false}
-              style={styles.container}
+              style={mapStyles.container}
               onDidFinishLoadingMap={this.findCoordinates}
             >
               {this.renderAnnotations()}
@@ -120,7 +120,7 @@ class Map extends Component {
               ></Mapbox.Camera>
             </Mapbox.MapView>
             <Icon
-              style={styles.locationButton}
+              style={mapStyles.locationButton}
               name="location-pin"
               size={25}
               onPress={this.findCoordinates}
