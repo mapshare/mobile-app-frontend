@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/SimpleLineIcons"
 
 import SignUp from "../../screens/SignUp/SignUp";
 import LogIn from "../../screens/Login/Login";
-import Home from "../../screens/Home/home";
+import Home from "../../screens/Home/Home";
 import Tester from "../../screens/Tester Screen/Tester";
 import Events from "../../screens/Events/Event";
 import Chat from "../../screens/Groups/GroupChat/GroupChat";
