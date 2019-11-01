@@ -1,12 +1,12 @@
-import keys from '../data/key';
+import keys from "../data/key";
 
 const INITIAL_GROUP_STATE = {
-    status: false,
-    groupData: {},
-    createGroupError: "",
+  status: false,
+  groupData: {},
+  createGroupError: ""
 };
 
-export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
+export const groupEventReducer = (state = INITIAL_GROUP_STATE, action) => {
     switch (action.type) {
         // ADD GROUP EVENT
         case keys.ADD_GROUP_EVENT_SUCCESS:
