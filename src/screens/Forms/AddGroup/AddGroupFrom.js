@@ -34,7 +34,7 @@ class AddGroupForm extends Component {
         if (prevProps.status !== this.props.status) {
             if (this.props.status) {
                 Keyboard.dismiss();
-                Actions.manageGroup();
+                Actions.pop();
             }
         }
 
@@ -50,6 +50,7 @@ class AddGroupForm extends Component {
           token: this.props.token,
           groupName: this.state.groupName,
         }
+        this.props.createGroupSuccess(false);
         this.props.createGroup(data);
     };
 
@@ -93,6 +94,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         createGroup: data => dispatch(createGroup(data)),
+        createGroupSuccess: data => dispatch(createGroupSuccess(data)),
         createGroupError: data => dispatch(createGroupError(data))
     };
 };

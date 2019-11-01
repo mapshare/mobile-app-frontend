@@ -64,6 +64,7 @@ class LogInForm extends Component {
       },
       () => {
         if (!emailError && !passwordError) {
+          this.props.logInSuccess(false);
           this.props.logInUser(this.state.user);
         } else {
           console.log("this.state.emailError " + this.state.emailError);

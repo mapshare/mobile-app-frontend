@@ -20,7 +20,11 @@ class ManageGroupChat extends Component {
             activeChatRoom: "None"
         };
     }
-
+    componentDidMount() {
+        if (this.props.getActiveGroupChatRoomStatus) {
+            this.setState({ activeChatRoom: this.props.getActiveGroupChatRoomData.chatRoomName });
+        }
+    }
     componentDidUpdate(prevProps) {
         if (prevProps.getActiveGroupChatRoomStatus !== this.props.getActiveGroupChatRoomStatus) {
             if (this.props.getActiveGroupChatRoomStatus) {
