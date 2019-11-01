@@ -9,10 +9,13 @@ import { Actions } from "react-native-router-flux";
 
 export default class Home extends Component {
 
-    location = {
-        latitude: 0,
-        longitude: 0
-    }
+    constructor(props) {
+        super(props);
+        this.location = {
+          latitude: 0.0,
+          longitude: 0.0
+        }
+      }
 
     findCoordinates = () => {
         Geolocation.getCurrentPosition(

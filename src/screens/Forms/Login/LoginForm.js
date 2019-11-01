@@ -38,10 +38,6 @@ class LogInForm extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.logInSuccess(true);
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.logInStatus !== this.props.logInStatus) {
       if (this.props.logInStatus) {
