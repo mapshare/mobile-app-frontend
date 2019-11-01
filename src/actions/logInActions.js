@@ -3,6 +3,9 @@ import { API_URL } from 'react-native-dotenv'
 
 import keys from '../data/key';
 
+
+console.log(API_URL)
+
 export const logInSuccess = bool => {
   return {
     type: keys.LOG_IN_SUCCESS,

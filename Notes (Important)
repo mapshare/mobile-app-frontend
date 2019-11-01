@@ -10,3 +10,6 @@ Each folder and their intended use:
       • context: Use to store data which will be global to the React components
                  e.g. Current Authenticated user or Theme
       • dev: Tester components
+
+Requesting permission to Access Location
+      • Code located under android/app/src/main/AndriodManifest.xml

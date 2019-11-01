@@ -1,29 +1,24 @@
 // Import Libraries
 import React, { Component } from "react"
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-
-// Componenets Style
-import styles from "./Stylesheet"
+import { Text, View, TouchableOpacity} from 'react-native';
+import {Actions} from 'react-native-router-flux';
 
 //Redux actions
 import { connect } from 'react-redux';
 import {
 } from '../../actions/groupActions';
 
+// Componenets Style
+import styles from "./Stylesheet"
+
 // Creating Component
-class Home extends Component {
+class Tester extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             activeGroup: "None"
         };
-    }
-    
-    componentDidMount() {
-        if (this.props.getActiveGroupStatus) {
-            this.setState({ activeGroup: this.props.getActiveGroupData.groupName });
-        }
     }
 
     componentDidUpdate(prevProps) {
@@ -58,9 +53,9 @@ class Home extends Component {
         Actions.profile()
     }
 
-    render() {
+    render(){
         return (
-            <View style={styles.container}>
+            <View style = {styles.container}>
 
                 <Text>This is just a Tester Page which Links different screens</Text>
 
@@ -94,8 +89,6 @@ class Home extends Component {
         );
     }
 }
-
-
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
     return {
@@ -114,4 +107,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(Home);
+)(Tester)

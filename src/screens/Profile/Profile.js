@@ -8,8 +8,18 @@ import {
 
 // Componenets Style
 import styles from "./Stylesheet"
+import { Actions } from 'react-native-router-flux';
 
 export default class Profile extends Component {
+
+  goLogin(){
+    Actions.login()
+    
+  }
+
+  goTester(){
+    Actions.tester()
+  }
 
   render() {
     return (
@@ -24,8 +34,11 @@ export default class Profile extends Component {
               
               <TouchableOpacity style={styles.buttonContainer}>
                 <Text>Setting</Text>  
-              </TouchableOpacity>              
-              <TouchableOpacity style={styles.logoutButton}>
+              </TouchableOpacity> 
+              <TouchableOpacity style={styles.testerMode} onPress={this.goTester}>
+                <Text>Enter Debug Mode</Text> 
+              </TouchableOpacity>             
+              <TouchableOpacity style={styles.logoutButton} onPress={this.goLogin}>
                 <Text>Log Out</Text> 
               </TouchableOpacity>
             </View>

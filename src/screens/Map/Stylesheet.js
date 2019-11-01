@@ -50,6 +50,12 @@ const containerStyles = StyleSheet.create({
 const mapStyles = StyleSheet.create({
   container: {
     flex: 1
+  },
+
+  locationButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 10
   }
 });
 

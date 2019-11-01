@@ -11,7 +11,7 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(225,225,225,0.2)',
         marginBottom: 10,
         padding: 10,
-        color: '#000'
+        color: '#fff'
     },
     buttonContainer:{
         backgroundColor: '#2980b6',
