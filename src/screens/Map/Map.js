@@ -20,6 +20,10 @@ export default class MyComponent extends Component {
   constructor(props) {
     super(props);
     this.data = null;
+    this.location = {
+      latitude: 0.0,
+      longitude: 0.0
+    }
   }
 
   // Not Linked yet will add icon for this task
@@ -37,11 +41,6 @@ export default class MyComponent extends Component {
   addLocationOnClick = () => {
     this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
   };
-
-	location = {
-        latitude: 0.0,
-        longitude: 0.0
-    }
 
     findCoordinates = () => {
         Geolocation.getCurrentPosition(
