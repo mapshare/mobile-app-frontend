@@ -41,6 +41,13 @@ class SelectGroup extends Component {
             }
         }
 
+
+        if (prevProps.getActiveGroupStatus !== this.props.getActiveGroupStatus) {
+            if (this.props.getActiveGroupStatus) {
+                Actions.pop();
+            }
+        }
+
         if (this.props.activeGroupError) {
             this.setModalVisible(true);
             this.props.getActiveGroupError("");

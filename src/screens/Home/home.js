@@ -19,6 +19,12 @@ class Home extends Component {
             activeGroup: "None"
         };
     }
+    
+    componentDidMount() {
+        if (this.props.getActiveGroupStatus) {
+            this.setState({ activeGroup: this.props.getActiveGroupData.groupName });
+        }
+    }
 
     componentDidUpdate(prevProps) {
         if (prevProps.getActiveGroupStatus !== this.props.getActiveGroupStatus) {
