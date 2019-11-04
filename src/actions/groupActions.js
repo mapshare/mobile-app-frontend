@@ -102,6 +102,44 @@ export const searchGroup = data => {
     };
 };
 
+/*
+*   GET GROUPS THAT A USER IS A MEMBER
+*/
+export const getUserGroupsSuccess = bool => {
+    return {
+        type: keys.GET_USER_GROUP_SUCCESS,
+        getUserGroupsStatus: bool,
+    };
+};
+
+export const getUserGroupsDataSuccess = data => {
+    return {
+        type: keys.GET_USER_GROUP_DATA_SUCCESS,
+        getUserGroupsData: data,
+    };
+};
+
+export const getUserGroupsError = data => {
+    return {
+        type: keys.GET_USER_GROUP_ERROR,
+        getUserGroupsError: data,
+    };
+};
+
+export const getUserGroups = data => {
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/user', { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(getUserGroupsDataSuccess(res.data));
+                dispatch(getUserGroupsSuccess(true));
+            })
+            .catch(err => {
+                dispatch(getUserGroupsSuccess(false));
+                dispatch(getUserGroupsError(err.response));
+            });
+    };
+};
 
 /*
 *   GET ACTIVE GROUP

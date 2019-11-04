@@ -20,7 +20,14 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, searchData: action.searchData };
         case keys.SEARCH_GROUP_ERROR:
             return { ...state, searchGroupError: action.searchGroupError };
-        // GET GROUP
+        // GET GROUPS THAT A USER IS A MEMBER
+        case keys.GET_USER_GROUP_SUCCESS:
+            return { ...state, getUserGroupsStatus: action.getUserGroupsStatus };
+        case keys.GET_USER_GROUP_DATA_SUCCESS:
+            return { ...state, getUserGroupsData: action.getUserGroupsData };
+        case keys.GET_USER_GROUP_ERROR:
+            return { ...state, getUserGroupsError: action.getUserGroupsError };
+        // GET ACTIVE GROUP
         case keys.GET_ACTIVE_GROUP_SUCCESS:
             return { ...state, getActiveGroupStatus: action.getActiveGroupStatus };
         case keys.GET_ACTIVE_GROUP_DATA_SUCCESS:
