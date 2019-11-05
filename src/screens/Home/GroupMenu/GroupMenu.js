@@ -57,7 +57,7 @@ class GroupMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalVisible: true,
+            modalVisible: false,
             currentContentState: 1,
         };
     }
