@@ -11,6 +11,7 @@ const renderOnType = (input, type) => {
         <TextInput
           style={mainStyles.textInputStyle}
           onChangeText={input.onChange}
+          value={input.value}
           {...input.restInput}
         />
       );
@@ -19,6 +20,7 @@ const renderOnType = (input, type) => {
         <TextInput
           style={mainStyles.textInputStyle}
           onChangeText={input.onChange}
+          value={input.value}
           {...input.restInput}
         />
       );
@@ -29,6 +31,7 @@ const renderOnType = (input, type) => {
           multiline={true}
           numberOfLines={4}
           onChangeText={input.onChange}
+          value={input.value}
           {...input.restInput}
         />
       );
@@ -37,6 +40,7 @@ const renderOnType = (input, type) => {
         <TextInput
           style={mainStyles.textInputStyle}
           onChangeText={input.onChange}
+          value={input.value}
           {...input.restInput}
         />
       );

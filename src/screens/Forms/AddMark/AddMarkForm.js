@@ -32,7 +32,7 @@ class AddMarkForm extends Component {
 
   render() {
     const { handleSubmit } = this.props;
-    console.log("re-render");
+
     return (
       <View style={containerStyles.container}>
         <Field

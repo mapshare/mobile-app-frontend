@@ -46,7 +46,6 @@ export const addGroupMarkError = data => {
 };
 
 export const setCoordinates = data => {
-  console.log("action: ", data);
   return {
     type: keys.SET_COORDINATES,
     coordinates: data
