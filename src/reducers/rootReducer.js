@@ -8,8 +8,7 @@ import { groupCustomMarkCategoryReducer } from "./groupCustomMarkCategoryReducer
 import { groupEventReducer } from "./groupEventReducer";
 import { groupChatRoomReducer } from "./groupChatRoomReducer";
 import { modalWindowReducer } from "./modalWindowReducer";
-// for future form implementation
-// import {reducer as formReducer} from 'redux-form';
+import { reducer as formReducer } from "redux-form";
 
 export default combineReducers({
   logInReducer,
@@ -20,6 +19,6 @@ export default combineReducers({
   groupCustomMarkCategoryReducer,
   groupEventReducer,
   groupChatRoomReducer,
-  modalWindowReducer
-  //  form: formReducer,
+  modalWindowReducer,
+  form: formReducer
 });

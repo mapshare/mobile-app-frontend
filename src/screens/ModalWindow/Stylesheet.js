@@ -11,20 +11,22 @@ const containerStyles = StyleSheet.create({
     width: reponsiveStyle.wp("100%"),
     height: reponsiveStyle.hp("100%"),
     position: "absolute",
-    backgroundColor: "red",
+    padding: 10,
+    backgroundColor: "white",
     zIndex: 10
   },
 
   closeButtonContainer: {
-    flex: 1,
-    alignItems: "flex-end",
-    padding: 10,
-    width: reponsiveStyle.wp("100%")
+    alignSelf: "flex-end",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 5,
+    width: reponsiveStyle.wp("8%")
   },
 
   contentContainer: {
     width: reponsiveStyle.wp("95%"),
-    height: reponsiveStyle.hp("95%")
+    height: reponsiveStyle.hp("92%")
   }
 });
 
