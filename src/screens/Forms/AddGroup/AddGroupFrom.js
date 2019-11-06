@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 
 //Redux actions
 import { createGroup, createGroupSuccess, createGroupError } from '../../../actions/groupActions';
+import { addGroupSuccess, addGroupFormSuccess } from '../../../actions/AddGroupFormAction';
 
 // Componenets Style
 import styles from '../Stylesheet';
@@ -27,6 +28,7 @@ class AddGroupForm extends Component {
         this.state = {
             groupName: '',
             createGroupError: '',
+            currentlyCreatingGroup: false
         };
     }
 
@@ -34,34 +36,38 @@ class AddGroupForm extends Component {
         if (prevProps.status !== this.props.status) {
             if (this.props.status) {
                 Keyboard.dismiss();
-                Actions.pop();
+                this.props.addGroupFormSuccess(false);
+                this.props.addGroupSuccess({ success: true });
+                this.setState({ currentlyCreatingGroup: false });
             }
         }
 
         if (this.props.getCreateGroupError) {
-            console.log(this.props.getCreateGroupError)
             alert(this.props.getCreateGroupError);
             this.props.createGroupError("");
         }
     }
 
     createGroup = async () => {
-        const data = {
-          token: this.props.token,
-          groupName: this.state.groupName,
+        if (!this.state.currentlyCreatingGroup) {
+            this.setState({ currentlyCreatingGroup: true });
+            const data = {
+                token: this.props.token,
+                groupName: this.state.groupName,
+            }
+            this.props.createGroupSuccess(false);
+            this.props.createGroup(data);
         }
-        this.props.createGroupSuccess(false);
-        this.props.createGroup(data);
     };
 
     render() {
         return (
             <View style={styles.container}>
                 <TextInput
-                    style={styles.inputBox}
+                    style={styles.addGroupInputBox}
                     onChangeText={GroupName => this.setState({ groupName: GroupName })}
-                    placeholder="Group Name"
-                    placeholderTextColor="rgba(225,225,225,0.7)"
+                    placeholder="Enter Group Name"
+                    placeholderTextColor="#B8B8B8"
                     selectionColor="#fff"
                     autoCorrect={false}
                     returnKeyType="next"
@@ -95,7 +101,9 @@ const mapDispatchToProps = dispatch => {
     return {
         createGroup: data => dispatch(createGroup(data)),
         createGroupSuccess: data => dispatch(createGroupSuccess(data)),
-        createGroupError: data => dispatch(createGroupError(data))
+        createGroupError: data => dispatch(createGroupError(data)),
+        addGroupSuccess: data => dispatch(addGroupSuccess(data)),
+        addGroupFormSuccess: data => dispatch(addGroupFormSuccess(data)),
     };
 };
 

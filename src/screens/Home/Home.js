@@ -9,6 +9,7 @@ import {
 import Mapbox from "@react-native-mapbox-gl/maps";
 import Geolocation from "@react-native-community/geolocation";
 import { connect } from "react-redux";
+import GroupMenu from "./GroupMenu/GroupMenu";
 
 // Componenets Style
 import styles from "./Stylesheet";
@@ -48,6 +49,7 @@ class Home extends Component {
     return (
       <View style={styles.root}>
         <View style={styles.Body}>
+        <GroupMenu />
           <View style={styles.InfoBody}>
             <ImageBackground
               source={require("../../assests/images/food.jpg")}
