@@ -8,12 +8,22 @@ import {
 } from "react-native";
 import Mapbox from "@react-native-mapbox-gl/maps";
 import Geolocation from "@react-native-community/geolocation";
-import { connect } from "react-redux";
 import GroupMenu from "./GroupMenu/GroupMenu";
 
 // Componenets Style
 import styles from "./Stylesheet";
-import { Actions } from "react-native-router-flux";
+import { Actions, ActionConst } from "react-native-router-flux";
+import Icon from "react-native-vector-icons/SimpleLineIcons";
+
+//Redux actions
+import { connect } from 'react-redux';
+import {
+  getActiveGroup,
+  getActiveGroupError,
+  getActiveGroupSuccess,
+  getActiveGroupDataSuccess,
+  groupExists
+} from '../../actions/groupActions';
 
 class Home extends Component {
   constructor(props) {
@@ -22,6 +32,37 @@ class Home extends Component {
       latitude: 0.0,
       longitude: 0.0
     };
+    this.state = {
+      interval: ""
+    };
+  }
+
+  componentDidMount() {
+    // update every 5 seconds'
+    this.setState({
+      interval: setInterval(function () {
+        this.checkIfGroupExists();
+      }
+        .bind(this), 5000)
+    });
+
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.groupExistsStatus !== this.props.groupExistsStatus) {
+      if (!this.props.groupExistsStatus) {
+        this.setState({ interval: clearInterval(this.state.interval) });
+        Actions.initial({ type: ActionConst.RESET });
+      }
+    }
+  }
+
+  checkIfGroupExists() {
+    const data = {
+      token: this.props.token,
+      groupId: this.props.getActiveGroupData._id,
+    }
+    this.props.groupExists(data);
   }
 
   findCoordinates = () => {
@@ -49,7 +90,7 @@ class Home extends Component {
     return (
       <View style={styles.root}>
         <View style={styles.Body}>
-        <GroupMenu />
+          <GroupMenu />
           <View style={styles.InfoBody}>
             <ImageBackground
               source={require("../../assests/images/food.jpg")}
@@ -57,12 +98,9 @@ class Home extends Component {
               style={styles.image}
             >
               <View style={styles.Overlay}>
-                <Text style={styles.GroupName}>Spartans {"\n"}</Text>
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.text}>Group Page</Text>
-                </TouchableOpacity>
+                <Text style={styles.GroupName}>{this.props.getActiveGroupData.groupName}{"\n"}</Text>
                 <Text style={styles.Message}>
-                  Did I give you permission to eat, soldier?
+                  {this.props.getActiveGroupData.groupDescription}
                 </Text>
               </View>
             </ImageBackground>
@@ -99,14 +137,21 @@ const mapStateToProps = state => {
   return {
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
-    token: state.logInReducer.token
+    token: state.logInReducer.token,
+    groupExistsStatus: state.groupReducer.groupExistsStatus,
   };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
-  return {};
-};
+  return {
+    getActiveGroup: data => dispatch(getActiveGroup(data)),
+    getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
+    getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
+    getActiveGroupError: data => dispatch(getActiveGroupError(data)),
+    groupExists: data => dispatch(groupExists(data)),
+  };
+}
 
 export default connect(
   mapStateToProps,

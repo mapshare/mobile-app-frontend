@@ -23,15 +23,16 @@ import {
     requestToJoinGroupSuccess,
     getUserGroupsSuccess,
     getUserGroups
-} from '../../../../actions/groupActions';
+} from '../../../actions/groupActions';
 
 import {
     requestClearField,
     requestClearFieldSuccess
-} from '../../../../actions/SearchGroupFormAction';
+} from '../../../actions/SearchGroupFormAction';
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
-import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
+import SearchGroupForm from '../../Forms/SearchGroup/SearchGroupForm';
+
 // Componenets Style
 import styles from "../Stylesheet";
 import { Actions } from "react-native-router-flux";
@@ -111,24 +112,26 @@ class SearchGroup extends Component {
 
     render() {
         return (
-            <View style={styles.modalStyle}>
-                <View>
-                    <TouchableOpacity style={styles.closeButton} onPress={() => {
-                        setTimeout(()=> Actions.refresh(), 500)
-                        Actions.pop();
-                        Keyboard.dismiss();
-                        this.props.requestClearFieldSuccess(false);
-                        this.props.requestClearField(true);
-                    }}>
-                        <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.content} >
-                    <SearchGroupForm />
-                    <View style={styles.flatListItemSeporator} />
-                    {this.showSearchResults()}
-                    <View style={styles.flatListItemSeporator} />
-                </View>
+            <View style={styles.body}>
+                <ImageBackground resizeMode="cover" style={styles.backgroundImage} source={require('../../../assests/images/logo.png')}>
+
+                    <View style={styles.container} >
+                        <TouchableOpacity style={styles.closeButton} onPress={() => {
+                            Keyboard.dismiss();
+                            Actions.pop();
+                            this.props.requestClearFieldSuccess(false);
+                            this.props.requestClearField(true);
+                        }}>
+                            <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
+                        </TouchableOpacity>
+                        <View style={styles.content} >
+                            <SearchGroupForm />
+                            <View style={styles.flatListItemSeporator} />
+                            {this.showSearchResults()}
+                            <View style={styles.flatListItemSeporator} />
+                        </View>
+                    </View>
+                </ImageBackground>
             </View>
         );
     }

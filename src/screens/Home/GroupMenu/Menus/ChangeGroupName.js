@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import {
     Text,
     View,
@@ -12,6 +11,7 @@ import {
 } from "react-native";
 
 import AddGroupForm from '../../../Forms/AddGroup/AddGroupFrom'
+import ChangeGroupName from '../../../Forms/ChangeGroupName/ChangeGroupName';import React, { Component } from "react";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 
@@ -47,8 +47,8 @@ class AddGroup extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.content} >
-                    <Text style={styles.addGroupText}>Add a New Group</Text>
-                    <AddGroupForm type="Add Group" />
+                    <Text style={styles.addGroupText}>Change Group Name</Text>
+                    <ChangeGroupName type="Change Group Name" />
                 </View>
             </View>
         );

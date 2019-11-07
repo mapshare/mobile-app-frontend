@@ -88,7 +88,7 @@ class JoinGroupRequest extends Component {
             }
         }
     }
-    
+
     reviewRequest(status, selectedPendingUser) {
         const data = {
             token: this.props.token,
@@ -102,41 +102,48 @@ class JoinGroupRequest extends Component {
 
     render() {
         return (
-            <View >
-                <Text style={styles.textBox}>Pending Group Join Request:</Text>
-                <View style={styles.flatListItemSeporator} />
-                <FlatList
-                    data={this.state.data}
-                    renderItem={(request) => {
-                        return (
-                            <View style={styles.flatListItem}>
-                                <View style={styles.flatListColOne}></View>
-                                <View style={styles.flatListColTwo}>
-                                    <Text style={styles.textBoxSmall}>
-                                        {request.item.userFirstName + " " + request.item.userLastName + "\n"}
-                                        {request.item.userEmail}
-                                    </Text>
-                                </View>
-                                <View style={styles.flatListColThree}>
-                                    <TouchableOpacity onPress={() => this.reviewRequest(true, request.item)}>
-                                        <Icon style={styles.acceptIcon} name="check" size={30} />
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.flatListColFour}>
-                                    <TouchableOpacity onPress={() => this.reviewRequest(false, request.item)}>
-                                        <Icon style={styles.declineIcon} name="close" size={30} />
-                                    </TouchableOpacity>
+            <View style={styles.modalStyle}>
+                <View>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => Actions.pop()}>
+                        <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.content} >
+                    <Text style={styles.textBox}>Pending Group Join Request:</Text>
+                    <View style={styles.flatListItemSeporator} />
+                    <FlatList
+                        data={this.state.data}
+                        renderItem={(request) => {
+                            return (
+                                <View style={styles.flatListItem}>
+                                    <View style={styles.flatListColOne}></View>
+                                    <View style={styles.flatListColTwo}>
+                                        <Text style={styles.textBoxSmall}>
+                                            {request.item.userFirstName + " " + request.item.userLastName + "\n"}
+                                            {request.item.userEmail}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.flatListColThree}>
+                                        <TouchableOpacity onPress={() => this.reviewRequest(true, request.item)}>
+                                            <Icon style={styles.acceptIcon} name="check" size={30} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.flatListColFour}>
+                                        <TouchableOpacity onPress={() => this.reviewRequest(false, request.item)}>
+                                            <Icon style={styles.declineIcon} name="close" size={30} />
+                                        </TouchableOpacity>
 
+                                    </View>
                                 </View>
-                            </View>
 
-                        )
-                    }
-                    }
-                    keyExtractor={item => item._id}
-                />
+                            )
+                        }
+                        }
+                        keyExtractor={item => item._id}
+                    />
 
-                <View style={styles.flatListItemSeporator} />
+                    <View style={styles.flatListItemSeporator} />
+                </View>
             </View>
         );
     }

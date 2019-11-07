@@ -20,6 +20,7 @@ import {
     searchGroup,
     searchGroupSuccess,
     getActiveGroup,
+    getActiveGroupDataSuccess,
     getActiveGroupError,
     getActiveGroupSuccess,
     requestToJoinGroup,
@@ -79,6 +80,7 @@ class EditGroup extends Component {
         }
         this.props.leaveGroupSuccess(false);
         this.props.leaveGroup(data);
+        Actions.pop();
     }
 
     deleteGroup() {
@@ -88,37 +90,65 @@ class EditGroup extends Component {
         }
         this.props.deleteGroupSuccess(false);
         this.props.deleteGroup(data);
-    }
-
-    manageGroupJoinRequests() {
-        this.props.setCurrentContentState(5);
+        Actions.pop();
     }
 
     render() {
         return (
-            <View >
-                <Text style={styles.textBox}>Edit Group:</Text>
-
+            <View style={styles.modalStyle}>
                 <View>
-                    <View style={styles.flatListItemSeporator} />
-
-                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.manageGroupJoinRequests()}>
-                        <Text style={styles.textBox} >Group Join Requests</Text>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => Actions.pop()}>
+                        <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
+                </View>
+                <View style={styles.content} >
+                    <Text style={styles.textBox}>Edit Group:</Text>
 
-                    <View style={styles.flatListItemSeporator} />
+                    <View>
+                        <View style={styles.flatListItemSeporator} />
 
-                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.leaveGroup()}>
-                        <Text style={styles.textBox} >Leave Group</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupNameMenu()}>
+                            <Text style={styles.textBox} >Change Group Name</Text>
+                        </TouchableOpacity>
 
-                    <View style={styles.flatListItemSeporator} />
+                        <View style={styles.flatListItemSeporator} />
 
-                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.deleteGroup()}>
-                        <Text style={styles.textBox} >Delete Group</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupDescriptionMenu()}>
+                            <Text style={styles.textBox} >Change Group Description</Text>
+                        </TouchableOpacity>
 
-                    <View style={styles.flatListItemSeporator} />
+                        <View style={styles.flatListItemSeporator} />
+
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { }}>
+                            <Text style={styles.textBox} >Change Group Picture</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.flatListItemSeporator} />
+
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { }}>
+                            <Text style={styles.textBox} >Group Members</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.flatListItemSeporator} />
+
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.joinGroupRequestMenu()}>
+                            <Text style={styles.textBox} >Group Join Requests</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.flatListItemSeporator} />
+
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.leaveGroup()}>
+                            <Text style={styles.textBox} >Leave Group</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.flatListItemSeporator} />
+
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.deleteGroup()}>
+                            <Text style={styles.textBox} >Delete Group</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.flatListItemSeporator} />
+                    </View>
                 </View>
             </View>
         );
@@ -154,6 +184,7 @@ const mapDispatchToProps = dispatch => {
         getActiveGroup: data => dispatch(getActiveGroup(data)),
         getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
         getActiveGroupError: data => dispatch(getActiveGroupError(data)),
+        getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
         requestToJoinGroup: data => dispatch(requestToJoinGroup(data)),
         requestToJoinGroupSuccess: data => dispatch(requestToJoinGroupSuccess(data)),
         requestClearField: data => dispatch(requestClearField(data)),

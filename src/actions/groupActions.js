@@ -181,6 +181,30 @@ export const getActiveGroup = data => {
 };
 
 /*
+*   CHECK IF GROUP EXISTS
+*/
+export const groupExistsSuccess = bool => {
+    return {
+        type: keys.GROUP_EXISTS_SUCCESS,
+        groupExistsStatus: bool,
+    };
+};
+
+export const groupExists = data => {
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/' + data.groupId + '/exists', { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(groupExistsSuccess(true));
+            })
+            .catch(err => {
+                console.log("HERE" + err.response.data)
+                dispatch(groupExistsSuccess(false));
+            });
+    };
+};
+
+/*
 *   Add GROUP MEMBER
 */
 export const addGroupMemberSuccess = bool => {
@@ -407,16 +431,18 @@ export const updateGroupError = data => {
 export const updateGroup = data => {
     let groupData = {
         groupName: data.groupName,
+        groupDescription: data.groupDescription,
     };
-
+    
     return dispatch => {
         axios
-            .post(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } })
+            .put(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(updateGroupDataSuccess(res.data));
                 dispatch(updateGroupSuccess(true));
             })
             .catch(err => {
+                console.log(err.response.data)
                 dispatch(updateGroupSuccess(false));
                 dispatch(updateGroupError(err.response.data));
             });

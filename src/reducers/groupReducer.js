@@ -2,6 +2,11 @@ import keys from '../data/key';
 
 const INITIAL_GROUP_STATE = {
     status: false,
+    getActiveGroupStatus: false,
+    getUserGroupsStatus: false,
+    groupExistsStatus: true,
+    getUserGroupsData: "",
+    getActiveGroupError: "",
 };
 
 export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
@@ -34,6 +39,9 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, getActiveGroupData: action.getActiveGroupData };
         case keys.GET_ACTIVE_GROUP_ERROR:
             return { ...state, getActiveGroupError: action.getActiveGroupError };
+        //  CHECK IF GROUP EXISTS
+        case keys.GROUP_EXISTS_SUCCESS:
+            return { ...state, groupExistsStatus: action.groupExistsStatus };
         // ADD GROUP MEMBER
         case keys.ADD_GROUP_MEMBER_SUCCESS:
             return { ...state, addGroupMemberStatus: action.addGroupMemberStatus };

@@ -55,13 +55,11 @@ class SearchGroupForm extends Component {
 
         if (prevProps.requestClearFieldStatus !== this.props.requestClearFieldStatus) {
             if (this.props.requestClearFieldStatus) {
-                console.log("clear Field")
                 this.setState({ groupName: "" });
             }
         }
 
         if (this.props.getSearchGroupError) {
-            console.log(this.props.getSearchGroupError)
             alert(this.props.getSearchGroupError);
             this.props.searchGroupError("");
         }
@@ -72,7 +70,6 @@ class SearchGroupForm extends Component {
             token: this.props.token,
             groupName: this.state.groupName,
         }
-        console.log("searching")
         this.props.setSearchStatus(false);
         this.props.searchGroup(data);
     };
@@ -89,6 +86,7 @@ class SearchGroupForm extends Component {
                     <View style={styles.searchBoxItem}>
                         <Icon style={styles.searchIcon} name="magnifier" size={25} />
                         <TextInput
+                            autoFocus={true}
                             onFocus={() => this.formFocus(true)}
                             onBlur={() => this.formFocus(false)}
                             style={{ fontSize: 25, paddingLeft: 15 }}
@@ -101,6 +99,7 @@ class SearchGroupForm extends Component {
                             returnKeyType="next"
                             autoCapitalize="none"
                             onSubmitEditing={() => this.searchGroup()}
+                            editable={this.props.enabled}
                         />
                         {this.state.searchGroupError ? <Text>{this.state.searchGroupError}</Text> : null}
                     </View>

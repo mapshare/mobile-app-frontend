@@ -4,11 +4,21 @@ import { whileStatement } from '@babel/types';
 
 // Componenets Style
 export default StyleSheet.create({
+    backgroundImage: {
+        width: '100%',
+        height: '100%',
+        flex: 1,
+    },
+    body: {
+        flex: 1,
+    },
     container: {
         zIndex: 1000,
-        position: 'absolute',
         top: 20,
-        left: 20,
+    },
+    content: {
+        zIndex: 1,
+        marginTop: 50,
     },
     GroupName: {
         color: "#FFF",
@@ -19,17 +29,10 @@ export default StyleSheet.create({
     },
     modalStyle: {
         backgroundColor: "rgba(110,110,110,0.9)",
-        flex: 1,
-        alignSelf:'stretch',
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width:'100%',
-        height:'100%',
+        flex: 1
     },
     closeButton: {
         zIndex: 1,
-        position: 'absolute',
         top: 20,
         left: 20,
     },
@@ -72,10 +75,6 @@ export default StyleSheet.create({
     },
     flatListColFour: {
         width: '20%',
-    },
-    content: {
-        zIndex: 1,
-        marginTop: 50,
     },
     addGroupText: {
         color: "rgba(255,255,255,1)",
@@ -129,6 +128,6 @@ export default StyleSheet.create({
         fontWeight: 'bold',
     },
     editGroupOptions: {
-        paddingStart:50
+        paddingStart: 50
     },
 });
