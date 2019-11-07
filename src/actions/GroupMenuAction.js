@@ -38,7 +38,6 @@ export const currentEditingGroupIdData = data => {
     };
 };
 
-
 export const setCurrentEditingGroupId = data => {
     return dispatch => {
         dispatch(currentEditingGroupIdData(data));

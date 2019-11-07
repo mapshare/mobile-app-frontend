@@ -10,7 +10,7 @@ import {
     FlatList,
 } from "react-native";
 
-import ChangeGroupDescription from '../../../Forms/ChangeGroupDescription/ChangeGroupDescription';
+import ChangeGroupDescriptionForm from '../../../Forms/ChangeGroupDescription/ChangeGroupDescriptionForm';
 import React, { Component } from "react";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
@@ -26,7 +26,7 @@ import styles from "../Stylesheet";
 import { Actions } from "react-native-router-flux";
 
 // Group Menu
-class AddGroup extends Component {
+class ChangeGroupDescription extends Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -48,7 +48,7 @@ class AddGroup extends Component {
                 </View>
                 <View style={styles.content} >
                     <Text style={styles.addGroupText}>Change Group Description</Text>
-                    <ChangeGroupDescription type="Change Group Description" />
+                    <ChangeGroupDescriptionForm type="Change Group Description" />
                 </View>
             </View>
         );
@@ -72,4 +72,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddGroup);
+)(ChangeGroupDescription);

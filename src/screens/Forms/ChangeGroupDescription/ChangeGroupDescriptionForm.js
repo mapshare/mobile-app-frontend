@@ -21,11 +21,11 @@ import styles from '../Stylesheet';
 import validator from '../validate/validation_wrapper'
 
 // Creating Component
-class AddGroupForm extends Component {
+class changeGroupDiscriptionForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            groupName: '',
+            groupDescription: '',
         };
     }
 
@@ -40,7 +40,7 @@ class AddGroupForm extends Component {
     changeGroupName = async () => {
         const data = {
             token: this.props.token,
-            groupName: this.state.groupName,
+            groupDescription: this.state.groupDescription,
             groupId: this.props.currentEditingGroupIdData,
         }
         this.props.updateGroupSuccess(false);
@@ -54,8 +54,8 @@ class AddGroupForm extends Component {
                 <TextInput
                     autoFocus={true}
                     style={styles.addGroupInputBox}
-                    onChangeText={GroupName => this.setState({ groupName: GroupName })}
-                    placeholder="Enter Group Name"
+                    onChangeText={GroupDescription => this.setState({ groupDescription: GroupDescription })}
+                    placeholder="Enter Group Description"
                     placeholderTextColor="#B8B8B8"
                     selectionColor="#fff"
                     autoCorrect={false}
@@ -99,4 +99,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(AddGroupForm);
+)(changeGroupDiscriptionForm);

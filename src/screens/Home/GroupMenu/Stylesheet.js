@@ -64,8 +64,14 @@ export default StyleSheet.create({
     flatListColOne: {
         width: '10%'
     },
+    flatListColOneWide: {
+        width: '30%',
+    },
     flatListColTwo: {
         width: '60%'
+    },
+    flatListColTwoSmall: {
+        width: '50%',
     },
     flatListColThree: {
         width: '20%',
@@ -127,6 +133,12 @@ export default StyleSheet.create({
         color: "rgba(255,255,255,1)",
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    textBoxRoles: {
+        color: "rgba(255,255,255,1)",
+        fontSize: 16,
+        fontWeight: 'bold',
+        paddingStart:20
     },
     editGroupOptions: {
         paddingStart:50

@@ -174,6 +174,7 @@ export const getActiveGroup = data => {
                 dispatch(getActiveGroupSuccess(true));
             })
             .catch(err => {
+                console.log(err.response.data)
                 dispatch(getActiveGroupSuccess(false));
                 dispatch(getActiveGroupError(err.response));
             });
@@ -198,7 +199,6 @@ export const groupExists = data => {
                 dispatch(groupExistsSuccess(true));
             })
             .catch(err => {
-                console.log("HERE" + err.response.data)
                 dispatch(groupExistsSuccess(false));
             });
     };
@@ -278,6 +278,46 @@ export const getGroupMember = data => {
             .catch(err => {
                 dispatch(getGroupMemberSuccess(false));
                 dispatch(getGroupMemberError(err.response.data));
+            });
+    };
+};
+
+
+/*
+*   GET All GROUP MEMBER
+*/
+export const getAllGroupMemberSuccess = bool => {
+    return {
+        type: keys.GET_ALL_GROUP_MEMBER_SUCCESS,
+        getAllGroupMemberStatus: bool,
+    };
+};
+
+export const getAllGroupMemberDataSuccess = data => {
+    return {
+        type: keys.GET_ALL_GROUP_MEMBER_DATA_SUCCESS,
+        getAllGroupMemberData: data,
+    };
+};
+
+export const getAllGroupMemberError = data => {
+    return {
+        type: keys.GET_ALL_GROUP_MEMBER_ERROR,
+        getAllGroupMemberError: data,
+    };
+};
+
+export const getAllGroupMember = data => {
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/' + data.groupId + '/allmembers', { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(getAllGroupMemberDataSuccess(res.data));
+                dispatch(getAllGroupMemberSuccess(true));
+            })
+            .catch(err => {
+                dispatch(getAllGroupMemberSuccess(false));
+                dispatch(getAllGroupMemberError(err.response.data));
             });
     };
 };
@@ -432,8 +472,9 @@ export const updateGroup = data => {
     let groupData = {
         groupName: data.groupName,
         groupDescription: data.groupDescription,
+        groupImg: data.groupImg
     };
-    
+
     return dispatch => {
         axios
             .put(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } })

@@ -86,6 +86,17 @@ class Home extends Component {
     Actions.map();
   }
 
+  getGroupImage() {
+    if (this.props.getActiveGroupData.groupImg) {
+      let data = 'data:image/png;base64,' + this.props.getActiveGroupData.groupImg;
+      return ({uri: data});
+    } else {
+      return (
+        require("../../assests/images/food.jpg")
+      );
+    }
+  }
+
   render() {
     return (
       <View style={styles.root}>
@@ -93,7 +104,7 @@ class Home extends Component {
           <GroupMenu />
           <View style={styles.InfoBody}>
             <ImageBackground
-              source={require("../../assests/images/food.jpg")}
+              source={this.getGroupImage()}
               resizeMode="cover"
               style={styles.image}
             >

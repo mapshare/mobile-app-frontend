@@ -11,7 +11,8 @@ import {
 } from "react-native";
 
 import AddGroupForm from '../../../Forms/AddGroup/AddGroupFrom'
-import ChangeGroupName from '../../../Forms/ChangeGroupName/ChangeGroupName';import React, { Component } from "react";
+import ChangeGroupNameForm from '../../../Forms/ChangeGroupName/ChangeGroupNameForm';
+import React, { Component } from "react";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 
@@ -26,7 +27,7 @@ import styles from "../Stylesheet";
 import { Actions } from "react-native-router-flux";
 
 // Group Menu
-class AddGroup extends Component {
+class ChangeGroupName extends Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -48,7 +49,7 @@ class AddGroup extends Component {
                 </View>
                 <View style={styles.content} >
                     <Text style={styles.addGroupText}>Change Group Name</Text>
-                    <ChangeGroupName type="Change Group Name" />
+                    <ChangeGroupNameForm type="Change Group Name" />
                 </View>
             </View>
         );
@@ -72,4 +73,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddGroup);
+)(ChangeGroupName);

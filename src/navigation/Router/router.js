@@ -39,7 +39,7 @@ import AddGroupMenu from "../../screens/Home/GroupMenu/Menus/AddGroup";
 import EditGroupMenu from "../../screens/Home/GroupMenu/Menus/EditGroup";
 import EditGroupMemberMenu from "../../screens/Home/GroupMenu/Menus/EditGroupMember";
 import GroupMembersListMenu from "../../screens/Home/GroupMenu/Menus/GroupMembersList";
-import GroupPhotoMenu from "../../screens/Home/GroupMenu/Menus/GroupPhoto";
+import ChangeGroupPhotoMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupPhoto";
 import JoinGroupRequestMenu from "../../screens/Home/GroupMenu/Menus/JoinGroupRequest";
 import ChangeGroupNameMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupName";
 import ChangeGroupDescriptionMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupDescription";
@@ -139,7 +139,7 @@ export default class App extends Component {
             <Scene key="editGroupMenu" component={EditGroupMenu} />
             <Scene key="editGroupMemberMenu" component={EditGroupMemberMenu} />
             <Scene key="groupMembersListMenu" component={GroupMembersListMenu} />
-            <Scene key="groupPhotoMenu" component={GroupPhotoMenu} />
+            <Scene key="changeGroupPhotoMenu" component={ChangeGroupPhotoMenu} />
             <Scene key="joinGroupRequestMenu" component={JoinGroupRequestMenu} />
             <Scene key="changeGroupNameMenu" component={ChangeGroupNameMenu} />
             <Scene key="changeGroupDescriptionMenu" component={ChangeGroupDescriptionMenu} />

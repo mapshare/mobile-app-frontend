@@ -13,7 +13,6 @@ import {
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
-
 //Redux actions
 import { connect } from 'react-redux';
 import {
@@ -33,6 +32,9 @@ import {
     leaveGroup,
     leaveGroupError,
     leaveGroupSuccess,
+    updateGroup,
+    updateGroupSuccess,
+    updateGroupError
 } from '../../../../actions/groupActions';
 
 import {
@@ -46,9 +48,12 @@ import {
     setCurrentEditingGroupId,
 } from '../../../../actions/GroupMenuAction';
 
+import ChangeGroupPhoto from './ChangeGroupPhoto'
+
 // Componenets Style
 import styles from "../Stylesheet";
 import { Actions } from "react-native-router-flux";
+import ImagePicker from 'react-native-image-picker';
 
 // Group Menu
 class EditGroup extends Component {
@@ -56,6 +61,7 @@ class EditGroup extends Component {
         super(props);
         this.state = {
             editingGroupId: "",
+            groupImg: ''
         };
     }
 
@@ -93,6 +99,41 @@ class EditGroup extends Component {
         Actions.pop();
     }
 
+    updateGroupPhoto() {
+        const data = {
+            token: this.props.token,
+            groupImg: this.state.groupImg,
+            groupId: this.props.currentEditingGroupIdData,
+        }
+        this.props.updateGroupSuccess(false);
+        this.props.updateGroup(data);
+    }
+
+    choosePhoto() {
+        let options = {
+            title: 'Select Image',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else {
+                this.setState({
+                    groupImg: response.data
+                }, () => {
+                    this.updateGroupPhoto();
+                });
+            }
+        });
+    };
+
+
     render() {
         return (
             <View style={styles.modalStyle}>
@@ -119,13 +160,13 @@ class EditGroup extends Component {
 
                         <View style={styles.flatListItemSeporator} />
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { }}>
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.choosePhoto() }}>
                             <Text style={styles.textBox} >Change Group Picture</Text>
                         </TouchableOpacity>
 
                         <View style={styles.flatListItemSeporator} />
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { }}>
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { Actions.groupMembersListMenu() }}>
                             <Text style={styles.textBox} >Group Members</Text>
                         </TouchableOpacity>
 
@@ -200,6 +241,9 @@ const mapDispatchToProps = dispatch => {
         deleteGroup: data => dispatch(deleteGroup(data)),
         deleteGroupSuccess: data => dispatch(deleteGroupSuccess(data)),
         deleteGroupError: data => dispatch(deleteGroupError(data)),
+        updateGroup: data => dispatch(updateGroup(data)),
+        updateGroupSuccess: data => dispatch(updateGroupSuccess(data)),
+        updateGroupError: data => dispatch(updateGroupError(data)),
     };
 };
 
