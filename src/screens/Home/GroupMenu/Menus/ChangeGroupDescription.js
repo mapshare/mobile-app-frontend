@@ -8,6 +8,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
 } from "react-native";
 
 import ChangeGroupDescriptionForm from '../../../Forms/ChangeGroupDescription/ChangeGroupDescriptionForm';
@@ -46,10 +47,10 @@ class ChangeGroupDescription extends Component {
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
+                <ScrollView style={styles.content} keyboardShouldPersistTaps='always'>
                     <Text style={styles.addGroupText}>Change Group Description</Text>
                     <ChangeGroupDescriptionForm type="Change Group Description" />
-                </View>
+                </ScrollView>
             </View>
         );
     }

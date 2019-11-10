@@ -9,6 +9,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    SafeAreaView
 } from "react-native";
 
 //Redux actions
@@ -59,6 +60,8 @@ class SearchGroup extends Component {
         if (prevProps.getSearchStatus !== this.props.getSearchStatus) {
             if (this.props.getSearchStatus) {
                 this.setState({ data: this.props.getSearchData });
+            } else {
+                this.setState({ data: { loading: true } });
             }
         }
     }
@@ -76,38 +79,90 @@ class SearchGroup extends Component {
         Actions.pop();
     }
 
+    setGroup = (groupId) => {
+        const data = {
+            token: this.props.token,
+            groupId: groupId,
+        }
+        this.props.getActiveGroupSuccess(false);
+        this.props.getActiveGroup(data);
+    }
+
     showSearchResults() {
-        return (
-            <FlatList
-                ItemSeparatorComponent={this.separator}
-                data={this.state.data}
-                renderItem={(group) => {
-                    return (
-                        <View style={styles.flatListItem} >
+        let activeGroupId = "";
+        if (this.props.getActiveGroupData != undefined) {
+            activeGroupId = this.props.getActiveGroupData._id;
+        }
+        if (this.state.data.loading) {
+            return (
+                <View style={styles.centerText}>
+                    <Text style={styles.textBox}>
+                        loading...
+                    </Text>
+                </View>
+            );
+        } else {
+            return (
+                <FlatList
+                    ItemSeparatorComponent={this.separator}
+                    data={this.state.data}
+                    keyExtractor={item => item._id}
+                    renderItem={(group) => {
+                        if (group.item.isMember) {
+                            return (<TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id)}>
 
-                            <View style={styles.flatListColOne}>
-                            </View>
+                                <View style={styles.flatListColOne}>
+                                    {activeGroupId == group.item._id &&
+                                        <Icon style={styles.activeGroupIcon} name="arrow-right" size={20} />
+                                    }
+                                </View>
+                                <View style={styles.flatListColTwo}>
+                                    <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        {group.item.groupName}
+                                    </Text>
+                                    <Text style={styles.textBoxSmall}>
+                                        Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                    </Text>
+                                </View>
 
-                            <View style={styles.flatListColTwo}>
-                                <Text style={styles.flatListItemText}>
-                                    {group.item.groupName}
-                                </Text>
-                            </View>
+                                <View style={styles.flatListColThree}>
+                                </View>
 
-                            <View style={styles.flatListColThree} >
-                                {!group.item.isMember &&
-                                    <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
-                                        <Text style={styles.flatListItemButtonText}>Join</Text>
-                                    </TouchableOpacity>}
-                            </View>
+                            </TouchableOpacity>
+                            )
+                        } else {
+                            return (
+                                <View style={styles.flatListItem} >
 
-                        </View>
-                    )
-                }
-                }
-                keyExtractor={item => item._id}
-            />
-        );
+                                    <View style={styles.flatListColOne}>
+                                    </View>
+
+                                    <View style={styles.flatListColTwo}>
+                                        <Text style={styles.flatListItemText}>
+                                            {group.item.groupName}
+                                        </Text>
+                                        <Text style={styles.textBoxSmall}>
+                                            Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                        </Text>
+                                    </View>
+
+                                    <View style={styles.flatListColThree} >
+                                        {!group.item.isMember &&
+                                            !group.item.isPending &&
+                                            <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
+                                                <Text style={styles.flatListItemButtonText}>Join</Text>
+                                            </TouchableOpacity>}
+                                        {group.item.isPending &&
+                                            <Text style={styles.flatListItemButtonText}>Pending</Text>
+                                        }
+                                    </View>
+
+                                </View>
+                            );
+                        }
+                    }}
+                />);
+        }
     }
 
     render() {
@@ -124,12 +179,12 @@ class SearchGroup extends Component {
                         }}>
                             <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                         </TouchableOpacity>
-                        <View style={styles.content} >
-                            <SearchGroupForm />
+                        <SafeAreaView style={[styles.content]} >
+                            <SearchGroupForm keyboardEnabled={true} />
                             <View style={styles.flatListItemSeporator} />
                             {this.showSearchResults()}
                             <View style={styles.flatListItemSeporator} />
-                        </View>
+                        </SafeAreaView>
                     </View>
                 </ImageBackground>
             </View>

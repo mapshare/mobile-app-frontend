@@ -9,6 +9,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    SafeAreaView
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -50,19 +51,26 @@ class MyGroups extends Component {
         super(props);
         this.state = {
             userGroups: "",
-            editingGroupId: "",
-            groupName: '',
+            interval: '',
         };
     }
 
     componentDidMount() {
         // update every 5 seconds
-        setInterval(() => this.props.getUserGroupsSuccess(false), 5000);
+        this.setState({
+            interval: setInterval(() => {
+                this.props.getUserGroupsSuccess(false);
+            }, 5000)
+        });
 
         if (!this.props.getUserGroupsStatus) {
             this.props.getUserGroupsSuccess(false);
             this.props.getUserGroups({ token: this.props.token });
         }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
     }
 
     componentDidUpdate(prevProps) {
@@ -74,11 +82,10 @@ class MyGroups extends Component {
             }
         }
 
-        if (prevProps.getActiveGroupStatus !== this.props.getActiveGroupStatus) {
-            if (this.props.getActiveGroupStatus) {
-                Actions.navTab({ type: ActionConst.RESET });
-            }
+        if (this.props.getActiveGroupStatus) {
+            Actions.navTab({ type: ActionConst.RESET });
         }
+
         // return to my groups after adding group
         if (prevProps.status !== this.props.status) {
             if (this.props.status) {
@@ -100,7 +107,7 @@ class MyGroups extends Component {
                 data={this.state.userGroups}
                 renderItem={(group) => {
                     return (
-                        <TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
+                        <TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id)}>
 
                             <View style={styles.flatListColOne}>
                                 {activeGroupId == group.item._id &&
@@ -116,7 +123,7 @@ class MyGroups extends Component {
                             <View style={styles.flatListColThree}>
                             </View>
 
-                        </TouchableOpacity >
+                        </TouchableOpacity>
                     )
                 }
                 }
@@ -125,15 +132,13 @@ class MyGroups extends Component {
         );
     }
 
-    setGroup = (groupId, groupname) => {
+    setGroup = (groupId) => {
         const data = {
             token: this.props.token,
             groupId: groupId,
         }
         this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroup(data);
-        this.setState({ requestedGroupToJoinName: groupname });
-        this.setState({ requestedGroupToJoinId: groupId });
     }
 
     render() {
@@ -142,20 +147,22 @@ class MyGroups extends Component {
                 <ImageBackground resizeMode="cover" style={styles.backgroundImage} source={require('../../../assests/images/logo.png')}>
 
                     <View style={styles.container} >
+
+                        <Text style={styles.textBoxCenterTop}>SELECT GROUP</Text>
                         <TouchableOpacity style={styles.addGroup} onPress={() => Actions.initialAddGroup()}>
                             <Icon style={styles.closeIcon} name="plus" size={30} />
                         </TouchableOpacity>
-                        <View style={styles.content} >
+                        <SafeAreaView style={[styles.content]} >
                             <TouchableWithoutFeedback onPress={() => Actions.initialSearchGroup()}>
                                 <View>
-                                    <SearchGroupForm enabled={false} />
+                                    <SearchGroupForm enabled={false} keyboardEnabled={false} />
                                 </View>
                             </TouchableWithoutFeedback>
                             <Text style={styles.textBox}>My Groups:</Text>
                             <View style={styles.flatListItemSeporator} />
                             {this.showMyGroups()}
                             <View style={styles.flatListItemSeporator} />
-                        </View>
+                        </SafeAreaView>
                     </View>
                 </ImageBackground>
             </View>

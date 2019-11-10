@@ -9,6 +9,8 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
+    SafeAreaView
 } from "react-native";
 
 //Redux actions
@@ -22,13 +24,19 @@ import {
     requestToJoinGroup,
     requestToJoinGroupSuccess,
     getUserGroupsSuccess,
-    getUserGroups
+    getUserGroups,
 } from '../../../../actions/groupActions';
 
 import {
     requestClearField,
     requestClearFieldSuccess
 } from '../../../../actions/SearchGroupFormAction';
+
+
+import {
+    setCurrentEditingGroupId,
+    currentEditingGroupIdSuccess
+} from '../../../../actions/GroupMenuAction';
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
@@ -42,12 +50,7 @@ class SearchGroup extends Component {
         super(props);
         this.state = {
             data: "",
-            modalVisible: true,
-            requestedGroupToJoinName: "",
-            requestedGroupToJoinId: "",
-            currentContentState: 1,
-            editingGroupId: "",
-            groupName: '',
+            changedGroup: false,
         };
     }
 
@@ -58,7 +61,13 @@ class SearchGroup extends Component {
         if (prevProps.getSearchStatus !== this.props.getSearchStatus) {
             if (this.props.getSearchStatus) {
                 this.setState({ data: this.props.getSearchData });
+            } else {
+                this.setState({ data: { loading: true } });
             }
+        }
+        if (this.state.changedGroup) {
+            this.setState({ changedGroup: false });
+            Actions.home();
         }
     }
 
@@ -75,38 +84,102 @@ class SearchGroup extends Component {
         Actions.pop();
     }
 
+    setGroup = (groupId) => {
+        const data = {
+            token: this.props.token,
+            groupId: groupId,
+        }
+        this.setState({ changedGroup: true });
+        this.props.getActiveGroupSuccess(false);
+        this.props.getActiveGroup(data);
+    }
+
+    editGroup(groupId) {
+        Actions.editGroupMenu();
+        this.props.currentEditingGroupIdSuccess(false);
+        this.props.setCurrentEditingGroupId(groupId);
+    }
+
     showSearchResults() {
-        return (
-            <FlatList
-                ItemSeparatorComponent={this.separator}
-                data={this.state.data}
-                renderItem={(group) => {
-                    return (
-                        <View style={styles.flatListItem} >
+        let activeGroupId = "";
+        if (this.props.getActiveGroupData != undefined) {
+            activeGroupId = this.props.getActiveGroupData._id;
+        }
+        if (this.state.data.loading) {
+            return (
+                <View style={styles.centerText}>
+                    <Text style={styles.textBox}>
+                        loading...
+                    </Text>
+                </View>
+            );
+        } else {
+            return (
+                <FlatList
+                    ItemSeparatorComponent={this.separator}
+                    data={this.state.data}
+                    renderItem={(group) => {
+                        if (group.item.isMember) {
+                            return (<TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
 
-                            <View style={styles.flatListColOne}>
-                            </View>
+                                <View style={styles.flatListColOne}>
+                                    {activeGroupId == group.item._id &&
+                                        <Icon style={styles.activeGroupIcon} name="arrow-right" size={20} />
+                                    }
+                                </View>
+                                <View style={styles.flatListColTwo}>
+                                    <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        {group.item.groupName}
+                                    </Text>
+                                    <Text style={styles.textBoxSmall}>
+                                        Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                    </Text>
+                                </View>
 
-                            <View style={styles.flatListColTwo}>
-                                <Text style={styles.flatListItemText}>
-                                    {group.item.groupName}
-                                </Text>
-                            </View>
+                                <View style={styles.flatListColThree}>
+                                    <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
+                                        <Icon style={styles.editGroupIcon} name="note" size={30} />
+                                    </TouchableOpacity>
+                                </View>
 
-                            <View style={styles.flatListColThree} >
-                                {!group.item.isMember &&
-                                    <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
-                                        <Text style={styles.flatListItemButtonText}>Join</Text>
-                                    </TouchableOpacity>}
-                            </View>
+                            </TouchableOpacity>
+                            )
+                        } else {
+                            return (
+                                <View style={styles.flatListItem} >
 
-                        </View>
-                    )
-                }
-                }
-                keyExtractor={item => item._id}
-            />
-        );
+                                    <View style={styles.flatListColOneWideTwo}>
+                                    </View>
+
+                                    <View style={styles.flatListColTwo}>
+                                        <Text style={styles.flatListItemText}>
+                                            {group.item.groupName}
+                                        </Text>
+                                        <Text style={styles.textBoxSmall}>
+                                            Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                        </Text>
+                                    </View>
+
+                                    <View style={styles.flatListColThreeWide} >
+                                        {!group.item.isMember &&
+                                            !group.item.isPending &&
+                                            <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
+                                                <Text style={styles.flatListItemButtonText}>Join</Text>
+                                            </TouchableOpacity>}
+                                        {group.item.isPending &&
+                                            <Text style={styles.flatListItemButtonText}>Pending</Text>
+                                        }
+                                    </View>
+
+                                </View>
+                            )
+                        }
+                    }
+                    }
+                    keyExtractor={item => item._id}
+                />
+            );
+        }
     }
 
     render() {
@@ -114,7 +187,6 @@ class SearchGroup extends Component {
             <View style={styles.modalStyle}>
                 <View>
                     <TouchableOpacity style={styles.closeButton} onPress={() => {
-                        setTimeout(()=> Actions.refresh(), 500)
                         Actions.pop();
                         Keyboard.dismiss();
                         this.props.requestClearFieldSuccess(false);
@@ -123,12 +195,12 @@ class SearchGroup extends Component {
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
-                    <SearchGroupForm />
+                <SafeAreaView style={[styles.content, { flex: 1 }]} >
+                    <SearchGroupForm keyboardEnabled={true} />
                     <View style={styles.flatListItemSeporator} />
                     {this.showSearchResults()}
                     <View style={styles.flatListItemSeporator} />
-                </View>
+                </SafeAreaView>
             </View>
         );
     }
@@ -165,6 +237,8 @@ const mapDispatchToProps = dispatch => {
         requestClearFieldSuccess: data => dispatch(requestClearFieldSuccess(data)),
         getUserGroupsSuccess: data => dispatch(getUserGroupsSuccess(data)),
         getUserGroups: data => dispatch(getUserGroups(data)),
+        currentEditingGroupIdSuccess: data => dispatch(currentEditingGroupIdSuccess(data)),
+        setCurrentEditingGroupId: data => dispatch(setCurrentEditingGroupId(data)),
     };
 };
 

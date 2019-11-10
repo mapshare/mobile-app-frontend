@@ -14,6 +14,10 @@ export const groupMenuReducer = (state = CURRENT_CONTENT_STATE, action) => {
             return { ...state, currentEditingGroupIdStatus: action.currentEditingGroupIdStatus };
         case keys.CURRENT_EDITING_GROUP_ID_DATA:
             return { ...state, currentEditingGroupIdData: action.currentEditingGroupIdData };
+        case keys.CURRENT_EDITING_GROUP_MEMBER_SUCCESS:
+            return { ...state, currentEditingGroupMemberStatus: action.currentEditingGroupMemberStatus };
+        case keys.CURRENT_EDITING_GROUP_MEMBER_DATA:
+            return { ...state, currentEditingGroupMemberData: action.currentEditingGroupMemberData };
         default:
             return state;
     }

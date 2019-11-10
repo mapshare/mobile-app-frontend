@@ -67,11 +67,14 @@ export default StyleSheet.create({
     flatListColOne: {
         width: '10%'
     },
+    flatListColOneWideTwo: {
+        width: '20%',
+    },
     flatListColTwo: {
         width: '60%'
     },
     flatListColThree: {
-        width: '20%',
+        width: '30%',
     },
     flatListColFour: {
         width: '20%',
@@ -120,7 +123,14 @@ export default StyleSheet.create({
         color: "rgba(255,255,255,1)",
         fontSize: 24,
         fontWeight: 'bold',
-        padding: 10
+        padding: 10,
+    },
+    textBoxCenterTop: {
+        color: "rgba(255,255,255,1)",
+        fontSize: 24,
+        fontWeight: 'bold',
+        alignSelf:'center',
+        top: 20,
     },
     textBoxSmall: {
         color: "rgba(255,255,255,1)",
@@ -129,5 +139,11 @@ export default StyleSheet.create({
     },
     editGroupOptions: {
         paddingStart: 50
+    },
+    centerText: {
+        width:'100%',
+        alignContent:'center',
+        justifyContent:'center',
+        alignItems: 'center',
     },
 });

@@ -2,53 +2,32 @@ import React, { Component } from "react";
 import {
     Text,
     View,
-    ImageBackground,
     TouchableOpacity,
-    TouchableWithoutFeedback,
-    Keyboard,
-    Alert,
-    Modal,
     FlatList,
+    ScrollView,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
-import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
-import AddGroupForm from '../../../Forms/AddGroup/AddGroupFrom'
-
 //Redux actions
 import { connect } from 'react-redux';
 import {
-    searchGroup,
-    searchGroupSuccess,
     getActiveGroup,
-    getActiveGroupError,
-    getActiveGroupSuccess,
-    getActiveGroupDataSuccess,
-    requestToJoinGroup,
-    requestToJoinGroupSuccess,
     getUserGroupsSuccess,
     getUserGroups,
     getAllGroupMember,
     getAllGroupMemberSuccess
 } from '../../../../actions/groupActions';
 
-import {
-    requestClearField
-} from '../../../../actions/SearchGroupFormAction';
 
 import {
-    currentContentSuccess,
-    setCurrentContentState,
-    currentEditingGroupIdStatus,
-    currentEditingGroupIdData,
-    setCurrentEditingGroupId,
-    currentEditingGroupIdSuccess
+    setCurrentEditingGroupMember,
+    currentEditingGroupMemberSuccess
 } from '../../../../actions/GroupMenuAction';
 
 // Componenets Style
 import styles from "../Stylesheet";
-import { Actions, ActionConst } from "react-native-router-flux";
+import { Actions } from "react-native-router-flux";
 
 // Group Menu
 class MyGroups extends Component {
@@ -63,8 +42,17 @@ class MyGroups extends Component {
 
     componentDidMount() {
         this.props.getAllGroupMemberSuccess(false);
+        // update every 5 seconds
+        this.setState({
+            interval: setInterval(() => {
+                this.props.getAllGroupMemberSuccess(false);
+            }, 5000)
+        });
     }
 
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
+    }
 
     componentDidUpdate(prevProps) {
         if (prevProps.getAllGroupMemberStatus !== this.props.getAllGroupMemberStatus) {
@@ -81,6 +69,12 @@ class MyGroups extends Component {
         }
     }
 
+    editGroupMember(data) {
+        Actions.editGroupMemberMenu();
+        this.props.currentEditingGroupMemberSuccess(false);
+        this.props.setCurrentEditingGroupMember(data);
+    }
+
     separator = () => <View style={styles.flatListItemSeporator} />
 
     showGroupMembers() {
@@ -94,12 +88,12 @@ class MyGroups extends Component {
                 data={this.state.data}
                 renderItem={(group) => {
                     return (
-                        <TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
+                        <View style={styles.flatListItem}>
 
                             <View style={styles.flatListColOneWide}>
                                 <Text style={styles.textBoxRoles}>
                                     {group.item.groupMemberRole.groupRoleName}
-                                    </Text>
+                                </Text>
                             </View>
                             <View style={styles.flatListColTwoSmall}>
                                 <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
@@ -108,34 +102,20 @@ class MyGroups extends Component {
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                {!group.item.isAdmin &&
-                                    <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
+                                {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                                    (group.item.groupMemberRole.groupRolePermisionLevel <= 3) &&
+                                    <TouchableOpacity onPress={() => this.editGroupMember(group.item)}>
                                         <Icon style={styles.editGroupIcon} name="note" size={30} />
                                     </TouchableOpacity>}
                             </View>
 
-                        </TouchableOpacity >
+                        </View>
                     )
                 }
                 }
                 keyExtractor={item => item._id}
             />
         );
-    }
-
-    setGroup = (groupId, groupname) => {
-        const data = {
-            token: this.props.token,
-            groupId: groupId,
-        }
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroup(data);
-    }
-
-    editGroup(groupId) {
-        Actions.editGroupMenu();
-        this.props.currentEditingGroupIdSuccess(false);
-        this.props.setCurrentEditingGroupId(groupId);
     }
 
     render() {
@@ -146,12 +126,12 @@ class MyGroups extends Component {
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
+                <ScrollView style={styles.content} >
                     <Text style={styles.textBox}>Members:</Text>
                     <View style={styles.flatListItemSeporator} />
                     {this.showGroupMembers()}
                     <View style={styles.flatListItemSeporator} />
-                </View>
+                </ScrollView>
             </View>
         );
     }
@@ -160,22 +140,8 @@ class MyGroups extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
     return {
-        status: state.groupReducer.status,
-        getSearchData: state.groupReducer.searchData,
-        getSearchStatus: state.groupReducer.searchStatus,
         token: state.logInReducer.token,
-        getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
         getActiveGroupData: state.groupReducer.getActiveGroupData,
-        activeGroupError: state.groupReducer.getActiveGroupError,
-        getUserGroupsStatus: state.groupReducer.getUserGroupsStatus,
-        getUserGroupsData: state.groupReducer.getUserGroupsData,
-        getRequestToJoinGroupStatus: state.groupReducer.getRequestToJoinGroupStatus,
-        onSearchFocusStatus: state.searchGroupFormReducer.onSearchFocusStatus,
-        onAddGroupFormStatus: state.addGroupFormReducer.onAddGroupFormStatus,
-        leaveGroupStatus: state.groupReducer.leaveGroupStatus,
-        getLeaveGroupError: state.groupReducer.leaveGroupError,
-        deleteGroupStatus: state.groupReducer.deleteGroupStatus,
-        getCurrentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
         getAllGroupMemberStatus: state.groupReducer.getAllGroupMemberStatus,
         getAllGroupMemberData: state.groupReducer.getAllGroupMemberData,
     };
@@ -184,24 +150,13 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
     return {
-        searchGroup: data => dispatch(searchGroup(data)),
-        setSearchStatus: data => dispatch(searchGroupSuccess(data)),
         getActiveGroup: data => dispatch(getActiveGroup(data)),
-        getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
-        getActiveGroupError: data => dispatch(getActiveGroupError(data)),
-        getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
-        requestToJoinGroup: data => dispatch(requestToJoinGroup(data)),
-        requestToJoinGroupSuccess: data => dispatch(requestToJoinGroupSuccess(data)),
-        requestClearField: data => dispatch(requestClearField(data)),
         getUserGroupsSuccess: data => dispatch(getUserGroupsSuccess(data)),
         getUserGroups: data => dispatch(getUserGroups(data)),
-        setCurrentContentState: data => dispatch(setCurrentContentState(data)),
-        currentContentSuccess: data => dispatch(currentContentSuccess(data)),
-        currentEditingGroupIdSuccess: data => dispatch(currentEditingGroupIdSuccess(data)),
-        currentEditingGroupIdData: data => dispatch(currentEditingGroupIdData(data)),
-        setCurrentEditingGroupId: data => dispatch(setCurrentEditingGroupId(data)),
         getAllGroupMember: data => dispatch(getAllGroupMember(data)),
         getAllGroupMemberSuccess: data => dispatch(getAllGroupMemberSuccess(data)),
+        setCurrentEditingGroupMember: data => dispatch(setCurrentEditingGroupMember(data)),
+        currentEditingGroupMemberSuccess: data => dispatch(currentEditingGroupMemberSuccess(data)),
     };
 };
 

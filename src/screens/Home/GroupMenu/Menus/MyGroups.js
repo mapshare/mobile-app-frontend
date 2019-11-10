@@ -9,12 +9,13 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
+    SafeAreaView
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
-import AddGroupForm from '../../../Forms/AddGroup/AddGroupFrom'
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -56,20 +57,38 @@ class MyGroups extends Component {
             userGroups: "",
             groupName: '',
             interval: '',
+            changedGroup: false,
         };
     }
 
     componentDidMount() {
         this.setState({ userGroups: this.props.getUserGroupsData });
-        // update every 5 seconds
-        this.setState({ interval: setInterval(() => this.props.getUserGroupsSuccess(false), 5000) });
+        // update active group and user group every 10 seconds
+        this.setState({
+            interval: setInterval(() => {
+                this.props.getUserGroupsSuccess(false);
+                this.props.getActiveGroupSuccess(false);
+            }, 10000)
+        });
     }
 
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
+    }
 
     componentDidUpdate(prevProps) {
+        if (this.state.changedGroup) {
+            this.setState({ changedGroup: false });
+            Actions.pop();
+        }
+
         if (prevProps.getActiveGroupStatus !== this.props.getActiveGroupStatus) {
-            if (this.props.getActiveGroupStatus) {
-                Actions.pop();
+            if (!this.props.getActiveGroupStatus) {
+                const data = {
+                    token: this.props.token,
+                    groupId: this.props.getActiveGroupData._id,
+                }
+                this.props.getActiveGroup(data);
             }
         }
 
@@ -140,13 +159,12 @@ class MyGroups extends Component {
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                {!group.item.isAdmin &&
-                                    <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
-                                        <Icon style={styles.editGroupIcon} name="note" size={30} />
-                                    </TouchableOpacity>}
+                                <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
+                                    <Icon style={styles.editGroupIcon} name="note" size={30} />
+                                </TouchableOpacity>
                             </View>
 
-                        </TouchableOpacity >
+                        </TouchableOpacity>
                     )
                 }
                 }
@@ -160,6 +178,7 @@ class MyGroups extends Component {
             token: this.props.token,
             groupId: groupId,
         }
+        this.setState({ changedGroup: true });
         this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroup(data);
     }
@@ -184,17 +203,17 @@ class MyGroups extends Component {
                         <Icon style={styles.closeIcon} name="close" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
+                <SafeAreaView style={[styles.content, {flex: 1}]} >
                     <TouchableWithoutFeedback onPress={() => Actions.searchGroupMenu()}>
                         <View>
-                            <SearchGroupForm enabled={false} />
+                            <SearchGroupForm enabled={false} keyboardEnabled={false}  />
                         </View>
                     </TouchableWithoutFeedback>
                     <Text style={styles.textBox}>My Groups:</Text>
                     <View style={styles.flatListItemSeporator} />
                     {this.showMyGroups()}
                     <View style={styles.flatListItemSeporator} />
-                </View>
+                </SafeAreaView>
             </View>
         );
     }

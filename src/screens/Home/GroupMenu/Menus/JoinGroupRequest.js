@@ -9,6 +9,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -53,6 +54,7 @@ class JoinGroupRequest extends Component {
         super(props);
         this.state = {
             editingGroupId: "",
+            succesModalVisible: false,
         };
     }
 
@@ -98,17 +100,39 @@ class JoinGroupRequest extends Component {
         }
         this.props.reviewJoinGroupRequestsSuccess(false);
         this.props.reviewJoinGroupRequests(data);
+        this.setSuccesModalVisible(!this.state.succesModalVisible);
+    }
+
+    setSuccesModalVisible(visible) {
+        this.setState({ succesModalVisible: visible },()=>{
+            setTimeout(()=>{
+                this.setState({ succesModalVisible: !visible });
+            }, 3000);
+        });
     }
 
     render() {
         return (
             <View style={styles.modalStyle}>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.succesModalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.SuccesModal}>
+                        <Text style={styles.textBox}>Success</Text>
+                    </View>
+                </Modal>
+
                 <View>
                     <TouchableOpacity style={styles.closeButton} onPress={() => Actions.pop()}>
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
+                <ScrollView style={styles.content} >
                     <Text style={styles.textBox}>Pending Group Join Request:</Text>
                     <View style={styles.flatListItemSeporator} />
                     <FlatList
@@ -143,7 +167,7 @@ class JoinGroupRequest extends Component {
                     />
 
                     <View style={styles.flatListItemSeporator} />
-                </View>
+                </ScrollView>
             </View>
         );
     }

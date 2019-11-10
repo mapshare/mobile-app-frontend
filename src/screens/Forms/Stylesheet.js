@@ -48,4 +48,19 @@ export default StyleSheet.create({
         borderRadius: 10,
         marginBottom:10,
     },
+    SuccesModal: {
+        backgroundColor: "rgba(50,50,50,.8)",
+        position: 'absolute',
+        alignItems:'center',
+        alignSelf: 'center',
+        borderRadius:10,
+        width: '50%',
+        bottom: 100
+    },
+    textBox: {
+        color: "rgba(255,255,255,1)",
+        fontSize: 24,
+        fontWeight: 'bold',
+        padding: 10
+    },
 });

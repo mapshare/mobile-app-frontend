@@ -33,36 +33,59 @@ class Home extends Component {
       longitude: 0.0
     };
     this.state = {
-      interval: ""
+      interval: "",
+      groupImg: "",
     };
   }
 
   componentDidMount() {
-    // update every 5 seconds'
+    // update every 5 seconds
     this.setState({
-      interval: setInterval(function () {
-        this.checkIfGroupExists();
-      }
-        .bind(this), 5000)
+      interval: setInterval(() => {
+        this.checkIfGroupExists(this.props.getActiveGroupData._id);
+      }, 5000)
     });
 
+    this.setState({ groupImg: this.props.getActiveGroupData.groupImg });
+
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.interval);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.groupExistsStatus !== this.props.groupExistsStatus) {
       if (!this.props.groupExistsStatus) {
-        this.setState({ interval: clearInterval(this.state.interval) });
-        Actions.initial({ type: ActionConst.RESET });
+        this.clearActiveGroup();
+      }
+    }
+
+    if (prevProps.updateGroupStatus !== this.props.updateGroupStatus) {
+      if (this.props.updateGroupStatus) {
+        const data = {
+          token: this.props.token,
+          groupId: this.props.getActiveGroupData._id,
+        }
+        this.props.getActiveGroupSuccess(false);
+        this.props.getActiveGroup(data);
       }
     }
   }
 
-  checkIfGroupExists() {
+  checkIfGroupExists(groupId) {
     const data = {
       token: this.props.token,
-      groupId: this.props.getActiveGroupData._id,
+      groupId: groupId,
     }
     this.props.groupExists(data);
+  }
+
+  clearActiveGroup() {
+    this.props.getActiveGroupSuccess(false);
+    this.props.getActiveGroupDataSuccess("");
+    this.props.getActiveGroupError("");
+    Actions.initial({ type: ActionConst.RESET });
   }
 
   findCoordinates = () => {
@@ -77,7 +100,10 @@ class Home extends Component {
         console.log(this.location.latitude);
         console.log(this.location.longitude);
       },
-      error => alert(error),
+      error => {
+        alert(error);
+        console.log(error)
+      },
       { enableHighAccuracy: true, timeout: 2000 }
     );
   };
@@ -88,8 +114,8 @@ class Home extends Component {
 
   getGroupImage() {
     if (this.props.getActiveGroupData.groupImg) {
-      let data = 'data:image/png;base64,' + this.props.getActiveGroupData.groupImg;
-      return ({uri: data});
+      let data = 'data:image/png;base64,' + this.state.groupImg;
+      return ({ uri: data });
     } else {
       return (
         require("../../assests/images/food.jpg")
@@ -103,8 +129,11 @@ class Home extends Component {
         <View style={styles.Body}>
           <GroupMenu />
           <View style={styles.InfoBody}>
+
             <ImageBackground
-              source={this.getGroupImage()}
+              source={this.props.getActiveGroupData.groupImg ? { uri: 'data:image/png;base64,' + this.props.getActiveGroupData.groupImg }
+                : require("../../assests/images/food.jpg")
+              }
               resizeMode="cover"
               style={styles.image}
             >
@@ -138,7 +167,7 @@ class Home extends Component {
             />
           </Mapbox.MapView>
         </View>
-      </View>
+      </View >
     );
   }
 }
@@ -150,6 +179,8 @@ const mapStateToProps = state => {
     getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
     token: state.logInReducer.token,
     groupExistsStatus: state.groupReducer.groupExistsStatus,
+    updateGroupStatus: state.groupReducer.updateGroupStatus,
+    updateGroupData: state.groupReducer.updateGroupStatus,
   };
 };
 

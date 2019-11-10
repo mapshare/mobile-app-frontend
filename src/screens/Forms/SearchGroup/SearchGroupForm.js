@@ -19,6 +19,7 @@ import {
     searchGroup,
     searchGroupSuccess,
     searchGroupError,
+    searchGroupDataSuccess
 } from '../../../actions/groupActions';
 
 
@@ -60,7 +61,7 @@ class SearchGroupForm extends Component {
         }
 
         if (this.props.getSearchGroupError) {
-            alert(this.props.getSearchGroupError);
+            alert(JSON.stringify(this.props.getSearchGroupError));
             this.props.searchGroupError("");
         }
     }
@@ -86,13 +87,13 @@ class SearchGroupForm extends Component {
                     <View style={styles.searchBoxItem}>
                         <Icon style={styles.searchIcon} name="magnifier" size={25} />
                         <TextInput
-                            autoFocus={true}
+                            autoFocus={this.props.keyboardEnabled}
                             onFocus={() => this.formFocus(true)}
                             onBlur={() => this.formFocus(false)}
                             style={{ fontSize: 25, paddingLeft: 15 }}
                             onChangeText={GroupName => this.setState({ groupName: GroupName })}
                             value={this.state.groupName}
-                            placeholder="Search For Group"
+                            placeholder="Search For New Group"
                             placeholderTextColor="#B8B8B8"
                             selectionColor="#fff"
                             autoCorrect={false}
@@ -129,6 +130,7 @@ const mapDispatchToProps = dispatch => {
         onSearchFocusSuccess: data => dispatch(onSearchFocusSuccess(data)),
         requestClearFieldSuccess: data => dispatch(requestClearFieldSuccess(data)),
         setSearchStatus: data => dispatch(searchGroupSuccess(data)),
+        searchGroupDataSuccess: data => dispatch(searchGroupDataSuccess(data)),
     };
 };
 

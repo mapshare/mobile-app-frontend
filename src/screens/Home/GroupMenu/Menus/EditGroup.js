@@ -9,6 +9,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -48,7 +49,6 @@ import {
     setCurrentEditingGroupId,
 } from '../../../../actions/GroupMenuAction';
 
-import ChangeGroupPhoto from './ChangeGroupPhoto'
 
 // Componenets Style
 import styles from "../Stylesheet";
@@ -61,7 +61,8 @@ class EditGroup extends Component {
         super(props);
         this.state = {
             editingGroupId: "",
-            groupImg: ''
+            groupImg: '',
+            succesModalVisible: false,
         };
     }
 
@@ -100,6 +101,7 @@ class EditGroup extends Component {
     }
 
     updateGroupPhoto() {
+        console.log('updateGroupPhoto');
         const data = {
             token: this.props.token,
             groupImg: this.state.groupImg,
@@ -107,6 +109,7 @@ class EditGroup extends Component {
         }
         this.props.updateGroupSuccess(false);
         this.props.updateGroup(data);
+        this.setSuccesModalVisible(!this.state.succesModalVisible);
     }
 
     choosePhoto() {
@@ -133,38 +136,68 @@ class EditGroup extends Component {
         });
     };
 
+    setSuccesModalVisible(visible) {
+        this.setState({ succesModalVisible: visible },()=>{
+            setTimeout(()=>{
+                this.setState({ succesModalVisible: !visible });
+            }, 3000);
+        });
+    }
 
     render() {
         return (
             <View style={styles.modalStyle}>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.succesModalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.SuccesModal}>
+                        <Text style={styles.textBox}>Success</Text>
+                    </View>
+                </Modal>
+
                 <View>
                     <TouchableOpacity style={styles.closeButton} onPress={() => Actions.pop()}>
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
+                <ScrollView style={styles.content} >
                     <Text style={styles.textBox}>Edit Group:</Text>
 
                     <View>
                         <View style={styles.flatListItemSeporator} />
+                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                            <View>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupNameMenu()}>
+                                    <Text style={styles.textBox} >Change Group Name</Text>
+                                </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupNameMenu()}>
-                            <Text style={styles.textBox} >Change Group Name</Text>
-                        </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
 
-                        <View style={styles.flatListItemSeporator} />
+                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                            <View>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupDescriptionMenu()}>
+                                    <Text style={styles.textBox} >Change Group Description</Text>
+                                </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupDescriptionMenu()}>
-                            <Text style={styles.textBox} >Change Group Description</Text>
-                        </TouchableOpacity>
+                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                            <View>
 
-                        <View style={styles.flatListItemSeporator} />
-
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.choosePhoto() }}>
-                            <Text style={styles.textBox} >Change Group Picture</Text>
-                        </TouchableOpacity>
-
-                        <View style={styles.flatListItemSeporator} />
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.choosePhoto() }}>
+                                    <Text style={styles.textBox} >Change Group Picture</Text>
+                                </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
 
                         <TouchableOpacity style={styles.editGroupOptions} onPress={() => { Actions.groupMembersListMenu() }}>
                             <Text style={styles.textBox} >Group Members</Text>
@@ -172,25 +205,37 @@ class EditGroup extends Component {
 
                         <View style={styles.flatListItemSeporator} />
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.joinGroupRequestMenu()}>
-                            <Text style={styles.textBox} >Group Join Requests</Text>
-                        </TouchableOpacity>
+                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                            <View>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.joinGroupRequestMenu()}>
+                                    <Text style={styles.textBox} >Group Join Requests</Text>
+                                </TouchableOpacity>
 
-                        <View style={styles.flatListItemSeporator} />
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.leaveGroup()}>
-                            <Text style={styles.textBox} >Leave Group</Text>
-                        </TouchableOpacity>
+                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel <= 3) &&
+                            <View>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.leaveGroup()}>
+                                    <Text style={styles.textBox} >Leave Group</Text>
+                                </TouchableOpacity>
 
-                        <View style={styles.flatListItemSeporator} />
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.deleteGroup()}>
-                            <Text style={styles.textBox} >Delete Group</Text>
-                        </TouchableOpacity>
+                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel == 4) &&
+                            <View>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.deleteGroup()}>
+                                    <Text style={styles.textBox} >Delete Group</Text>
+                                </TouchableOpacity>
 
-                        <View style={styles.flatListItemSeporator} />
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
                     </View>
-                </View>
+                </ScrollView>
             </View>
         );
     }

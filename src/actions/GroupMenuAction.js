@@ -44,3 +44,25 @@ export const setCurrentEditingGroupId = data => {
         dispatch(currentEditingGroupIdSuccess(true));
     };
 };
+
+
+export const currentEditingGroupMemberSuccess = bool => {
+    return {
+        type: keys.CURRENT_EDITING_GROUP_MEMBER_SUCCESS,
+        currentEditingGroupMemberStatus: bool,
+    };
+};
+
+export const currentEditingGroupMemberData = data => {
+    return {
+        type: keys.CURRENT_EDITING_GROUP_MEMBER_DATA,
+        currentEditingGroupMemberData: data,
+    };
+};
+
+export const setCurrentEditingGroupMember = data => {
+    return dispatch => {
+        dispatch(currentEditingGroupMemberData(data));
+        dispatch(currentEditingGroupMemberSuccess(true));
+    };
+};

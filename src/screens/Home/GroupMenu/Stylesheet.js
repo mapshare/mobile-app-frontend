@@ -20,12 +20,12 @@ export default StyleSheet.create({
     modalStyle: {
         backgroundColor: "rgba(110,110,110,0.9)",
         flex: 1,
-        alignSelf:'stretch',
+        alignSelf: 'stretch',
         position: "absolute",
         top: 0,
         left: 0,
-        width:'100%',
-        height:'100%',
+        width: '100%',
+        height: '100%',
     },
     closeButton: {
         zIndex: 1,
@@ -51,7 +51,6 @@ export default StyleSheet.create({
     },
     activeGroupIcon: {
         color: "#000",
-        width: '60%'
     },
     acceptIcon: {
         color: "#0F0",
@@ -67,6 +66,9 @@ export default StyleSheet.create({
     flatListColOneWide: {
         width: '30%',
     },
+    flatListColOneWideTwo: {
+        width: '20%',
+    },
     flatListColTwo: {
         width: '60%'
     },
@@ -75,6 +77,9 @@ export default StyleSheet.create({
     },
     flatListColThree: {
         width: '20%',
+    },
+    flatListColThreeWide: {
+        width: '30%',
     },
     flatListColFour: {
         width: '20%',
@@ -138,9 +143,50 @@ export default StyleSheet.create({
         color: "rgba(255,255,255,1)",
         fontSize: 16,
         fontWeight: 'bold',
-        paddingStart:20
+        paddingStart: 20
     },
     editGroupOptions: {
-        paddingStart:50
+        paddingStart: 50
     },
+    groupRolePicker: {
+        height: 55,
+        paddingTop: 30,
+        paddingBottom: 30,
+        flex: 1,
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        alignContent: 'space-around'
+    },
+    groupRolePickerItem: {
+        height: 30,
+        color: '#FFF',
+    },
+    editMemberOption: {
+        height: 50,
+        alignSelf: 'center',
+        width: '60%',
+        justifyContent: 'center',
+    },
+    pinBottom: {
+        position: 'absolute',
+        alignSelf: 'center',
+        width: '100%',
+        bottom: 20
+    },
+    centerText: {
+        width:'100%',
+        alignContent:'center',
+        justifyContent:'center',
+        alignItems: 'center',
+    },
+    SuccesModal: {
+        backgroundColor: "rgba(50,50,50,.8)",
+        position: 'absolute',
+        alignItems:'center',
+        alignSelf: 'center',
+        borderRadius:10,
+        width: '50%',
+        bottom: 100
+    }
 });

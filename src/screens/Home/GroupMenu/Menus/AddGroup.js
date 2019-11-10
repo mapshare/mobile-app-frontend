@@ -9,6 +9,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
 } from "react-native";
 
 import AddGroupForm from '../../../Forms/AddGroup/AddGroupFrom'
@@ -46,10 +47,10 @@ class AddGroup extends Component {
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
+                <ScrollView style={styles.content} keyboardShouldPersistTaps='always'>
                     <Text style={styles.addGroupText}>Add a New Group</Text>
                     <AddGroupForm type="Add Group" />
-                </View>
+                </ScrollView>
             </View>
         );
     }

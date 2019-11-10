@@ -192,6 +192,7 @@ export const groupExistsSuccess = bool => {
 };
 
 export const groupExists = data => {
+
     return dispatch => {
         axios
             .get(API_URL + '/groups/' + data.groupId + '/exists', { headers: { 'authentication': data.token } })
@@ -282,6 +283,49 @@ export const getGroupMember = data => {
     };
 };
 
+
+/*
+*   UPDATE GROUP MEMBER
+*/
+export const updateGroupMemberSuccess = bool => {
+    return {
+        type: keys.UPDATE_GROUP_MEMBER_SUCCESS,
+        updateGroupMemberStatus: bool,
+    };
+};
+
+export const updateGroupMemberDataSuccess = data => {
+    return {
+        type: keys.UPDATE_GROUP_MEMBER_DATA_SUCCESS,
+        updateGroupMemberData: data,
+    };
+};
+
+export const updateGroupMemberError = data => {
+    return {
+        type: keys.UPDATE_GROUP_MEMBER_ERROR,
+        updateGroupMemberError: data,
+    };
+};
+
+export const updateGroupMember = data => {
+    let newData = {
+        memberId: data.memberId,
+        groupRolePermisionLevel: data.groupRolePermisionLevel,
+    }
+    return dispatch => {
+        axios
+            .put(API_URL + '/groups/' + data.groupId + '/member', newData, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(updateGroupMemberDataSuccess(res.data));
+                dispatch(updateGroupMemberSuccess(true));
+            })
+            .catch(err => {
+                dispatch(updateGroupMemberSuccess(false));
+                dispatch(updateGroupMemberError(err.response.data));
+            });
+    };
+};
 
 /*
 *   GET All GROUP MEMBER
@@ -515,9 +559,13 @@ export const leaveGroupError = data => {
 };
 
 export const leaveGroup = data => {
+    let deleteByMember = "";
+    if (data.memberId) {
+        deleteByMember = "/" + data.memberId;
+    }
     return dispatch => {
         axios
-            .delete(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } })
+            .delete(API_URL + '/groups/' + data.groupId + '/member' + deleteByMember, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(leaveGroupDataSuccess(res.data));
                 dispatch(leaveGroupSuccess(true));

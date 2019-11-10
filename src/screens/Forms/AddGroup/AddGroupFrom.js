@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Keyboard,
+    Modal,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -28,7 +29,8 @@ class AddGroupForm extends Component {
         this.state = {
             groupName: '',
             createGroupError: '',
-            currentlyCreatingGroup: false
+            currentlyCreatingGroup: false,
+            succesModalVisible: false,
         };
     }
 
@@ -57,13 +59,35 @@ class AddGroupForm extends Component {
             }
             this.props.createGroupSuccess(false);
             this.props.createGroup(data);
+            this.setSuccesModalVisible(!this.state.succesModalVisible);
             Actions.pop();
         }
     };
 
+    setSuccesModalVisible(visible) {
+        this.setState({ succesModalVisible: visible }, () => {
+            setTimeout(() => {
+                this.setState({ succesModalVisible: !visible });
+            }, 3000);
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.succesModalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.SuccesModal}>
+                        <Text style={styles.textBox}>Success</Text>
+                    </View>
+                </Modal>
+
                 <TextInput
                     autoFocus={true}
                     style={styles.addGroupInputBox}

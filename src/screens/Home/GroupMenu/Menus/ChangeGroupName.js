@@ -8,6 +8,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
 } from "react-native";
 
 import AddGroupForm from '../../../Forms/AddGroup/AddGroupFrom'
@@ -32,25 +33,27 @@ class ChangeGroupName extends Component {
         super(props);
         this.state = {}
     }
+    
     componentDidUpdate(prevProps) {
-        
+
     }
 
     render() {
         return (
             <View style={styles.modalStyle}>
+
                 <View>
                     <TouchableOpacity style={styles.closeButton} onPress={() => {
-                        Actions.pop({refresh:{}});
+                        Actions.pop({ refresh: {} });
                         Keyboard.dismiss();
                     }}>
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content} >
+                <ScrollView style={styles.content} keyboardShouldPersistTaps='always'>
                     <Text style={styles.addGroupText}>Change Group Name</Text>
                     <ChangeGroupNameForm type="Change Group Name" />
-                </View>
+                </ScrollView>
             </View>
         );
     }
