@@ -167,7 +167,7 @@ class Home extends Component {
             />
           </Mapbox.MapView>
         </View>
-      </View >
+      </View>
     );
   }
 }
