@@ -12,7 +12,7 @@ import { searchGroupFormReducer } from "./SearchGroupFromReducer";
 import { addGroupFormReducer } from "./AddGroupFromReducer";
 import { groupMenuReducer } from "./GroupMenuReducer";
 // for future form implementation
-// import {reducer as formReducer} from 'redux-form';
+import { reducer as formReducer } from "redux-form";
 
 export default combineReducers({
   logInReducer,
@@ -26,6 +26,6 @@ export default combineReducers({
   modalWindowReducer,
   searchGroupFormReducer,
   addGroupFormReducer,
-  groupMenuReducer
-  //  form: formReducer,
+  groupMenuReducer,
+  form: formReducer
 });
