@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Geolocation from "@react-native-community/geolocation";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import MSearch from './Search'
+import { MAPBOX } from 'react-native-dotenv';
 
 //Redux actions
 import { addGroupMarkOnClick } from "../../actions/groupMarkAction";
@@ -17,8 +18,10 @@ import { containerStyles, mapStyles, annotationStyles } from "./Stylesheet";
 import ModalWindow from "../ModalWindow/ModalWindow";
 import LogInForm from "../Forms/Login/LoginForm";
 
+console.log(MAPBOX)
+
 Mapbox.setAccessToken(
-  ""
+  MAPBOX
 );
 
 class Map extends Component {

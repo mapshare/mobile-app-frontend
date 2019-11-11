@@ -1,13 +1,15 @@
 import React from 'react'
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import { View, Button } from "react-native";
 import { mapStyles } from "./Stylesheet";
+import { SEARCH } from 'react-native-dotenv';
 
 class MSearch extends React.Component {
 
     render() {
-
+        console.log(SEARCH)
         return (
+            
             <View style={mapStyles.searchBar}>
                 <GooglePlacesAutocomplete
                 ref={c => this.googlePlacesAutocomplete = c}
@@ -23,9 +25,9 @@ class MSearch extends React.Component {
                     this.googlePlacesAutocomplete._handleChangeText('') // use _handleChangeText to set the text that you want
                 }
                 }
-                
+            
                 query={{
-                    key: '',
+                    key: SEARCH,
                     language: 'en'
                 }}
 
