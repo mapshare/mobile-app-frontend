@@ -9,6 +9,7 @@ import {
     Alert,
     Modal,
     FlatList,
+    ScrollView,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -53,6 +54,7 @@ class JoinGroupRequest extends Component {
         super(props);
         this.state = {
             editingGroupId: "",
+            succesModalVisible: false,
         };
     }
 
@@ -88,7 +90,7 @@ class JoinGroupRequest extends Component {
             }
         }
     }
-    
+
     reviewRequest(status, selectedPendingUser) {
         const data = {
             token: this.props.token,
@@ -98,45 +100,74 @@ class JoinGroupRequest extends Component {
         }
         this.props.reviewJoinGroupRequestsSuccess(false);
         this.props.reviewJoinGroupRequests(data);
+        this.setSuccesModalVisible(!this.state.succesModalVisible);
+    }
+
+    setSuccesModalVisible(visible) {
+        this.setState({ succesModalVisible: visible },()=>{
+            setTimeout(()=>{
+                this.setState({ succesModalVisible: !visible });
+            }, 3000);
+        });
     }
 
     render() {
         return (
-            <View >
-                <Text style={styles.textBox}>Pending Group Join Request:</Text>
-                <View style={styles.flatListItemSeporator} />
-                <FlatList
-                    data={this.state.data}
-                    renderItem={(request) => {
-                        return (
-                            <View style={styles.flatListItem}>
-                                <View style={styles.flatListColOne}></View>
-                                <View style={styles.flatListColTwo}>
-                                    <Text style={styles.textBoxSmall}>
-                                        {request.item.userFirstName + " " + request.item.userLastName + "\n"}
-                                        {request.item.userEmail}
-                                    </Text>
-                                </View>
-                                <View style={styles.flatListColThree}>
-                                    <TouchableOpacity onPress={() => this.reviewRequest(true, request.item)}>
-                                        <Icon style={styles.acceptIcon} name="check" size={30} />
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.flatListColFour}>
-                                    <TouchableOpacity onPress={() => this.reviewRequest(false, request.item)}>
-                                        <Icon style={styles.declineIcon} name="close" size={30} />
-                                    </TouchableOpacity>
+            <View style={styles.modalStyle}>
 
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.succesModalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.SuccesModal}>
+                        <Text style={styles.textBox}>Success</Text>
+                    </View>
+                </Modal>
+
+                <View>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => Actions.pop()}>
+                        <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
+                    </TouchableOpacity>
+                </View>
+                <ScrollView style={styles.content} >
+                    <Text style={styles.textBox}>Pending Group Join Request:</Text>
+                    <View style={styles.flatListItemSeporator} />
+                    <FlatList
+                        data={this.state.data}
+                        renderItem={(request) => {
+                            return (
+                                <View style={styles.flatListItem}>
+                                    <View style={styles.flatListColOne}></View>
+                                    <View style={styles.flatListColTwo}>
+                                        <Text style={styles.textBoxSmall}>
+                                            {request.item.userFirstName + " " + request.item.userLastName + "\n"}
+                                            {request.item.userEmail}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.flatListColThree}>
+                                        <TouchableOpacity onPress={() => this.reviewRequest(true, request.item)}>
+                                            <Icon style={styles.acceptIcon} name="check" size={30} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.flatListColFour}>
+                                        <TouchableOpacity onPress={() => this.reviewRequest(false, request.item)}>
+                                            <Icon style={styles.declineIcon} name="close" size={30} />
+                                        </TouchableOpacity>
+
+                                    </View>
                                 </View>
-                            </View>
 
-                        )
-                    }
-                    }
-                    keyExtractor={item => item._id}
-                />
+                            )
+                        }
+                        }
+                        keyExtractor={item => item._id}
+                    />
 
-                <View style={styles.flatListItemSeporator} />
+                    <View style={styles.flatListItemSeporator} />
+                </ScrollView>
             </View>
         );
     }

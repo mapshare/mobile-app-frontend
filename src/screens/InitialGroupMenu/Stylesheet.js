@@ -4,11 +4,21 @@ import { whileStatement } from '@babel/types';
 
 // Componenets Style
 export default StyleSheet.create({
+    backgroundImage: {
+        width: '100%',
+        height: '100%',
+        flex: 1,
+    },
+    body: {
+        flex: 1,
+    },
     container: {
         zIndex: 1000,
-        position: 'absolute',
         top: 20,
-        left: 20,
+    },
+    content: {
+        zIndex: 1,
+        marginTop: 50,
     },
     GroupName: {
         color: "#FFF",
@@ -19,17 +29,10 @@ export default StyleSheet.create({
     },
     modalStyle: {
         backgroundColor: "rgba(110,110,110,0.9)",
-        flex: 1,
-        alignSelf: 'stretch',
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
+        flex: 1
     },
     closeButton: {
         zIndex: 1,
-        position: 'absolute',
         top: 20,
         left: 20,
     },
@@ -51,6 +54,7 @@ export default StyleSheet.create({
     },
     activeGroupIcon: {
         color: "#000",
+        width: '60%'
     },
     acceptIcon: {
         color: "#0F0",
@@ -63,30 +67,17 @@ export default StyleSheet.create({
     flatListColOne: {
         width: '10%'
     },
-    flatListColOneWide: {
-        width: '30%',
-    },
     flatListColOneWideTwo: {
         width: '20%',
     },
     flatListColTwo: {
         width: '60%'
     },
-    flatListColTwoSmall: {
-        width: '50%',
-    },
     flatListColThree: {
-        width: '20%',
-    },
-    flatListColThreeWide: {
         width: '30%',
     },
     flatListColFour: {
         width: '20%',
-    },
-    content: {
-        zIndex: 1,
-        marginTop: 50,
     },
     addGroupText: {
         color: "rgba(255,255,255,1)",
@@ -132,47 +123,22 @@ export default StyleSheet.create({
         color: "rgba(255,255,255,1)",
         fontSize: 24,
         fontWeight: 'bold',
-        padding: 10
+        padding: 10,
+    },
+    textBoxCenterTop: {
+        color: "rgba(255,255,255,1)",
+        fontSize: 24,
+        fontWeight: 'bold',
+        alignSelf:'center',
+        top: 20,
     },
     textBoxSmall: {
         color: "rgba(255,255,255,1)",
         fontSize: 16,
         fontWeight: 'bold',
     },
-    textBoxRoles: {
-        color: "rgba(255,255,255,1)",
-        fontSize: 16,
-        fontWeight: 'bold',
-        paddingStart: 20
-    },
     editGroupOptions: {
         paddingStart: 50
-    },
-    groupRolePicker: {
-        height: 55,
-        paddingTop: 30,
-        paddingBottom: 30,
-        flex: 1,
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        alignContent: 'space-around'
-    },
-    groupRolePickerItem: {
-        height: 30,
-        color: '#FFF',
-    },
-    editMemberOption: {
-        height: 50,
-        alignSelf: 'center',
-        width: '60%',
-        justifyContent: 'center',
-    },
-    pinBottom: {
-        position: 'absolute',
-        alignSelf: 'center',
-        width: '100%',
-        bottom: 20
     },
     centerText: {
         width:'100%',
@@ -180,13 +146,4 @@ export default StyleSheet.create({
         justifyContent:'center',
         alignItems: 'center',
     },
-    SuccesModal: {
-        backgroundColor: "rgba(50,50,50,.8)",
-        position: 'absolute',
-        alignItems:'center',
-        alignSelf: 'center',
-        borderRadius:10,
-        width: '50%',
-        bottom: 100
-    }
 });

@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import {
     Text,
     View,
@@ -13,6 +12,8 @@ import {
 } from "react-native";
 
 import AddGroupForm from '../../../Forms/AddGroup/AddGroupFrom'
+import ChangeGroupNameForm from '../../../Forms/ChangeGroupName/ChangeGroupNameForm';
+import React, { Component } from "react";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 
@@ -27,29 +28,31 @@ import styles from "../Stylesheet";
 import { Actions } from "react-native-router-flux";
 
 // Group Menu
-class AddGroup extends Component {
+class ChangeGroupName extends Component {
     constructor(props) {
         super(props);
         this.state = {}
     }
+    
     componentDidUpdate(prevProps) {
-        
+
     }
 
     render() {
         return (
             <View style={styles.modalStyle}>
+
                 <View>
                     <TouchableOpacity style={styles.closeButton} onPress={() => {
-                        Actions.pop({refresh:{}});
+                        Actions.pop({ refresh: {} });
                         Keyboard.dismiss();
                     }}>
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.content} keyboardShouldPersistTaps='always'>
-                    <Text style={styles.addGroupText}>Add a New Group</Text>
-                    <AddGroupForm type="Add Group" />
+                    <Text style={styles.addGroupText}>Change Group Name</Text>
+                    <ChangeGroupNameForm type="Change Group Name" />
                 </ScrollView>
             </View>
         );
@@ -73,4 +76,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddGroup);
+)(ChangeGroupName);

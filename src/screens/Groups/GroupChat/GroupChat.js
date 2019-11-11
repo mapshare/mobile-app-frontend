@@ -11,71 +11,203 @@ import {
   Button
 } from "react-native";
 
+console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
+
 // Componenets Style
 import styles from "./Stylesheet";
+//Redux actions
+import { connect } from 'react-redux';
+import {
+  connectToGroupChatSuccess,
+  connectToGroupChatDataSuccess,
+  connectToGroupChatError,
+  joinGroupChatRoomSuccess,
+  connectToGroupChat,
+  joinGroupChatRoom,
+  sendMessageToGroupChatRoom,
+  sendMessageToGroupChatRoomSuccess,
+  newMessageStatus,
+  disconnectGroupChatRoom,
+  disconnectGroupChatRoomSuccess,
+} from '../../../actions/groupChatRoomAction';
+import {
+  getGroupMember,
+  getGroupMemberSuccess
+} from '../../../actions/groupActions';
 
-export default class GroupChat extends Component {
+class GroupChat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        { id: 1, date: "9:50 am", type: "in", message: "Temp Data in" },
-        { id: 2, date: "9:50 am", type: "out", message: "Temp Data out" },
-        { id: 3, date: "9:50 am", type: "in", message: "Temp Data in" },
-        { id: 4, date: "9:50 am", type: "in", message: "Temp Data in" }
-      ]
+      data: [],
+      groupMember: "",
+      newMessage: "",
+      chatRoomId: ""
     };
   }
 
-  renderDate = date => {
-    return <Text style={styles.time}>{date}</Text>;
-  };
+  componentDidMount() {
+    const data = {
+      token: this.props.token,
+      groupId: this.props.getActiveGroupData._id,
+    }
+
+    if (this.props.connectToGroupChatStatus) {
+      this.props.disconnectGroupChatRoom({ socket: this.props.socket });
+    }
+    else {
+      this.props.joinGroupChatRoomSuccess(false);
+      this.props.connectToGroupChatSuccess(false);
+      this.props.connectToGroupChat(data);
+      this.props.getGroupMemberSuccess(false);
+      this.props.getGroupMember(data);
+      this.props.disconnectGroupChatRoomSuccess(false);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.disconnectGroupChatRoomStatus !== this.props.disconnectGroupChatRoomStatus) {
+      if (this.props.disconnectGroupChatRoomStatus) {
+        const data = {
+          token: this.props.token,
+          groupId: this.props.getActiveGroupData._id,
+        }
+        this.props.joinGroupChatRoomSuccess(false);
+        this.props.connectToGroupChatSuccess(false);
+        this.props.connectToGroupChat(data);
+        this.props.getGroupMemberSuccess(false);
+        this.props.getGroupMember(data);
+        this.props.disconnectGroupChatRoomSuccess(false);
+      }
+    }
+
+    if (prevProps.connectToGroupChatStatus !== this.props.connectToGroupChatStatus) {
+      if (this.props.connectToGroupChatStatus) {
+        const joinData = {
+          socket: this.props.socket,
+          groupId: this.props.getActiveGroupData._id,
+          chatRoomName: "General"
+        }
+        this.props.joinGroupChatRoom(joinData);
+      }
+    }
+
+    if (prevProps.joinGroupChatRoomStatus !== this.props.joinGroupChatRoomStatus) {
+      if (this.props.joinGroupChatRoomStatus) {
+        this.setState({ chatRoomId: this.props.joinGroupChatRoomData._id });
+        this.setState({ data: this.props.joinGroupChatRoomData.data });
+      }
+    }
+
+    if (prevProps.getGroupMemberStatus !== this.props.getGroupMemberStatus) {
+      if (this.props.getGroupMemberStatus) {
+        this.setState({ groupMember: this.props.getGroupMemberData });
+      }
+    }
+
+    if (prevProps.getNewMessageStatus !== this.props.getNewMessageStatus) {
+      if (this.props.getNewMessageStatus) {
+        this.setState({ data: this.props.newMessageData });
+        this.props.newMessageStatus(false);
+      }
+    }
+  }
+
+  sendMessage() {
+    const messageData = {
+      socket: this.props.socket,
+      messageBody: this.state.newMessage,
+    }
+    this.setState({ newMessage: "" })
+    this.props.sendMessageToGroupChatRoomSuccess(false)
+    this.props.sendMessageToGroupChatRoom(messageData)
+  }
+
+  renderDate = (utcdate) => {
+    var date = new Date(utcdate);
+    return (
+      <Text style={styles.time}>
+        {date.toLocaleTimeString()}
+      </Text>
+    );
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <FlatList
-          style={styles.list}
+        <FlatList style={styles.list}
+          inverted
           data={this.state.data}
-          keyExtractor={item => {
-            return item.id;
-          }}
-          renderItem={message => {
-            console.log(item);
-            const item = message.item;
-            let inMessage = item.type === "in";
+          keyExtractor={(item) => { return item._id; }}
+          renderItem={({ item }) => {
+            let inMessage = item.messageCreatedBy === this.state.groupMember._id;
             let itemStyle = inMessage ? styles.itemIn : styles.itemOut;
             return (
               <View style={[styles.item, itemStyle]}>
-                {!inMessage && this.renderDate(item.date)}
                 <View style={[styles.balloon]}>
-                  <Text>{item.message}</Text>
+                  <Text>{item.messageBody}</Text>
+                  {this.renderDate(item.messageCreatedAt)}
                 </View>
-                {inMessage && this.renderDate(item.date)}
               </View>
-            );
-          }}
-        />
+            )
+          }} />
         <View style={styles.footer}>
           <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputs}
+            <TextInput style={styles.inputs}
               placeholder="Write a message..."
-              underlineColorAndroid="transparent"
-              onChangeText={name_address => this.setState({ name_address })}
+              underlineColorAndroid='transparent'
+              onChangeText={(newMessage) => this.setState({ newMessage })}
+              value={this.state.newMessage}
+              onSubmitEditing={() => this.sendMessage()}
             />
           </View>
 
-          <TouchableOpacity style={styles.btnSend}>
-            <Image
-              source={{
-                uri: "https://png.icons8.com/small/75/ffffff/filled-sent.png"
-              }}
-              style={styles.iconSend}
-            />
+          <TouchableOpacity style={styles.btnSend} onPress={this.sendMessage.bind(this)}>
+            <Image source={{ uri: "https://png.icons8.com/small/75/ffffff/filled-sent.png" }} style={styles.iconSend} />
           </TouchableOpacity>
         </View>
       </View>
     );
   }
 }
+
+// Redux Getter to use: this.props.(name of any return)
+const mapStateToProps = state => {
+  return {
+    socket: state.groupChatRoomReducer.socket,
+    token: state.logInReducer.token,
+    getActiveGroupData: state.groupReducer.getActiveGroupData,
+    getGroupMemberData: state.groupReducer.getGroupMemberData,
+    connectToGroupChatStatus: state.groupChatRoomReducer.connectToGroupChatStatus,
+    getActiveGroupChatRoomData: state.groupChatRoomReducer.getActiveGroupChatRoomData,
+    joinGroupChatRoomStatus: state.groupChatRoomReducer.joinGroupChatRoomStatus,
+    joinGroupChatRoomData: state.groupChatRoomReducer.joinGroupChatRoomData,
+    socket: state.groupChatRoomReducer.socket,
+    newMessageData: state.groupChatRoomReducer.newMessageData,
+    getNewMessageStatus: state.groupChatRoomReducer.getNewMessageStatus,
+    getGroupMemberStatus: state.groupReducer.getGroupMemberStatus,
+    disconnectGroupChatRoomStatus: state.groupChatRoomReducer.disconnectGroupChatRoomStatus,
+  };
+};
+
+// Redux Setter to use: this.props.(name of any return)
+const mapDispatchToProps = dispatch => {
+  return {
+    connectToGroupChat: data => dispatch(connectToGroupChat(data)),
+    connectToGroupChatSuccess: data => dispatch(connectToGroupChatSuccess(data)),
+    joinGroupChatRoom: data => dispatch(joinGroupChatRoom(data)),
+    joinGroupChatRoomSuccess: data => dispatch(joinGroupChatRoomSuccess(data)),
+    getGroupMember: data => dispatch(getGroupMember(data)),
+    sendMessageToGroupChatRoom: data => dispatch(sendMessageToGroupChatRoom(data)),
+    sendMessageToGroupChatRoomSuccess: data => dispatch(sendMessageToGroupChatRoomSuccess(data)),
+    newMessageStatus: data => dispatch(newMessageStatus(data)),
+    getGroupMemberSuccess: data => dispatch(getGroupMemberSuccess(data)),
+    disconnectGroupChatRoom: data => dispatch(disconnectGroupChatRoom(data)),
+    disconnectGroupChatRoomSuccess: data => dispatch(disconnectGroupChatRoomSuccess(data)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(GroupChat);
