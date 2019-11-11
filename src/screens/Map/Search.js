@@ -25,7 +25,7 @@ class MSearch extends React.Component {
                 }
                 
                 query={{
-                    key: 'AIzaSyA90q5qhly6LCK4saJ8jBFrMP-z4Ekgk-8',
+                    key: '',
                     language: 'en'
                 }}
 

@@ -18,7 +18,7 @@ import ModalWindow from "../ModalWindow/ModalWindow";
 import LogInForm from "../Forms/Login/LoginForm";
 
 Mapbox.setAccessToken(
-  "sk.eyJ1IjoiendhaGFiMTE0IiwiYSI6ImNrMXR2cWRxZDB2MjUzY25zdTZkdHg1MGEifQ.pGh19KR7GqfLCg1qoga5rg"
+  ""
 );
 
 class Map extends Component {
