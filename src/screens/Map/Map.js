@@ -55,11 +55,16 @@ class Map extends Component {
       error => alert(error),
       { enableHighAccuracy: true, timeout: 2000 }
     );
+  };
+
+  zoomCoordinates = () => {
+    this.findCoordinates()
     this._mapcoord.setCamera({
       centerCoordinate: [this.location.longitude, this.location.latitude],
       zoomLevel: 8
     });
-  };
+    this.renderAnnotations()
+  }
 
   mapOnClick = data => {
     if (this.props.addGroupMarkOnClickStatus) {
@@ -78,7 +83,7 @@ class Map extends Component {
       <Mapbox.PointAnnotation
         key="pointAnnotation"
         id="pointAnnotation"
-        coordinate={[-75.69, 45.421]}
+        coordinate={[this.location.longitude, this.location.latitude]}
       >
         <View style={annotationStyles.container}>
           <View style={annotationStyles.fill} />
@@ -135,7 +140,7 @@ class Map extends Component {
               style={mapStyles.locationButton}
               name="location-pin"
               size={25}
-              onPress={this.findCoordinates}
+              onPress={this.zoomCoordinates}
             ></Icon>
           </View>
         )}

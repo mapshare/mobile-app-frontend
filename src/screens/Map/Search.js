@@ -12,6 +12,7 @@ class MSearch extends React.Component {
                 <GooglePlacesAutocomplete
                 ref={c => this.googlePlacesAutocomplete = c}
                 placeholder='Search'
+                enablePoweredByContainer={false}
                 minLength={2} // minimum length of text to search
                 autoFocus={false}
                 returnKeyType={'search'} // Can be left out for default return key 
