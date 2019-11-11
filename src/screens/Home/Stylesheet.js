@@ -3,6 +3,15 @@ import { StyleSheet } from 'react-native';
 
 // Componenets Style
 export default StyleSheet.create({
+    container: {
+        zIndex: 1000,
+        position: 'absolute',
+        top: 20,
+        left: 20,
+    },
+    menuButton: {
+        color: "#FFF",
+    },
     root: {
         flex: 1,
     },

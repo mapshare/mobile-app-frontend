@@ -19,6 +19,7 @@ import {
     searchGroup,
     searchGroupSuccess,
     searchGroupError,
+    searchGroupDataSuccess
 } from '../../../actions/groupActions';
 
 
@@ -55,14 +56,12 @@ class SearchGroupForm extends Component {
 
         if (prevProps.requestClearFieldStatus !== this.props.requestClearFieldStatus) {
             if (this.props.requestClearFieldStatus) {
-                console.log("clear Field")
                 this.setState({ groupName: "" });
             }
         }
 
         if (this.props.getSearchGroupError) {
-            console.log(this.props.getSearchGroupError)
-            alert(this.props.getSearchGroupError);
+            alert(JSON.stringify(this.props.getSearchGroupError));
             this.props.searchGroupError("");
         }
     }
@@ -72,7 +71,6 @@ class SearchGroupForm extends Component {
             token: this.props.token,
             groupName: this.state.groupName,
         }
-        console.log("searching")
         this.props.setSearchStatus(false);
         this.props.searchGroup(data);
     };
@@ -89,18 +87,20 @@ class SearchGroupForm extends Component {
                     <View style={styles.searchBoxItem}>
                         <Icon style={styles.searchIcon} name="magnifier" size={25} />
                         <TextInput
+                            autoFocus={this.props.keyboardEnabled}
                             onFocus={() => this.formFocus(true)}
                             onBlur={() => this.formFocus(false)}
                             style={{ fontSize: 25, paddingLeft: 15 }}
                             onChangeText={GroupName => this.setState({ groupName: GroupName })}
                             value={this.state.groupName}
-                            placeholder="Search For Group"
+                            placeholder="Search For New Group"
                             placeholderTextColor="#B8B8B8"
                             selectionColor="#fff"
                             autoCorrect={false}
                             returnKeyType="next"
                             autoCapitalize="none"
                             onSubmitEditing={() => this.searchGroup()}
+                            editable={this.props.enabled}
                         />
                         {this.state.searchGroupError ? <Text>{this.state.searchGroupError}</Text> : null}
                     </View>
@@ -130,6 +130,7 @@ const mapDispatchToProps = dispatch => {
         onSearchFocusSuccess: data => dispatch(onSearchFocusSuccess(data)),
         requestClearFieldSuccess: data => dispatch(requestClearFieldSuccess(data)),
         setSearchStatus: data => dispatch(searchGroupSuccess(data)),
+        searchGroupDataSuccess: data => dispatch(searchGroupDataSuccess(data)),
     };
 };
 

@@ -14,8 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 //Redux actions
-import { createGroup, createGroupSuccess, createGroupError } from '../../../actions/groupActions';
-import { addGroupSuccess, addGroupFormSuccess } from '../../../actions/AddGroupFormAction';
+import { updateGroup, updateGroupSuccess, updateGroupError } from '../../../actions/groupActions';
 
 // Componenets Style
 import styles from '../Stylesheet';
@@ -23,13 +22,11 @@ import styles from '../Stylesheet';
 import validator from '../validate/validation_wrapper'
 
 // Creating Component
-class AddGroupForm extends Component {
+class changeGroupNameForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             groupName: '',
-            createGroupError: '',
-            currentlyCreatingGroup: false,
             succesModalVisible: false,
         };
     }
@@ -38,35 +35,25 @@ class AddGroupForm extends Component {
         if (prevProps.status !== this.props.status) {
             if (this.props.status) {
                 Keyboard.dismiss();
-                this.props.addGroupFormSuccess(false);
-                this.props.addGroupSuccess({ success: true });
-                this.setState({ currentlyCreatingGroup: false });
             }
-        }
-
-        if (this.props.getCreateGroupError) {
-            alert(this.props.getCreateGroupError);
-            this.props.createGroupError("");
         }
     }
 
-    createGroup = async () => {
-        if (!this.state.currentlyCreatingGroup) {
-            this.setState({ currentlyCreatingGroup: true });
-            const data = {
-                token: this.props.token,
-                groupName: this.state.groupName,
-            }
-            this.props.createGroupSuccess(false);
-            this.props.createGroup(data);
-            this.setSuccesModalVisible(!this.state.succesModalVisible);
-            Actions.pop();
+    changeGroupName = async () => {
+        const data = {
+            token: this.props.token,
+            groupName: this.state.groupName,
+            groupId: this.props.currentEditingGroupIdData,
         }
+        this.props.updateGroupSuccess(false);
+        this.props.updateGroup(data);
+        this.setSuccesModalVisible(!this.state.succesModalVisible);
+        Actions.pop();
     };
-
+    
     setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible }, () => {
-            setTimeout(() => {
+        this.setState({ succesModalVisible: visible },()=>{
+            setTimeout(()=>{
                 this.setState({ succesModalVisible: !visible });
             }, 3000);
         });
@@ -98,12 +85,11 @@ class AddGroupForm extends Component {
                     autoCorrect={false}
                     returnKeyType="next"
                     autoCapitalize="none"
-                    onSubmitEditing={() => this.createGroup()}
+                    onSubmitEditing={() => this.changeGroupName()}
                 />
-                {this.state.createGroupError ? <Text>{this.state.createGroupError}</Text> : null}
 
                 <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.createGroup}>
+                    <Text style={styles.buttonText} onPress={() => this.changeGroupName()}>
                         {this.props.type}
                     </Text>
                 </TouchableOpacity>
@@ -117,7 +103,8 @@ const mapStateToProps = state => {
     return {
         status: state.groupReducer.status,
         groupData: state.groupReducer.groupData,
-        getCreateGroupError: state.groupReducer.createGroupError,
+        currentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        updateGroupError: state.groupReducer.updateGroupError,
         token: state.logInReducer.token
     };
 };
@@ -125,9 +112,9 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
     return {
-        createGroup: data => dispatch(createGroup(data)),
-        createGroupSuccess: data => dispatch(createGroupSuccess(data)),
-        createGroupError: data => dispatch(createGroupError(data)),
+        updateGroup: data => dispatch(updateGroup(data)),
+        updateGroupSuccess: data => dispatch(updateGroupSuccess(data)),
+        updateGroupError: data => dispatch(updateGroupError(data)),
         addGroupSuccess: data => dispatch(addGroupSuccess(data)),
         addGroupFormSuccess: data => dispatch(addGroupFormSuccess(data)),
     };
@@ -136,4 +123,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(AddGroupForm);
+)(changeGroupNameForm);

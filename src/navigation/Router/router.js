@@ -5,7 +5,8 @@ import {
   Stack,
   Scene,
   ActionConst,
-  View
+  View,
+  Lightbox
 } from "react-native-router-flux";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
@@ -25,6 +26,23 @@ import SelectGroup from "../../screens/ManageGroup/SelectGroup/SelectGroup";
 import AddGroup from "../../screens/ManageGroup/AddGroup/AddGroup";
 import ManageGroupJoinRequests from "../../screens/ManageGroup/ManageGroupJoinRequests/ManageGroupJoinRequests";
 import Chat from "../../screens/Groups/GroupChat/GroupChat";
+
+// InitialGroupMenu
+import InitialAddGroup from "../../screens/InitialGroupMenu/Menus/AddGroup";
+import InitialMyGroups from "../../screens/InitialGroupMenu/Menus/MyGroups";
+import InitialSearchGroup from "../../screens/InitialGroupMenu/Menus/SearchGroup";
+
+// GroupMenu
+import MyGroupsMenu from "../../screens/Home/GroupMenu/Menus/MyGroups";
+import SearchGroupMenu from "../../screens/Home/GroupMenu/Menus/SearchGroup";
+import AddGroupMenu from "../../screens/Home/GroupMenu/Menus/AddGroup";
+import EditGroupMenu from "../../screens/Home/GroupMenu/Menus/EditGroup";
+import EditGroupMemberMenu from "../../screens/Home/GroupMenu/Menus/EditGroupMember";
+import GroupMembersListMenu from "../../screens/Home/GroupMenu/Menus/GroupMembersList";
+import JoinGroupRequestMenu from "../../screens/Home/GroupMenu/Menus/JoinGroupRequest";
+import ChangeGroupNameMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupName";
+import ChangeGroupDescriptionMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupDescription";
+
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
@@ -86,57 +104,89 @@ export default class App extends Component {
             component={ManageGroupJoinRequests}
             title="ManageGroupJoinRequests"
           />
+          <Stack key="initial" hideNavBar>
+            <Scene
+              key="initialMyGroups"
+              component={InitialMyGroups}
+              name="initialMyGroups"
+              type={ActionConst.RESET}
+              hideNavBar
+            />
 
-          <Router
-            hideNavBar={true}
+            <Scene
+              key="initialAddGroup"
+              component={InitialAddGroup}
+              name="initialAddGroup"
+              hideNavBar
+            />
+
+            <Scene
+              key="initialSearchGroup"
+              duration={0}
+              component={InitialSearchGroup}
+              name="initialSearchGroup"
+              hideNavBar
+            />
+          </Stack>
+
+          <Stack
+            hideNavBar
+            key="groupsMenu">
+            <Scene key='myGroupsMenu' component={MyGroupsMenu} />
+            <Scene key="searchGroupMenu" component={SearchGroupMenu} />
+            <Scene key="addGroupMenu" component={AddGroupMenu} />
+            <Scene key="editGroupMenu" component={EditGroupMenu} />
+            <Scene key="editGroupMemberMenu" component={EditGroupMemberMenu} />
+            <Scene key="groupMembersListMenu" component={GroupMembersListMenu} />
+            <Scene key="joinGroupRequestMenu" component={JoinGroupRequestMenu} />
+            <Scene key="changeGroupNameMenu" component={ChangeGroupNameMenu} />
+            <Scene key="changeGroupDescriptionMenu" component={ChangeGroupDescriptionMenu} />
+          </Stack>
+
+          <Stack key="navTab"
             titleStyle={{ color: "white" }}
             navigationBarStyle={{ backgroundColor: "#33C1FF" }}
-          >
-            <Stack
-              Key="NavTab"
-              tabs={true}
-              showNavigationBar={false}
+            tabs={true}>
+
+            <Scene
+              key="home"
+              component={Home}
               hideNavBar
-            >
-              <Scene
-                key="home"
-                component={Home}
-                icon={TabIcon}
-                name="home"
-                hideNavBar
-              />
-              <Scene
-                key="map"
-                component={Map}
-                icon={TabIcon}
-                name="map"
-                hideNavBar
-              />
-              <Scene
-                key="chat"
-                component={Chat}
-                icon={TabIcon}
-                name="people"
-                hideNavBar
-              />
-              <Scene
-                key="events"
-                component={Events}
-                icon={TabIcon}
-                name="event"
-                hideNavBar
-              />
-              <Scene
-                key="profile"
-                component={Profile}
-                icon={TabIcon}
-                name="options"
-                hideNavBar
-              />
-            </Stack>
-          </Router>
-        </Stack>
-      </Router>
+              icon={TabIcon}
+              name="home"
+            />
+
+            <Scene
+              key="map"
+              component={Map}
+              icon={TabIcon}
+              name="map"
+              hideNavBar
+            />
+            <Scene
+              key="chat"
+              component={Chat}
+              icon={TabIcon}
+              name="people"
+              hideNavBar
+            />
+            <Scene
+              key="events"
+              component={Events}
+              icon={TabIcon}
+              name="event"
+              hideNavBar
+            />
+            <Scene
+              key="profile"
+              component={Profile}
+              icon={TabIcon}
+              name="options"
+              hideNavBar
+            />
+          </Stack>
+        </Stack >
+      </Router >
     );
   }
 }

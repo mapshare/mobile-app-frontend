@@ -174,8 +174,33 @@ export const getActiveGroup = data => {
                 dispatch(getActiveGroupSuccess(true));
             })
             .catch(err => {
+                console.log(err.response.data)
                 dispatch(getActiveGroupSuccess(false));
                 dispatch(getActiveGroupError(err.response));
+            });
+    };
+};
+
+/*
+*   CHECK IF GROUP EXISTS
+*/
+export const groupExistsSuccess = bool => {
+    return {
+        type: keys.GROUP_EXISTS_SUCCESS,
+        groupExistsStatus: bool,
+    };
+};
+
+export const groupExists = data => {
+
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/' + data.groupId + '/exists', { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(groupExistsSuccess(true));
+            })
+            .catch(err => {
+                dispatch(groupExistsSuccess(false));
             });
     };
 };
@@ -254,6 +279,89 @@ export const getGroupMember = data => {
             .catch(err => {
                 dispatch(getGroupMemberSuccess(false));
                 dispatch(getGroupMemberError(err.response.data));
+            });
+    };
+};
+
+
+/*
+*   UPDATE GROUP MEMBER
+*/
+export const updateGroupMemberSuccess = bool => {
+    return {
+        type: keys.UPDATE_GROUP_MEMBER_SUCCESS,
+        updateGroupMemberStatus: bool,
+    };
+};
+
+export const updateGroupMemberDataSuccess = data => {
+    return {
+        type: keys.UPDATE_GROUP_MEMBER_DATA_SUCCESS,
+        updateGroupMemberData: data,
+    };
+};
+
+export const updateGroupMemberError = data => {
+    return {
+        type: keys.UPDATE_GROUP_MEMBER_ERROR,
+        updateGroupMemberError: data,
+    };
+};
+
+export const updateGroupMember = data => {
+    let newData = {
+        memberId: data.memberId,
+        groupRolePermisionLevel: data.groupRolePermisionLevel,
+    }
+    return dispatch => {
+        axios
+            .put(API_URL + '/groups/' + data.groupId + '/member', newData, { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(updateGroupMemberDataSuccess(res.data));
+                dispatch(updateGroupMemberSuccess(true));
+            })
+            .catch(err => {
+                dispatch(updateGroupMemberSuccess(false));
+                dispatch(updateGroupMemberError(err.response.data));
+            });
+    };
+};
+
+/*
+*   GET All GROUP MEMBER
+*/
+export const getAllGroupMemberSuccess = bool => {
+    return {
+        type: keys.GET_ALL_GROUP_MEMBER_SUCCESS,
+        getAllGroupMemberStatus: bool,
+    };
+};
+
+export const getAllGroupMemberDataSuccess = data => {
+    return {
+        type: keys.GET_ALL_GROUP_MEMBER_DATA_SUCCESS,
+        getAllGroupMemberData: data,
+    };
+};
+
+export const getAllGroupMemberError = data => {
+    return {
+        type: keys.GET_ALL_GROUP_MEMBER_ERROR,
+        getAllGroupMemberError: data,
+    };
+};
+
+export const getAllGroupMember = data => {
+    return dispatch => {
+        axios
+            .get(API_URL + '/groups/' + data.groupId + '/allmembers', { headers: { 'authentication': data.token } })
+            .then(res => {
+                dispatch(getAllGroupMemberDataSuccess(res.data));
+                dispatch(getAllGroupMemberSuccess(true));
+            })
+            .catch(err => {
+                dispatch(getAllGroupMemberSuccess(false));
+                dispatch(getAllGroupMemberError(err.response.data));
             });
     };
 };
@@ -407,16 +515,19 @@ export const updateGroupError = data => {
 export const updateGroup = data => {
     let groupData = {
         groupName: data.groupName,
+        groupDescription: data.groupDescription,
+        groupImg: data.groupImg
     };
 
     return dispatch => {
         axios
-            .post(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } })
+            .put(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(updateGroupDataSuccess(res.data));
                 dispatch(updateGroupSuccess(true));
             })
             .catch(err => {
+                console.log(err.response.data)
                 dispatch(updateGroupSuccess(false));
                 dispatch(updateGroupError(err.response.data));
             });
@@ -448,9 +559,13 @@ export const leaveGroupError = data => {
 };
 
 export const leaveGroup = data => {
+    let deleteByMember = "";
+    if (data.memberId) {
+        deleteByMember = "/" + data.memberId;
+    }
     return dispatch => {
         axios
-            .delete(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } })
+            .delete(API_URL + '/groups/' + data.groupId + '/member' + deleteByMember, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(leaveGroupDataSuccess(res.data));
                 dispatch(leaveGroupSuccess(true));
