@@ -9,7 +9,6 @@ import {
     Alert,
     Modal,
     FlatList,
-    ScrollView,
     SafeAreaView
 } from "react-native";
 
@@ -24,22 +23,17 @@ import {
     requestToJoinGroup,
     requestToJoinGroupSuccess,
     getUserGroupsSuccess,
-    getUserGroups,
-} from '../../../../actions/groupActions';
+    getUserGroups
+} from '../../../actions/groupActions';
 
 import {
     requestClearField,
     requestClearFieldSuccess
-} from '../../../../actions/SearchGroupFormAction';
-
-
-import {
-    setCurrentEditingGroupId,
-    currentEditingGroupIdSuccess
-} from '../../../../actions/GroupMenuAction';
+} from '../../../actions/SearchGroupFormAction';
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
-import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
+import SearchGroupForm from '../../Forms/SearchGroup/SearchGroupForm';
+
 // Componenets Style
 import styles from "../Stylesheet";
 import { Actions } from "react-native-router-flux";
@@ -50,7 +44,12 @@ class SearchGroup extends Component {
         super(props);
         this.state = {
             data: "",
-            changedGroup: false,
+            modalVisible: true,
+            requestedGroupToJoinName: "",
+            requestedGroupToJoinId: "",
+            currentContentState: 1,
+            editingGroupId: "",
+            groupName: '',
         };
     }
 
@@ -64,10 +63,6 @@ class SearchGroup extends Component {
             } else {
                 this.setState({ data: { loading: true } });
             }
-        }
-        if (this.state.changedGroup) {
-            this.setState({ changedGroup: false });
-            Actions.home();
         }
     }
 
@@ -89,15 +84,8 @@ class SearchGroup extends Component {
             token: this.props.token,
             groupId: groupId,
         }
-        this.setState({ changedGroup: true });
         this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroup(data);
-    }
-
-    editGroup(groupId) {
-        Actions.editGroupMenu();
-        this.props.currentEditingGroupIdSuccess(false);
-        this.props.setCurrentEditingGroupId(groupId);
     }
 
     showSearchResults() {
@@ -118,9 +106,10 @@ class SearchGroup extends Component {
                 <FlatList
                     ItemSeparatorComponent={this.separator}
                     data={this.state.data}
+                    keyExtractor={item => item._id}
                     renderItem={(group) => {
                         if (group.item.isMember) {
-                            return (<TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
+                            return (<TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id)}>
 
                                 <View style={styles.flatListColOne}>
                                     {activeGroupId == group.item._id &&
@@ -137,9 +126,6 @@ class SearchGroup extends Component {
                                 </View>
 
                                 <View style={styles.flatListColThree}>
-                                    <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
-                                        <Icon style={styles.editGroupIcon} name="note" size={30} />
-                                    </TouchableOpacity>
                                 </View>
 
                             </TouchableOpacity>
@@ -148,7 +134,7 @@ class SearchGroup extends Component {
                             return (
                                 <View style={styles.flatListItem} >
 
-                                    <View style={styles.flatListColOneWideTwo}>
+                                    <View style={styles.flatListColOne}>
                                     </View>
 
                                     <View style={styles.flatListColTwo}>
@@ -160,7 +146,7 @@ class SearchGroup extends Component {
                                         </Text>
                                     </View>
 
-                                    <View style={styles.flatListColThreeWide} >
+                                    <View style={styles.flatListColThree} >
                                         {!group.item.isMember &&
                                             !group.item.isPending &&
                                             <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
@@ -172,35 +158,35 @@ class SearchGroup extends Component {
                                     </View>
 
                                 </View>
-                            )
+                            );
                         }
-                    }
-                    }
-                    keyExtractor={item => item._id}
-                />
-            );
+                    }}
+                />);
         }
     }
 
     render() {
         return (
-            <View style={styles.modalStyle}>
-                <View>
-                    <TouchableOpacity style={styles.closeButton} onPress={() => {
-                        Actions.pop();
-                        Keyboard.dismiss();
-                        this.props.requestClearFieldSuccess(false);
-                        this.props.requestClearField(true);
-                    }}>
-                        <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
-                    </TouchableOpacity>
-                </View>
-                <SafeAreaView style={[styles.content, { flex: 1 }]} >
-                    <SearchGroupForm keyboardEnabled={true} />
-                    <View style={styles.flatListItemSeporator} />
-                    {this.showSearchResults()}
-                    <View style={styles.flatListItemSeporator} />
-                </SafeAreaView>
+            <View style={styles.body}>
+                <ImageBackground resizeMode="cover" style={styles.backgroundImage} source={require('../../../assests/images/logo.png')}>
+
+                    <View style={styles.container} >
+                        <TouchableOpacity style={styles.closeButton} onPress={() => {
+                            Keyboard.dismiss();
+                            Actions.pop();
+                            this.props.requestClearFieldSuccess(false);
+                            this.props.requestClearField(true);
+                        }}>
+                            <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
+                        </TouchableOpacity>
+                        <SafeAreaView style={[styles.content]} >
+                            <SearchGroupForm keyboardEnabled={true} />
+                            <View style={styles.flatListItemSeporator} />
+                            {this.showSearchResults()}
+                            <View style={styles.flatListItemSeporator} />
+                        </SafeAreaView>
+                    </View>
+                </ImageBackground>
             </View>
         );
     }
@@ -237,8 +223,6 @@ const mapDispatchToProps = dispatch => {
         requestClearFieldSuccess: data => dispatch(requestClearFieldSuccess(data)),
         getUserGroupsSuccess: data => dispatch(getUserGroupsSuccess(data)),
         getUserGroups: data => dispatch(getUserGroups(data)),
-        currentEditingGroupIdSuccess: data => dispatch(currentEditingGroupIdSuccess(data)),
-        setCurrentEditingGroupId: data => dispatch(setCurrentEditingGroupId(data)),
     };
 };
 

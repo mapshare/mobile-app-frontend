@@ -9,7 +9,7 @@ import {
   AsyncStorage,
   Keyboard
 } from "react-native";
-import { Actions } from "react-native-router-flux";
+import { Actions, ActionConst, } from "react-native-router-flux";
 import { connect } from "react-redux";
 
 //Redux actions
@@ -47,7 +47,13 @@ class LogInForm extends Component {
       if (this.props.logInStatus) {
         Keyboard.dismiss();
         // Actions.tester();
-        Actions.home();
+        // When we setup local storage we would want to load active group before checking if we have one selected
+        if (this.props.getActiveGroupStatus) {
+          Actions.navTab({type:ActionConst.RESET})
+        } else {
+          console.log("initialMyGroups")
+          Actions.initial({type:ActionConst.RESET});
+        }
       }
     }
 
@@ -138,7 +144,8 @@ const mapStateToProps = state => {
     getUserData: state.logInReducer.userData,
     logInStatus: state.logInReducer.status,
     getLogInError: state.logInReducer.logInError,
-    getToken: state.logInReducer.token
+    getToken: state.logInReducer.token,
+    getActiveGroupStatus: state.groupReducer.getActiveGroupStatus
   };
 };
 
