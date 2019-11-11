@@ -1,27 +1,27 @@
-import axios from 'axios';
-import { API_URL } from 'react-native-dotenv'
+import axios from "axios";
+import { API_URL } from "react-native-dotenv";
 
-import keys from '../data/key';
+import keys from "../data/key";
 
 export const registerSuccess = bool => {
   return {
     type: keys.REGISTER_SUCCESS,
-    status: bool,
+    status: bool
   };
 };
 
 export const registerUserDataSuccess = data => {
   return {
     type: keys.REGISTER_DATA_SUCCESS,
-    data: data,
+    data: data
   };
 };
 
 export const registerUserError = data => {
-  console.log(data)
+  console.log(data);
   return {
     type: keys.REGISTER_ERROR,
-    error: data,
+    error: data
   };
 };
 
@@ -30,18 +30,19 @@ export const registerUser = data => {
     userEmail: data.userEmail,
     userFirstName: data.userFirstName,
     userLastName: data.userLastName,
-    userPassword: data.userPassword,
+    userPassword: data.userPassword
   };
+
   return dispatch => {
     axios
-      .post(API_URL + '/register', userData)
+      .post(API_URL + "/register", userData)
       .then(res => {
-        //console.log('data after registerUser request return: ', res.data);
+        console.log("data after registerUser request return: ", res.data);
         dispatch(registerUserDataSuccess(res.data));
         dispatch(registerSuccess(true));
       })
       .catch(err => {
-        // console.log('registerUser errors: ', err.response.data);
+        console.log("registerUser errors: ", err.response.data);
         dispatch(registerUserError(err.response.data));
         dispatch(registerSuccess(false));
       });

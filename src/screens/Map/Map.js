@@ -6,7 +6,7 @@ import Geolocation from "@react-native-community/geolocation";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 //Redux actions
-import { displayModalWindow } from "../../actions/modalWindowAction";
+import { addMarkModalWindow } from "../../actions/modalWindowAction";
 import { setCoordinates } from "../../actions/groupMarkAction";
 
 // Componenets Style
@@ -54,7 +54,7 @@ class Map extends Component {
 
   mapOnClick = data => {
     if (this.props.addGroupMarkOnClickStatus) {
-      this.props.displayModalWindow(true);
+      this.props.addMarkModalWindow(true);
       this.props.setCoordinates(data.geometry.coordinates);
     }
   };
@@ -131,7 +131,7 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    displayModalWindow: bool => dispatch(displayModalWindow(bool)),
+    addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
     setCoordinates: data => dispatch(setCoordinates(data))
   };
 };

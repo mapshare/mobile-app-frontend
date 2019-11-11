@@ -1,7 +1,8 @@
 import keys from "../data/key";
 
 const INITIAL_MODAL_WINDOW_STATE = {
-  status: false
+  addMarkStatus: false,
+  onClickMarkStatus: false
 };
 
 export const modalWindowReducer = (
@@ -9,8 +10,10 @@ export const modalWindowReducer = (
   action
 ) => {
   switch (action.type) {
-    case keys.MODAL_WINDOW:
-      return { status: action.status };
+    case keys.ADD_MARK_MODAL_WINDOW:
+      return { ...state, addMarkStatus: action.addMarkStatus };
+    case keys.CLICK_MARK_MODAL_WINDOW:
+      return { ...state, onClickMarkStatus: action.onClickMarkStatus };
     default:
       return state;
   }

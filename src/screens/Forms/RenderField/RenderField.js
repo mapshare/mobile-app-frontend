@@ -4,7 +4,8 @@ import { Text, View, TextInput } from "react-native";
 // Componenets Style
 import { mainStyles } from "./Stylesheet";
 
-const renderOnType = (input, type) => {
+const renderOnType = (input, type, props) => {
+  const { ...inputProps } = props;
   switch (type) {
     case "text":
       return (
@@ -13,6 +14,7 @@ const renderOnType = (input, type) => {
           onChangeText={input.onChange}
           value={input.value}
           {...input.restInput}
+          {...inputProps}
         />
       );
     case "select":

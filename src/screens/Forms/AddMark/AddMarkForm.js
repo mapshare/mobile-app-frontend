@@ -24,7 +24,9 @@ class AddMarkForm extends Component {
         additionalInformation: values.additionalInformation
       },
       geometry: { coordinates: this.props.coordinates },
-      groupMarkCreatedBy: this.props.getUserData // Needs to be changed just for the ID
+      groupMarkCreatedBy: this.props.getUserData._id,
+      groupId: this.props.getUserData.userGroups[0],
+      token: this.props.logInToken
     };
 
     this.props.addGroupMark(formValues);
@@ -32,6 +34,8 @@ class AddMarkForm extends Component {
 
   render() {
     const { handleSubmit } = this.props;
+
+    console.log("re-render form");
 
     return (
       <View style={containerStyles.container}>
@@ -115,7 +119,8 @@ const clearUpForm = (result, dispatch) => {
 const mapStateToProps = state => {
   return {
     coordinates: state.groupMarkReducer.coordinates,
-    getUserData: state.userReducer
+    getUserData: state.logInReducer.userData,
+    logInToken: state.logInReducer.token
   };
 };
 
