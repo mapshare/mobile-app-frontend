@@ -39,7 +39,6 @@ class LogInForm extends Component {
   }
 
   componentDidMount() {
-    this.props.logInSuccess(true);
   }
 
   componentDidUpdate(prevProps) {
