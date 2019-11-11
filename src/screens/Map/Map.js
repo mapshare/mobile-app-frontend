@@ -4,6 +4,7 @@ import Mapbox from "@react-native-mapbox-gl/maps";
 import { connect } from "react-redux";
 import Geolocation from "@react-native-community/geolocation";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import MSearch from './Search'
 
 //Redux actions
 import { addGroupMarkOnClick } from "../../actions/groupMarkAction";
@@ -29,6 +30,14 @@ class Map extends Component {
       latitude: 0.0,
       longitude: 0.0
     };
+  }
+
+  getCoordsFromName(loc) {
+    console.log(loc.lng, loc.lat)
+    this._mapcoord.setCamera({
+      centerCoordinate: [loc.lng, loc.lat],
+      zoomLevel: 8
+    });
   }
 
   findCoordinates = () => {
@@ -69,7 +78,7 @@ class Map extends Component {
       <Mapbox.PointAnnotation
         key="pointAnnotation"
         id="pointAnnotation"
-        coordinate={[-79.39503177338315, 43.63353993681244]}
+        coordinate={[-75.69, 45.421]}
       >
         <View style={annotationStyles.container}>
           <View style={annotationStyles.fill} />
@@ -93,6 +102,7 @@ class Map extends Component {
                 : null
             ]}
           >
+            
             <View style={containerStyles.optionsContainer}>
               <View style={containerStyles.hamburgerMenu}></View>
               <View style={containerStyles.addLocation}>
@@ -100,6 +110,7 @@ class Map extends Component {
               </View>
               <View style={containerStyles.geolocation}></View>
             </View>
+            <MSearch notifyChange={(loc) => this.getCoordsFromName(loc)}/>
             <Mapbox.MapView
               styleURL={Mapbox.StyleURL.Light}
               onPress={data => this.mapOnClick(data)}
@@ -117,7 +128,8 @@ class Map extends Component {
                   this.location.latitude
                 ]}
                 zoomLevel={8}
-              ></Mapbox.Camera>
+              >
+              </Mapbox.Camera>
             </Mapbox.MapView>
             <Icon
               style={mapStyles.locationButton}

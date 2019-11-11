@@ -41,6 +41,7 @@ export const logInUser = data => {
   };
 
   return dispatch => {
+    console.log(API_URL)
     axios
       .post(API_URL + '/login', userData)
       .then(res => {
