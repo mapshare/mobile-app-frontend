@@ -89,21 +89,7 @@ class Map extends Component {
 
 
   renderAnnotations() {
-    return (
-      <Mapbox.PointAnnotation
-        key="pointAnnotation"
-        id="pointAnnotation"
-        coordinate={[this.location.longitude, this.location.latitude]}
-      >
-        <View style={annotationStyles.container}>
-          <View style={annotationStyles.fill} />
-        </View>
-        <Mapbox.Callout title="We did it!!" />
-      </Mapbox.PointAnnotation>
-    );
-  }
-
-  renderAnnotations() {
+    console.log("Test")
     return (
       <Mapbox.PointAnnotation
         key="pointAnnotation"
@@ -150,7 +136,6 @@ class Map extends Component {
               style={mapStyles.container}
               onDidFinishLoadingMap={this.findCoordinates}
             >
-              {this.renderAnnotations()}
               <Mapbox.Camera
                 ref={Component => (this._mapcoord = Component)}
                 centerCoordinate={[

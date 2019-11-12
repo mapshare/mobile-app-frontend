@@ -22,6 +22,7 @@ class MSearch extends React.Component {
                 fetchDetails={true}
                 onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                     this.props.notifyChange(details.geometry.location);
+                    console.log(details)
                     this.googlePlacesAutocomplete._handleChangeText('') // use _handleChangeText to set the text that you want
                 }
                 }
