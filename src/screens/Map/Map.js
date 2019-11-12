@@ -37,8 +37,14 @@ class Map extends Component {
 
   getCoordsFromName(loc) {
     console.log(loc.lng, loc.lat)
+
+    this.location.longitude = loc.lng;
+    this.location.latitude = loc.lat;
+    this.setState(this.location);
+
+    this.renderAnnotations()
     this._mapcoord.setCamera({
-      centerCoordinate: [loc.lng, loc.lat],
+      centerCoordinate: [this.location.longitude, this.location.latitude],
       zoomLevel: 8
     });
   }
@@ -80,6 +86,22 @@ class Map extends Component {
   addLocationOnClick = () => {
     this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
   };
+
+
+  renderAnnotations() {
+    return (
+      <Mapbox.PointAnnotation
+        key="pointAnnotation"
+        id="pointAnnotation"
+        coordinate={[this.location.longitude, this.location.latitude]}
+      >
+        <View style={annotationStyles.container}>
+          <View style={annotationStyles.fill} />
+        </View>
+        <Mapbox.Callout title="We did it!!" />
+      </Mapbox.PointAnnotation>
+    );
+  }
 
   renderAnnotations() {
     return (
