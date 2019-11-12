@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, Button } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { connect } from "react-redux";
+import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 //Redux actions
 import { displayModalWindow } from "../../actions/modalWindowAction";
@@ -8,7 +9,18 @@ import { displayModalWindow } from "../../actions/modalWindowAction";
 // Componenets Style
 import { containerStyles } from "./Stylesheet";
 
+import AddMarkForm from "../Forms/AddMark/AddMarkForm";
+
 class ModalWindow extends Component {
+  content = type => {
+    switch (type) {
+      case "addMark":
+        return <AddMarkForm />;
+      default:
+        return console.error("pass an existing modalWindowType");
+    }
+  };
+
   closeButtonOnClick = () => {
     this.props.displayModalWindow(false);
   };
@@ -16,11 +28,14 @@ class ModalWindow extends Component {
   render() {
     return (
       <View style={containerStyles.mainContainer}>
-        <View style={containerStyles.closeButtonContainer}>
-          <Button title="x" onPress={this.closeButtonOnClick} />
-        </View>
+        <TouchableOpacity
+          style={containerStyles.closeButtonContainer}
+          onPress={this.closeButtonOnClick}
+        >
+          <Icon name="close" size={30} />
+        </TouchableOpacity>
         <View style={containerStyles.contentContainer}>
-          {this.props.modalContent}
+          {this.content(this.props.modalContent)}
         </View>
       </View>
     );

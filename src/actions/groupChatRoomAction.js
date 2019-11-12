@@ -170,7 +170,7 @@ export const joinGroupChatRoomError = data => {
 export const joinGroupChatRoom = data => {
     const param = {
         groupId: data.groupId,
-        chatRoomId: data.chatRoomId
+        chatRoomName: data.chatRoomName
     }
     return dispatch => {
         try {

@@ -12,8 +12,22 @@ import {
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
+import Icon from "react-native-vector-icons/SimpleLineIcons";
+
 //Redux actions
-import { searchGroup, searchGroupSuccess, searchGroupError } from '../../../actions/groupActions';
+import {
+    searchGroup,
+    searchGroupSuccess,
+    searchGroupError,
+    searchGroupDataSuccess
+} from '../../../actions/groupActions';
+
+
+import {
+    onSearchFocus,
+    onSearchFocusSuccess,
+    requestClearFieldSuccess
+} from '../../../actions/SearchGroupFormAction';
 
 // Componenets Style
 import styles from '../Stylesheet';
@@ -30,8 +44,7 @@ class SearchGroupForm extends Component {
         };
     }
 
-    componentDidMount(){
-        this.searchGroup();
+    componentDidMount() {
     }
 
     componentDidUpdate(prevProps) {
@@ -41,42 +54,57 @@ class SearchGroupForm extends Component {
             }
         }
 
+        if (prevProps.requestClearFieldStatus !== this.props.requestClearFieldStatus) {
+            if (this.props.requestClearFieldStatus) {
+                this.setState({ groupName: "" });
+            }
+        }
+
         if (this.props.getSearchGroupError) {
-            console.log(this.props.getSearchGroupError)
-            alert(this.props.getSearchGroupError);
+            alert(JSON.stringify(this.props.getSearchGroupError));
             this.props.searchGroupError("");
         }
     }
 
     searchGroup = async () => {
         const data = {
-          token: this.props.token,
-          groupName: this.state.groupName,
+            token: this.props.token,
+            groupName: this.state.groupName,
         }
+        this.props.setSearchStatus(false);
         this.props.searchGroup(data);
     };
+
+    formFocus(value) {
+        this.props.onSearchFocusSuccess(false);
+        this.props.onSearchFocus({ focus: value });
+    }
 
     render() {
         return (
             <View style={styles.container}>
-                <TextInput
-                    style={styles.inputBox}
-                    onChangeText={GroupName => this.setState({ groupName: GroupName })}
-                    placeholder="Group Name"
-                    placeholderTextColor="rgba(225,225,225,0.7)"
-                    selectionColor="#fff"
-                    autoCorrect={false}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    onSubmitEditing={() => this.password.focus()}
-                />
-                {this.state.searchGroupError ? <Text>{this.state.searchGroupError}</Text> : null}
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={this.searchGroup}>
-                        {this.props.type}
-                    </Text>
-                </TouchableOpacity>
+                <View style={styles.searchBox}>
+                    <View style={styles.searchBoxItem}>
+                        <Icon style={styles.searchIcon} name="magnifier" size={25} />
+                        <TextInput
+                            autoFocus={this.props.keyboardEnabled}
+                            onFocus={() => this.formFocus(true)}
+                            onBlur={() => this.formFocus(false)}
+                            style={{ fontSize: 25, paddingLeft: 15 }}
+                            onChangeText={GroupName => this.setState({ groupName: GroupName })}
+                            value={this.state.groupName}
+                            placeholder="Search For New Group"
+                            placeholderTextColor="#B8B8B8"
+                            selectionColor="#fff"
+                            autoCorrect={false}
+                            returnKeyType="next"
+                            autoCapitalize="none"
+                            onSubmitEditing={() => this.searchGroup()}
+                            editable={this.props.enabled}
+                        />
+                        {this.state.searchGroupError ? <Text>{this.state.searchGroupError}</Text> : null}
+                    </View>
+                </View>
             </View>
         );
     }
@@ -88,7 +116,8 @@ const mapStateToProps = state => {
         searchStatus: state.groupReducer.searchStatus,
         searchData: state.groupReducer.searchData,
         getSearchGroupError: state.groupReducer.searchGroupError,
-        token: state.logInReducer.token
+        token: state.logInReducer.token,
+        requestClearFieldStatus: state.searchGroupFormReducer.requestClearFieldStatus,
     };
 };
 
@@ -96,7 +125,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         searchGroup: data => dispatch(searchGroup(data)),
-        searchGroupError: data => dispatch(searchGroupError(data))
+        searchGroupError: data => dispatch(searchGroupError(data)),
+        onSearchFocus: data => dispatch(onSearchFocus(data)),
+        onSearchFocusSuccess: data => dispatch(onSearchFocusSuccess(data)),
+        requestClearFieldSuccess: data => dispatch(requestClearFieldSuccess(data)),
+        setSearchStatus: data => dispatch(searchGroupSuccess(data)),
+        searchGroupDataSuccess: data => dispatch(searchGroupDataSuccess(data)),
     };
 };
 

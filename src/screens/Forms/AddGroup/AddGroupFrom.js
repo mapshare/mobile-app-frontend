@@ -8,12 +8,14 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Keyboard,
+    Modal,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 //Redux actions
 import { createGroup, createGroupSuccess, createGroupError } from '../../../actions/groupActions';
+import { addGroupSuccess, addGroupFormSuccess } from '../../../actions/AddGroupFormAction';
 
 // Componenets Style
 import styles from '../Stylesheet';
@@ -27,6 +29,8 @@ class AddGroupForm extends Component {
         this.state = {
             groupName: '',
             createGroupError: '',
+            currentlyCreatingGroup: false,
+            succesModalVisible: false,
         };
     }
 
@@ -34,39 +38,67 @@ class AddGroupForm extends Component {
         if (prevProps.status !== this.props.status) {
             if (this.props.status) {
                 Keyboard.dismiss();
-                Actions.pop();
+                this.props.addGroupFormSuccess(false);
+                this.props.addGroupSuccess({ success: true });
+                this.setState({ currentlyCreatingGroup: false });
             }
         }
 
         if (this.props.getCreateGroupError) {
-            console.log(this.props.getCreateGroupError)
             alert(this.props.getCreateGroupError);
             this.props.createGroupError("");
         }
     }
 
     createGroup = async () => {
-        const data = {
-          token: this.props.token,
-          groupName: this.state.groupName,
+        if (!this.state.currentlyCreatingGroup) {
+            this.setState({ currentlyCreatingGroup: true });
+            const data = {
+                token: this.props.token,
+                groupName: this.state.groupName,
+            }
+            this.props.createGroupSuccess(false);
+            this.props.createGroup(data);
+            this.setSuccesModalVisible(!this.state.succesModalVisible);
+            Actions.pop();
         }
-        this.props.createGroupSuccess(false);
-        this.props.createGroup(data);
     };
+
+    setSuccesModalVisible(visible) {
+        this.setState({ succesModalVisible: visible }, () => {
+            setTimeout(() => {
+                this.setState({ succesModalVisible: !visible });
+            }, 3000);
+        });
+    }
 
     render() {
         return (
             <View style={styles.container}>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.succesModalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.SuccesModal}>
+                        <Text style={styles.textBox}>Success</Text>
+                    </View>
+                </Modal>
+
                 <TextInput
-                    style={styles.inputBox}
+                    autoFocus={true}
+                    style={styles.addGroupInputBox}
                     onChangeText={GroupName => this.setState({ groupName: GroupName })}
-                    placeholder="Group Name"
-                    placeholderTextColor="rgba(225,225,225,0.7)"
+                    placeholder="Enter Group Name"
+                    placeholderTextColor="#B8B8B8"
                     selectionColor="#fff"
                     autoCorrect={false}
                     returnKeyType="next"
                     autoCapitalize="none"
-                    onSubmitEditing={() => this.password.focus()}
+                    onSubmitEditing={() => this.createGroup()}
                 />
                 {this.state.createGroupError ? <Text>{this.state.createGroupError}</Text> : null}
 
@@ -95,7 +127,9 @@ const mapDispatchToProps = dispatch => {
     return {
         createGroup: data => dispatch(createGroup(data)),
         createGroupSuccess: data => dispatch(createGroupSuccess(data)),
-        createGroupError: data => dispatch(createGroupError(data))
+        createGroupError: data => dispatch(createGroupError(data)),
+        addGroupSuccess: data => dispatch(addGroupSuccess(data)),
+        addGroupFormSuccess: data => dispatch(addGroupFormSuccess(data)),
     };
 };
 

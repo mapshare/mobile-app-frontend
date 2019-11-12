@@ -15,35 +15,17 @@ const containerStyles = StyleSheet.create({
     zIndex: 2
   },
 
+  modalWindow: {
+    display: "none"
+  },
+
   optionsContainer: {
     flex: 1,
     position: "absolute",
     alignSelf: "flex-end",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "center",
     width: reponsiveStyle.wp("10%"),
     height: reponsiveStyle.hp("93%")
-  },
-
-  hamburgerMenu: {
-    backgroundColor: "red",
-    width: reponsiveStyle.wp("10%"),
-    height: reponsiveStyle.hp("8%"),
-    zIndex: 1
-  },
-
-  addLocation: {
-    backgroundColor: "red",
-    width: reponsiveStyle.wp("10%"),
-    height: reponsiveStyle.hp("20%"),
-    zIndex: 1
-  },
-
-  geolocation: {
-    backgroundColor: "red",
-    width: reponsiveStyle.wp("10%"),
-    height: reponsiveStyle.hp("5%"),
-    zIndex: 1
   }
 });
 

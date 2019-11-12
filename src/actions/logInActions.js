@@ -45,8 +45,8 @@ export const logInUser = data => {
     axios
       .post(API_URL + '/login', userData)
       .then(res => {
-        //console.log('data after logInUser request return data: ', res.data);
-        //console.log('data after logInUser request return header: ', res.headers.authentication);
+        // console.log('data after logInUser request return data: ', res.data);
+        // console.log('data after logInUser request return header: ', res.headers.authentication);
         dispatch(logInUserDataSuccess(res.data));
         dispatch(logInToken(res.headers.authentication));
         dispatch(logInSuccess(true));

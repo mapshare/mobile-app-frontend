@@ -27,12 +27,14 @@ class AddGroupForm extends Component {
         this.state = {
             chatRoomName: '',
             groupChatRoomError: '',
+            succesModalVisible: false,
         };
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.getGroupChatRoomStatus !== this.props.getGroupChatRoomStatus) {
             if (this.props.getGroupChatRoomStatus) {
+                this.setSuccesModalVisible(!this.state.succesModalVisible);
                 Keyboard.dismiss();
                 Actions.pop();
             }
@@ -54,9 +56,30 @@ class AddGroupForm extends Component {
         this.props.addGroupChatRoom(data);
     };
 
+    setSuccesModalVisible(visible) {
+        this.setState({ succesModalVisible: visible },()=>{
+            setTimeout(()=>{
+                this.setState({ succesModalVisible: !visible });
+            }, 3000);
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.succesModalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.SuccesModal}>
+                        <Text style={styles.textBox}>Success</Text>
+                    </View>
+                </Modal>
+
                 <TextInput
                     style={styles.inputBox}
                     onChangeText={ChatRoomName => this.setState({ chatRoomName: ChatRoomName })}

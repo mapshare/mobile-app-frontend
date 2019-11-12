@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Button } from "react-native";
+import { View } from "react-native";
 import Mapbox from "@react-native-mapbox-gl/maps";
 import { connect } from "react-redux";
 import Geolocation from "@react-native-community/geolocation";
@@ -8,15 +8,15 @@ import MSearch from './Search'
 import { MAPBOX } from 'react-native-dotenv';
 
 //Redux actions
-import { addGroupMarkOnClick } from "../../actions/groupMarkAction";
 import { displayModalWindow } from "../../actions/modalWindowAction";
+import { setCoordinates } from "../../actions/groupMarkAction";
 
 // Componenets Style
 import { containerStyles, mapStyles, annotationStyles } from "./Stylesheet";
 
 // Screens
 import ModalWindow from "../ModalWindow/ModalWindow";
-import LogInForm from "../Forms/Login/LoginForm";
+import AddMark from "../AddMark/AddMark";
 
 console.log(MAPBOX)
 
@@ -42,7 +42,7 @@ class Map extends Component {
     this.location.latitude = loc.lat;
     this.setState(this.location);
 
-    this.renderAnnotations()
+    // this.renderAnnotations()
     this._mapcoord.setCamera({
       centerCoordinate: [this.location.longitude, this.location.latitude],
       zoomLevel: 8
@@ -78,15 +78,9 @@ class Map extends Component {
   mapOnClick = data => {
     if (this.props.addGroupMarkOnClickStatus) {
       this.props.displayModalWindow(true);
-      this.data = data;
-      console.log(this.data);
+      this.props.setCoordinates(data.geometry.coordinates);
     }
   };
-
-  addLocationOnClick = () => {
-    this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
-  };
-
 
   renderAnnotations() {
     console.log("Test")
@@ -107,53 +101,45 @@ class Map extends Component {
   render() {
     return (
       <View style={containerStyles.container}>
-        {this.props.modalWindowStatus ? (
-          <ModalWindow modalContent={<LogInForm type="login" />} />
-        ) : (
-          <View
-            style={[
-              containerStyles.container,
-              this.props.addGroupMarkOnClickStatus
-                ? containerStyles.addMarkTrue
-                : null
-            ]}
-          >
-            
-            <View style={containerStyles.optionsContainer}>
-              <View style={containerStyles.hamburgerMenu}></View>
-              <View style={containerStyles.addLocation}>
-                <Button title="+" onPress={this.addLocationOnClick} />
-              </View>
-              <View style={containerStyles.geolocation}></View>
-            </View>
-            <MSearch notifyChange={(loc) => this.getCoordsFromName(loc)}/>
-            <Mapbox.MapView
-              styleURL={Mapbox.StyleURL.Light}
-              onPress={data => this.mapOnClick(data)}
-              attributionEnabled={false}
-              showUserLocation={true}
-              logoEnabled={false}
-              style={mapStyles.container}
-              onDidFinishLoadingMap={this.findCoordinates}
-            >
-              <Mapbox.Camera
-                ref={Component => (this._mapcoord = Component)}
-                centerCoordinate={[
-                  this.location.longitude,
-                  this.location.latitude
-                ]}
-                zoomLevel={8}
-              >
-              </Mapbox.Camera>
-            </Mapbox.MapView>
-            <Icon
-              style={mapStyles.locationButton}
-              name="location-pin"
-              size={25}
-              onPress={this.zoomCoordinates}
-            ></Icon>
+        {this.props.modalWindowStatus && <ModalWindow modalContent="addMark" />}
+        <View
+          style={[
+            containerStyles.container,
+            this.props.addGroupMarkOnClickStatus
+              ? containerStyles.addMarkTrue
+              : null
+          ]}
+        >
+          <View style={containerStyles.optionsContainer}>
+            <AddMark />
           </View>
-        )}
+          <MSearch notifyChange={(loc) => this.getCoordsFromName(loc)}/>
+          <Mapbox.MapView
+            styleURL={Mapbox.StyleURL.Light}
+            onPress={data => this.mapOnClick(data)}
+            attributionEnabled={false}
+            showUserLocation={true}
+            logoEnabled={false}
+            style={mapStyles.container}
+            onDidFinishLoadingMap={this.findCoordinates}
+          >
+            {this.renderAnnotations()}
+            <Mapbox.Camera
+              ref={Component => (this._mapcoord = Component)}
+              centerCoordinate={[
+                this.location.longitude,
+                this.location.latitude
+              ]}
+              zoomLevel={8}
+            ></Mapbox.Camera>
+          </Mapbox.MapView>
+          <Icon
+            style={mapStyles.locationButton}
+            name="location-pin"
+            size={25}
+            onPress={this.zoomCoordinates}
+          ></Icon>
+        </View>
       </View>
     );
   }
@@ -170,8 +156,8 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    addGroupMarkOnClick: bool => dispatch(addGroupMarkOnClick(bool)),
-    displayModalWindow: bool => dispatch(displayModalWindow(bool))
+    displayModalWindow: bool => dispatch(displayModalWindow(bool)),
+    setCoordinates: data => dispatch(setCoordinates(data))
   };
 };
 
