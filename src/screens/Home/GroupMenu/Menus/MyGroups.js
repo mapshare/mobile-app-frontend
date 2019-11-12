@@ -67,7 +67,7 @@ class MyGroups extends Component {
         this.setState({
             interval: setInterval(() => {
                 this.props.getUserGroupsSuccess(false);
-                this.props.getActiveGroupSuccess(false);
+                this.refreshData();
             }, 10000)
         });
     }
@@ -81,17 +81,7 @@ class MyGroups extends Component {
             this.setState({ changedGroup: false });
             Actions.pop();
         }
-
-        if (prevProps.getActiveGroupStatus !== this.props.getActiveGroupStatus) {
-            if (!this.props.getActiveGroupStatus) {
-                const data = {
-                    token: this.props.token,
-                    groupId: this.props.getActiveGroupData._id,
-                }
-                this.props.getActiveGroup(data);
-            }
-        }
-
+        
         // return to my groups after adding group
         if (prevProps.status !== this.props.status) {
             if (this.props.status) {
@@ -173,14 +163,22 @@ class MyGroups extends Component {
         );
     }
 
+    refreshData() {
+        const data = {
+            token: this.props.token,
+            groupId: this.props.getActiveGroupData._id,
+        }
+        this.props.getActiveGroup(data);
+    }
+
     setGroup = (groupId, groupname) => {
         const data = {
             token: this.props.token,
             groupId: groupId,
         }
         this.setState({ changedGroup: true });
-        this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroup(data);
+        this.props.getActiveGroupSuccess(false);
     }
 
     editGroup(groupId) {
@@ -203,10 +201,10 @@ class MyGroups extends Component {
                         <Icon style={styles.closeIcon} name="close" size={30} />
                     </TouchableOpacity>
                 </View>
-                <SafeAreaView style={[styles.content, {flex: 1}]} >
+                <SafeAreaView style={[styles.content, { flex: 1 }]} >
                     <TouchableWithoutFeedback onPress={() => Actions.searchGroupMenu()}>
                         <View>
-                            <SearchGroupForm enabled={false} keyboardEnabled={false}  />
+                            <SearchGroupForm enabled={false} keyboardEnabled={false} />
                         </View>
                     </TouchableWithoutFeedback>
                     <Text style={styles.textBox}>My Groups:</Text>
