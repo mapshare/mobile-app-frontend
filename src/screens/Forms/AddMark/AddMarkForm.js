@@ -1,17 +1,17 @@
 // Import Libraries
-import React, { Component } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
-import { connect } from "react-redux";
-import { reduxForm, Field, reset } from "redux-form";
+import React, { Component } from 'react';
+import { Text, View, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
-import { addGroupMark } from "../../../actions/groupMarkAction";
+import { addGroupMark } from '../../../actions/groupMarkAction';
 
 // Componenets Style
-import { containerStyles } from "./Stylesheet";
+import { containerStyles } from './Stylesheet';
 
-import validator from "../validate/validation_wrapper";
-import { RenderField } from "../RenderField/RenderField";
+import validator from '../validate/validation_wrapper';
+import { RenderField } from '../RenderField/RenderField';
 
 // Creating Component
 class AddMarkForm extends Component {
@@ -25,7 +25,7 @@ class AddMarkForm extends Component {
       },
       geometry: { coordinates: this.props.coordinates },
       groupMarkCreatedBy: this.props.getUserData._id,
-      groupId: this.props.getUserData.userGroups[0],
+      groupId: this.props.getActiveGroup._id,
       token: this.props.logInToken
     };
 
@@ -34,8 +34,6 @@ class AddMarkForm extends Component {
 
   render() {
     const { handleSubmit } = this.props;
-
-    console.log("re-render form");
 
     return (
       <View style={containerStyles.container}>
@@ -90,29 +88,29 @@ const validate = values => {
   const errors = {};
 
   if (!values.markName) {
-    errors.markName = validator("markName", values.markName);
+    errors.markName = validator('markName', values.markName);
   }
   if (!values.locationAddress) {
     errors.locationAddress = validator(
-      "locationAddress",
+      'locationAddress',
       values.locationAddress
     );
   }
   if (!values.loactionPriceRange) {
     errors.loactionPriceRange = validator(
-      "loactionPriceRange",
+      'loactionPriceRange',
       values.loactionPriceRange
     );
   }
   if (!values.locationReview) {
-    errors.locationReview = validator("locationReview", values.locationReview);
+    errors.locationReview = validator('locationReview', values.locationReview);
   }
 
   return errors;
 };
 
 const clearUpForm = (result, dispatch) => {
-  dispatch(reset("addMarkRF"));
+  dispatch(reset('addMarkRF'));
 };
 
 // Redux Getter to use: this.props.(name of any return)
@@ -120,7 +118,8 @@ const mapStateToProps = state => {
   return {
     coordinates: state.groupMarkReducer.coordinates,
     getUserData: state.logInReducer.userData,
-    logInToken: state.logInReducer.token
+    logInToken: state.logInReducer.token,
+    getActiveGroup: state.groupReducer.getActiveGroupData
   };
 };
 
@@ -137,7 +136,7 @@ AddMarkForm = connect(
 )(AddMarkForm);
 
 export default reduxForm({
-  form: "addMarkRF",
+  form: 'addMarkRF',
   onSubmitSuccess: clearUpForm,
   validate
 })(AddMarkForm);

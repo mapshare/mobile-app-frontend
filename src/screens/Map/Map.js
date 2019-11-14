@@ -1,23 +1,25 @@
-import React, { Component } from "react";
-import { View } from "react-native";
-import Mapbox from "@react-native-mapbox-gl/maps";
-import { connect } from "react-redux";
-import Geolocation from "@react-native-community/geolocation";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import Mapbox from '@react-native-mapbox-gl/maps';
+import { connect } from 'react-redux';
+import Geolocation from '@react-native-community/geolocation';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //Redux actions
-import { addMarkModalWindow } from "../../actions/modalWindowAction";
-import { setCoordinates } from "../../actions/groupMarkAction";
+import { addMarkModalWindow } from '../../actions/modalWindowAction';
+import { setCoordinates } from '../../actions/groupMarkAction';
+import { getGroupById } from '../../actions/groupActions';
 
 // Componenets Style
-import { containerStyles, mapStyles, annotationStyles } from "./Stylesheet";
+import { containerStyles, mapStyles, annotationStyles } from './Stylesheet';
 
 // Screens
-import ModalWindow from "../ModalWindow/ModalWindow";
-import AddMark from "../AddMark/AddMark";
+import ModalWindow from '../ModalWindow/ModalWindow';
+import AddMark from '../AddMark/AddMark';
+import Marks from '../Marks/Marks';
 
 Mapbox.setAccessToken(
-  "sk.eyJ1IjoiendhaGFiMTE0IiwiYSI6ImNrMXR2cWRxZDB2MjUzY25zdTZkdHg1MGEifQ.pGh19KR7GqfLCg1qoga5rg"
+  'sk.eyJ1IjoiendhaGFiMTE0IiwiYSI6ImNrMXR2cWRxZDB2MjUzY25zdTZkdHg1MGEifQ.pGh19KR7GqfLCg1qoga5rg'
 );
 
 class Map extends Component {
@@ -29,6 +31,11 @@ class Map extends Component {
       latitude: 0.0,
       longitude: 0.0
     };
+    this.marksArray = [];
+  }
+
+  componentWillMount() {
+    this.marksArray = this.props.getGroupAllMarksData;
   }
 
   findCoordinates = () => {
@@ -38,7 +45,7 @@ class Map extends Component {
 
         this.location.longitude = position.coords.longitude;
         this.location.latitude = position.coords.latitude;
-        this.setState(this.location);
+        // this.setState(this.location);
 
         console.log(this.location.latitude);
         console.log(this.location.longitude);
@@ -59,25 +66,13 @@ class Map extends Component {
     }
   };
 
-  renderAnnotations() {
-    return (
-      <Mapbox.PointAnnotation
-        key="pointAnnotation"
-        id="pointAnnotation"
-        coordinate={[-79.39503177338315, 43.63353993681244]}
-      >
-        <View style={annotationStyles.container}>
-          <View style={annotationStyles.fill} />
-        </View>
-        <Mapbox.Callout title="We did it!!" />
-      </Mapbox.PointAnnotation>
-    );
-  }
-
   render() {
     return (
       <View style={containerStyles.container}>
-        {this.props.modalWindowStatus && <ModalWindow modalContent="addMark" />}
+        {this.props.addMarkStatus && <ModalWindow modalContent="addMark" />}
+        {this.props.onClickMarkStatus && (
+          <ModalWindow modalContent="onClickMark" />
+        )}
         <View
           style={[
             containerStyles.container,
@@ -98,7 +93,7 @@ class Map extends Component {
             style={mapStyles.container}
             onDidFinishLoadingMap={this.findCoordinates}
           >
-            {this.renderAnnotations()}
+            <Marks marksArray={this.marksArray} />
             <Mapbox.Camera
               ref={Component => (this._mapcoord = Component)}
               centerCoordinate={[
@@ -124,7 +119,10 @@ class Map extends Component {
 const mapStateToProps = state => {
   return {
     addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
-    modalWindowStatus: state.modalWindowReducer.status
+    addMarkStatus: state.modalWindowReducer.addMarkStatus,
+    onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
+    logInToken: state.logInReducer.token,
+    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData
   };
 };
 
@@ -132,7 +130,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
-    setCoordinates: data => dispatch(setCoordinates(data))
+    setCoordinates: data => dispatch(setCoordinates(data)),
+    getGroupById: data => dispatch(getGroupById(data))
   };
 };
 

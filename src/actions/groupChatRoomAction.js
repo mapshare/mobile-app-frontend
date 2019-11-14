@@ -250,7 +250,7 @@ export const getActiveGroupChatRoomError = data => {
 };
 
 export const getActiveGroupChatRoom = data => {
-    
+
     console.log(data)
     return dispatch => {
         axios

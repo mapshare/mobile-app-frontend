@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {AppRegistry} from 'react-native';
-import {Provider} from 'react-redux';
+import React, { Component } from 'react';
+import { AppRegistry } from 'react-native';
+import { Provider } from 'react-redux';
 import configureStore from './src/reduxStore/configureStore';
 
 // Import Libraries

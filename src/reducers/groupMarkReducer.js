@@ -1,9 +1,10 @@
-import keys from "../data/key";
+import keys from '../data/key';
 
 const INITIAL_GROUP_MARK_STATE = {
   addGroupMarkOnClickStatus: false,
   addGroupMarkStatus: false,
-  coordinates: []
+  coordinates: [],
+  getCurrentOnClickMarkData: {}
 };
 
 export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
@@ -32,6 +33,13 @@ export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
       return { ...state, getGroupMarkData: action.getGroupMarkData };
     case keys.GET_GROUP_MARK_ERROR:
       return { ...state, getGroupMarkError: action.getGroupMarkError };
+    case keys.GET_GROUP_ALL_MARKS:
+      return { ...state, getGroupAllMarksData: action.getGroupAllMarksData };
+    case keys.GET_CURRENT_MARK:
+      return {
+        ...state,
+        getCurrentOnClickMarkData: action.getCurrentOnClickMarkData
+      };
     // UPDATE GROUP MARK
     case keys.UPDATE_GROUP_MARK_SUCCESS:
       return { ...state, updateGroupMarkStatus: action.updateGroupMarkStatus };

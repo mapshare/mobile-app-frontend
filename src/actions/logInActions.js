@@ -1,7 +1,7 @@
-import axios from "axios";
-import { API_URL } from "react-native-dotenv";
+import axios from 'axios';
+import { API_URL } from 'react-native-dotenv';
 
-import keys from "../data/key";
+import keys from '../data/key';
 
 export const logInSuccess = bool => {
   return {
@@ -39,18 +39,21 @@ export const logInUser = data => {
 
   return dispatch => {
     axios
-      .post(API_URL + "/login", userData)
+      .post(API_URL + '/login', userData)
       .then(res => {
         // console.log('data after logInUser request return data: ', res.data);
-        // console.log('data after logInUser request return header: ', res.headers.authentication);
+        // console.log(
+        //   'data after logInUser request return header: ',
+        //   res.headers.authentication
+        // );
         dispatch(logInUserDataSuccess(res.data));
         dispatch(logInToken(res.headers.authentication));
         dispatch(logInSuccess(true));
       })
       .catch(err => {
-        // console.log('logInUser errors: ', err.response.data);
+        // console.log('logInUser errors: ', err.response);
         dispatch(logInSuccess(false));
-        dispatch(logInUserError(err.response.data));
+        dispatch(logInUserError(err.response));
       });
   };
 };
