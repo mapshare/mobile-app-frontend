@@ -4,11 +4,15 @@ import {
   View,
   ImageBackground,
   TouchableOpacity,
-  Alert
+  Alert,
+  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import Mapbox from "@react-native-mapbox-gl/maps";
 import Geolocation from "@react-native-community/geolocation";
 import GroupMenu from "./GroupMenu/GroupMenu";
+import CreatePostButton from "../Groups/GroupFeed/CreatePostButton";
+import GroupFeed from "../Groups/GroupFeed/GroupFeed";
 
 // Componenets Style
 import styles from "./Stylesheet";
@@ -45,9 +49,6 @@ class Home extends Component {
         this.checkIfGroupExists(this.props.getActiveGroupData._id);
       }, 5000)
     });
-
-    this.setState({ groupImg: this.props.getActiveGroupData.groupImg });
-
   }
 
   componentWillUnmount() {
@@ -88,48 +89,13 @@ class Home extends Component {
     Actions.initial({ type: ActionConst.RESET });
   }
 
-  findCoordinates = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        console.log(position);
-
-        this.location.longitude = position.coords.longitude;
-        this.location.latitude = position.coords.latitude;
-        this.setState(this.location);
-
-        console.log(this.location.latitude);
-        console.log(this.location.longitude);
-      },
-      error => {
-        alert(error);
-        console.log(error)
-      },
-      { enableHighAccuracy: true, timeout: 2000 }
-    );
-  };
-
-  goMap() {
-    Actions.map();
-  }
-
-  getGroupImage() {
-    if (this.props.getActiveGroupData.groupImg) {
-      let data = 'data:image/png;base64,' + this.state.groupImg;
-      return ({ uri: data });
-    } else {
-      return (
-        require("../../assests/images/food.jpg")
-      );
-    }
-  }
-
   render() {
     return (
       <View style={styles.root}>
         <View style={styles.Body}>
           <GroupMenu />
+          <CreatePostButton />
           <View style={styles.InfoBody}>
-
             <ImageBackground
               source={this.props.getActiveGroupData.groupImg ? { uri: 'data:image/png;base64,' + this.props.getActiveGroupData.groupImg }
                 : require("../../assests/images/food.jpg")
@@ -145,27 +111,9 @@ class Home extends Component {
               </View>
             </ImageBackground>
           </View>
-          <Mapbox.MapView
-            styleURL={Mapbox.StyleURL.Light}
-            showUserLocation={true}
-            zoomEnabled={false}
-            scrollEnabled={false}
-            pitchEnabled={false}
-            rotateEnabled={false}
-            attributionEnabled={false}
-            logoEnabled={false}
-            style={styles.Body}
-            onDidFinishLoadingMap={this.findCoordinates}
-            onPress={this.goMap}
-          >
-            <Mapbox.Camera
-              centerCoordinate={[
-                this.location.longitude,
-                this.location.latitude
-              ]}
-              zoomLevel={8}
-            />
-          </Mapbox.MapView>
+          <SafeAreaView style={styles.groupFeed}>
+            <GroupFeed />
+          </SafeAreaView>
         </View>
       </View>
     );

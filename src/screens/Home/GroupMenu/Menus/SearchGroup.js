@@ -58,13 +58,6 @@ class SearchGroup extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.getSearchStatus !== this.props.getSearchStatus) {
-            if (this.props.getSearchStatus) {
-                this.setState({ data: this.props.getSearchData });
-            } else {
-                this.setState({ data: { loading: true } });
-            }
-        }
         if (this.state.changedGroup) {
             this.setState({ changedGroup: false });
             Actions.home();
@@ -105,30 +98,46 @@ class SearchGroup extends Component {
         if (this.props.getActiveGroupData != undefined) {
             activeGroupId = this.props.getActiveGroupData._id;
         }
-        if (this.state.data.loading) {
-            return (
-                <View style={styles.centerText}>
-                    <Text style={styles.textBox}>
-                        loading...
-                    </Text>
-                </View>
-            );
-        } else {
-            return (
-                <FlatList
-                    ItemSeparatorComponent={this.separator}
-                    data={this.state.data}
-                    renderItem={(group) => {
-                        if (group.item.isMember) {
-                            return (<TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
+        return (
+            <FlatList
+                keyboardShouldPersistTaps='always'
+                ItemSeparatorComponent={this.separator}
+                data={this.props.getSearchData}
+                renderItem={(group) => {
+                    if (group.item.isMember) {
+                        return (<TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
 
-                                <View style={styles.flatListColOne}>
-                                    {activeGroupId == group.item._id &&
-                                        <Icon style={styles.activeGroupIcon} name="arrow-right" size={20} />
-                                    }
+                            <View style={styles.flatListColOne}>
+                                {activeGroupId == group.item._id &&
+                                    <Icon style={styles.activeGroupIcon} name="arrow-right" size={20} />
+                                }
+                            </View>
+                            <View style={styles.flatListColTwo}>
+                                <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    {group.item.groupName}
+                                </Text>
+                                <Text style={styles.textBoxSmall}>
+                                    Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                </Text>
+                            </View>
+
+                            <View style={styles.flatListColThree}>
+                                <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
+                                    <Icon style={styles.editGroupIcon} name="note" size={30} />
+                                </TouchableOpacity>
+                            </View>
+
+                        </TouchableOpacity>
+                        )
+                    } else {
+                        return (
+                            <View style={styles.flatListItem}>
+
+                                <View style={styles.flatListColOneWideTwo}>
                                 </View>
+
                                 <View style={styles.flatListColTwo}>
-                                    <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    <Text style={styles.flatListItemText}>
                                         {group.item.groupName}
                                     </Text>
                                     <Text style={styles.textBoxSmall}>
@@ -136,50 +145,25 @@ class SearchGroup extends Component {
                                     </Text>
                                 </View>
 
-                                <View style={styles.flatListColThree}>
-                                    <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
-                                        <Icon style={styles.editGroupIcon} name="note" size={30} />
-                                    </TouchableOpacity>
+                                <View style={styles.flatListColThreeWide} >
+                                    {!group.item.isMember &&
+                                        !group.item.isPending &&
+                                        <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
+                                            <Text style={styles.flatListItemButtonText}>Join</Text>
+                                        </TouchableOpacity>}
+                                    {group.item.isPending &&
+                                        <Text style={styles.flatListItemButtonText}>Pending</Text>
+                                    }
                                 </View>
 
-                            </TouchableOpacity>
-                            )
-                        } else {
-                            return (
-                                <View style={styles.flatListItem} >
-
-                                    <View style={styles.flatListColOneWideTwo}>
-                                    </View>
-
-                                    <View style={styles.flatListColTwo}>
-                                        <Text style={styles.flatListItemText}>
-                                            {group.item.groupName}
-                                        </Text>
-                                        <Text style={styles.textBoxSmall}>
-                                            Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
-                                        </Text>
-                                    </View>
-
-                                    <View style={styles.flatListColThreeWide} >
-                                        {!group.item.isMember &&
-                                            !group.item.isPending &&
-                                            <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
-                                                <Text style={styles.flatListItemButtonText}>Join</Text>
-                                            </TouchableOpacity>}
-                                        {group.item.isPending &&
-                                            <Text style={styles.flatListItemButtonText}>Pending</Text>
-                                        }
-                                    </View>
-
-                                </View>
-                            )
-                        }
+                            </View>
+                        )
                     }
-                    }
-                    keyExtractor={item => item._id}
-                />
-            );
-        }
+                }
+                }
+                keyExtractor={item => item._id}
+            />
+        );
     }
 
     render() {

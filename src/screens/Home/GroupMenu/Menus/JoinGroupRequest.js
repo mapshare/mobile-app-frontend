@@ -10,6 +10,7 @@ import {
     Modal,
     FlatList,
     ScrollView,
+    SafeAreaView
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -59,16 +60,12 @@ class JoinGroupRequest extends Component {
     }
 
     componentDidMount() {
-        if (this.props.currentEditingGroupIdStatus) {
-            this.setState({ editingGroupId: this.props.currentEditingGroupIdData }, () => {
-                const data = {
-                    token: this.props.token,
-                    groupId: this.state.editingGroupId,
-                }
-                this.props.allJoinGroupRequestsSuccess(false);
-                this.props.getAllJoinGroupRequests(data);
-            });
+        const data = {
+            token: this.props.token,
+            groupId: this.props.currentEditingGroupData._id,
         }
+        this.props.allJoinGroupRequestsSuccess(false);
+        this.props.getAllJoinGroupRequests(data);
     }
 
     componentDidUpdate(prevProps) {
@@ -76,17 +73,11 @@ class JoinGroupRequest extends Component {
             if (this.props.getAllJoinGroupRequestsStatus) {
                 const data = {
                     token: this.props.token,
-                    groupId: this.state.editingGroupId,
+                    groupId: this.props.currentEditingGroupData._id,
                 }
                 this.props.allJoinGroupRequestsSuccess(false);
                 this.props.getAllJoinGroupRequests(data);
                 this.setState({ data: this.props.getAllJoinGroupRequestsData });
-            }
-        }
-
-        if (prevProps.currentEditingGroupIdStatus !== this.props.currentEditingGroupIdStatus) {
-            if (this.props.currentEditingGroupIdStatus) {
-                this.setState({ editingGroupId: this.props.currentEditingGroupIdData })
             }
         }
     }
@@ -94,18 +85,19 @@ class JoinGroupRequest extends Component {
     reviewRequest(status, selectedPendingUser) {
         const data = {
             token: this.props.token,
-            groupId: this.state.editingGroupId,
+            groupId: this.props.currentEditingGroupData._id,
             status: status,
             pendingUserId: selectedPendingUser._id,
         }
         this.props.reviewJoinGroupRequestsSuccess(false);
         this.props.reviewJoinGroupRequests(data);
+        this.props.allJoinGroupRequestsSuccess(false);
         this.setSuccesModalVisible(!this.state.succesModalVisible);
     }
 
     setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible },()=>{
-            setTimeout(()=>{
+        this.setState({ succesModalVisible: visible }, () => {
+            setTimeout(() => {
                 this.setState({ succesModalVisible: !visible });
             }, 3000);
         });
@@ -132,11 +124,11 @@ class JoinGroupRequest extends Component {
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <ScrollView style={styles.content} >
+                <SafeAreaView style={styles.content} >
                     <Text style={styles.textBox}>Pending Group Join Request:</Text>
                     <View style={styles.flatListItemSeporator} />
                     <FlatList
-                        data={this.state.data}
+                        data={this.props.getAllJoinGroupRequestsData}
                         renderItem={(request) => {
                             return (
                                 <View style={styles.flatListItem}>
@@ -167,7 +159,7 @@ class JoinGroupRequest extends Component {
                     />
 
                     <View style={styles.flatListItemSeporator} />
-                </ScrollView>
+                </SafeAreaView>
             </View>
         );
     }
@@ -189,8 +181,8 @@ const mapStateToProps = state => {
         onAddGroupFormStatus: state.addGroupFormReducer.onAddGroupFormStatus,
         currentContentStateData: state.groupMenuReducer.currentContentStateData,
         currentContentStatus: state.groupMenuReducer.currentContentStatus,
-        currentEditingGroupIdStatus: state.groupMenuReducer.currentEditingGroupIdStatus,
-        currentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        currentEditingGroupStatus: state.groupMenuReducer.currentEditingGroupStatus,
+        currentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
         getAllJoinGroupRequestsStatus: state.groupReducer.getAllJoinGroupRequestsStatus,
         getAllJoinGroupRequestsData: state.groupReducer.getAllJoinGroupRequestsData,
         getActiveGroupData: state.groupReducer.getActiveGroupData,

@@ -50,7 +50,7 @@ class MyGroups extends Component {
         const data = {
             token: this.props.token,
             memberId: this.props.currentEditingGroupMemberData._id,
-            groupId: this.props.getCurrentEditingGroupIdData,
+            groupId: this.props.getCurrentEditingGroupData._id,
         }
         this.props.leaveGroupSuccess(false);
         this.props.leaveGroup(data);
@@ -62,7 +62,7 @@ class MyGroups extends Component {
             token: this.props.token,
             memberId: this.props.currentEditingGroupMemberData._id,
             groupRolePermisionLevel: this.state.permisionLevel,
-            groupId: this.props.getCurrentEditingGroupIdData,
+            groupId: this.props.getCurrentEditingGroupData._id,
         }
         this.props.updateGroupMemberSuccess(false);
         this.props.updateGroupMember(data);
@@ -70,7 +70,7 @@ class MyGroups extends Component {
 
         const data2 = {
             token: this.props.token,
-            groupId: this.props.getActiveGroupData._id,
+            groupId: this.props.getCurrentEditingGroupData._id,
         }
         this.props.getAllGroupMember(data2);
         this.setSuccesModalVisible(!this.state.succesModalVisible);
@@ -182,7 +182,7 @@ const mapStateToProps = state => {
     return {
         token: state.logInReducer.token,
         getActiveGroupData: state.groupReducer.getActiveGroupData,
-        getCurrentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        getCurrentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
         currentEditingGroupMemberData: state.groupMenuReducer.currentEditingGroupMemberData,
     };
 };

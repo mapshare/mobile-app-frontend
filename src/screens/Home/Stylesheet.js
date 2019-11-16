@@ -19,7 +19,7 @@ export default StyleSheet.create({
         flex: 1,
     },
     InfoBody: {
-        flex: 0.5
+        flex: 0.5,
     },
     image: {
         flex: 1
@@ -33,12 +33,12 @@ export default StyleSheet.create({
         color: "rgba(255,255,255,1)",
         fontSize: 24,
         marginTop: 41,
-        textAlign:"center",
+        textAlign: "center",
     },
-    button:{
+    button: {
         width: 105,
         height: 40,
-        alignSelf:"center",
+        alignSelf: "center",
         backgroundColor: "rgba(255,255,255,1)",
         paddingVertical: 10,
         color: '#fff',
@@ -48,7 +48,7 @@ export default StyleSheet.create({
     text: {
         color: "rgba(31,178,204,1)",
         fontSize: 14,
-        textAlign:"center"
+        textAlign: "center"
     },
     Message: {
         color: "rgba(255,255,255,1)",
@@ -56,4 +56,7 @@ export default StyleSheet.create({
         marginTop: 22,
         alignSelf: "center"
     },
+    groupFeed: {
+        flex: 1,
+    }
 });

@@ -1,7 +1,7 @@
 import keys from '../data/key';
 
 const INITIAL_GROUP_CHAT_ROOM_STATE = {
-    status: false,
+    chatLogData: { data: [] }
 };
 
 export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, action) => {
@@ -17,7 +17,13 @@ export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, acti
         case keys.CONNECT_TO_GROUP_CHAT_SUCCESS:
             return { ...state, connectToGroupChatStatus: action.connectToGroupChatStatus };
         case keys.CONNECT_TO_GROUP_CHAT_DATA_SUCCESS:
-            return { ...state, socket: action.socket };
+            try {
+                if (state.socket)
+                    state.socket.disconnect();
+                return { ...state, socket: action.socket };
+            } catch (error) {
+                return { ...state, socket: action.socket };
+            }
         case keys.CHAT_LOG_DATA:
             return { ...state, chatLogData: action.chatLogData };
         case keys.NEW_MESSAGE_STATUS:
