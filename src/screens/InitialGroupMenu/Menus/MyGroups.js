@@ -152,7 +152,7 @@ class MyGroups extends Component {
                         <TouchableOpacity style={styles.addGroup} onPress={() => Actions.initialAddGroup()}>
                             <Icon style={styles.closeIcon} name="plus" size={30} />
                         </TouchableOpacity>
-                        <SafeAreaView style={[styles.content]} >
+                        <SafeAreaView style={[styles.content], { flex: 1 }} >
                             <TouchableWithoutFeedback onPress={() => Actions.initialSearchGroup()}>
                                 <View>
                                     <SearchGroupForm enabled={false} keyboardEnabled={false} />

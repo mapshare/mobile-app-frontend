@@ -3,6 +3,7 @@ import { API_URL } from 'react-native-dotenv'
 
 import keys from '../data/key';
 
+import {getGroups} from "./groupActions";
 
 console.log(API_URL)
 
@@ -44,14 +45,14 @@ export const logInUser = data => {
     axios
       .post(API_URL + '/login', userData)
       .then(res => {
-        // console.log('data after logInUser request return data: ', res.data);
-        // console.log('data after logInUser request return header: ', res.headers.authentication);
+        // Load all groups on user login
+        dispatch(getGroups({ token: res.headers.authentication }));
         dispatch(logInUserDataSuccess(res.data));
         dispatch(logInToken(res.headers.authentication));
         dispatch(logInSuccess(true));
       })
       .catch(err => {
-        // console.log('logInUser errors: ', err.response.data);
+        console.log('logInUser errors: ', err);
         dispatch(logInSuccess(false));
         dispatch(logInUserError(err.response.data));
       });

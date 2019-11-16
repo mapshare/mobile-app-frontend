@@ -17,6 +17,15 @@ import keys from '../data/key';
 *
 */
 
+
+export const loadingData = bool => {
+    return {
+        type: keys.LOADING_DATA,
+        loadingData: bool,
+    };
+};
+
+
 /*
 *   CREATE GROUP
 */
@@ -50,6 +59,12 @@ export const createGroup = data => {
         axios
             .post(API_URL + '/groups', groupData, { headers: { 'authentication': data.token } })
             .then(res => {
+                const newGroupData = {
+                    groupId: res.data._id,
+                    token: data.token
+                }
+                dispatch(getActiveGroup(newGroupData));
+                dispatch(getUserGroups({ token: token }));
                 dispatch(createGroupDataSuccess(res.data));
                 dispatch(createGroupSuccess(true));
             })
@@ -85,19 +100,49 @@ export const searchGroupError = data => {
 };
 
 export const searchGroup = data => {
-    let searchArg = {
-        groupName: data.groupName,
+    return dispatch => {
+        dispatch(searchGroupDataSuccess(data));
+        dispatch(searchGroupSuccess(true));
     };
+};
+
+
+/*
+*   GET ALL GROUPS FOR LOCAL SEARCH
+*/
+export const getGroupsSuccess = bool => {
+    return {
+        type: keys.GET_GROUPS_SUCCESS,
+        getGroupsSuccess: bool,
+    };
+};
+
+export const getGroupsData = data => {
+    return {
+        type: keys.GET_GROUPS_DATA_SUCCESS,
+        getGroupsData: data,
+    };
+};
+
+export const getGroupsError = data => {
+    return {
+        type: keys.GET_GROUPS_ERROR,
+        getGroupsError: data,
+    };
+};
+
+export const getGroups = data => {
     return dispatch => {
         axios
-            .post(API_URL + '/groups/search', searchArg, { headers: { 'authentication': data.token } })
+            .get(API_URL + '/groups', { headers: { 'authentication': data.token } })
             .then(res => {
-                dispatch(searchGroupDataSuccess(res.data));
-                dispatch(searchGroupSuccess(true));
+                dispatch(getGroupsData(res.data));
+                dispatch(getGroupsSuccess(true));
             })
             .catch(err => {
-                dispatch(searchGroupSuccess(false));
-                dispatch(searchGroupError(err.response));
+                console.log(err.response.data)
+                dispatch(getGroupsSuccess(false));
+                dispatch(getGroupsError(err.response));
             });
     };
 };
@@ -144,6 +189,9 @@ export const getUserGroups = data => {
 /*
 *   GET ACTIVE GROUP
 */
+import { connectToGroupChat } from "./groupChatRoomAction"
+import { connectToGroupFeed, groupFeedData } from "./groupFeedAction"
+
 export const getActiveGroupSuccess = bool => {
     return {
         type: keys.GET_ACTIVE_GROUP_SUCCESS,
@@ -166,12 +214,27 @@ export const getActiveGroupError = data => {
 };
 
 export const getActiveGroup = data => {
-    return dispatch => {
+    // Reset all states that relate to the group
+
+    return (dispatch, getState) => {
+        const newData = {
+            token: data.token,
+            groupId: data.groupId,
+        }
+
+        dispatch(loadingData(true));
+        dispatch(groupFeedData([]));
+        dispatch(connectToGroupChat(newData));
+        dispatch(connectToGroupFeed(newData));
+        dispatch(getGroupMember(newData));
+
+
         axios
             .get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(getActiveGroupDataSuccess(res.data));
                 dispatch(getActiveGroupSuccess(true));
+                dispatch(loadingData(false));
             })
             .catch(err => {
                 console.log(err.response.data)
@@ -395,6 +458,7 @@ export const requestToJoinGroup = data => {
         axios
             .post(API_URL + '/groups/' + data.groupId + '/join', {}, { headers: { 'authentication': data.token } })
             .then(res => {
+                dispatch(getUserGroups({ token: data.token }))
                 dispatch(requestToJoinGroupDataSuccess(res.data));
                 dispatch(requestToJoinGroupSuccess(true));
             })
@@ -438,10 +502,13 @@ export const reviewJoinGroupRequests = data => {
         axios
             .post(API_URL + '/groups/' + data.groupId + '/reviewPending', accepted, { headers: { 'authentication': data.token } })
             .then(res => {
+                console.log(res.data)
+                dispatch(allJoinGroupRequestsSuccess(false));
                 dispatch(reviewJoinGroupRequestsDataSuccess(res.data));
                 dispatch(reviewJoinGroupRequestsSuccess(true));
             })
             .catch(err => {
+                console.log(err.response.data)
                 dispatch(reviewJoinGroupRequestsSuccess(false));
                 dispatch(reviewJoinGroupRequestsError(err.response.data));
             });
@@ -567,6 +634,7 @@ export const leaveGroup = data => {
         axios
             .delete(API_URL + '/groups/' + data.groupId + '/member' + deleteByMember, { headers: { 'authentication': data.token } })
             .then(res => {
+                dispatch(getUserGroups({ token: token }));
                 dispatch(leaveGroupDataSuccess(res.data));
                 dispatch(leaveGroupSuccess(true));
             })
@@ -606,6 +674,7 @@ export const deleteGroup = data => {
         axios
             .delete(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
             .then(res => {
+                dispatch(getUserGroups({ token: token }));
                 dispatch(deleteGroupDataSuccess(res.data));
                 dispatch(deleteGroupSuccess(true));
             })

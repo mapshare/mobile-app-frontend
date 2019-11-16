@@ -6,7 +6,9 @@ import {
   Scene,
   ActionConst,
   View,
-  Lightbox
+  Lightbox,
+  Modal,
+  Actions
 } from "react-native-router-flux";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
@@ -26,6 +28,8 @@ import SelectGroup from "../../screens/ManageGroup/SelectGroup/SelectGroup";
 import AddGroup from "../../screens/ManageGroup/AddGroup/AddGroup";
 import ManageGroupJoinRequests from "../../screens/ManageGroup/ManageGroupJoinRequests/ManageGroupJoinRequests";
 import Chat from "../../screens/Groups/GroupChat/GroupChat";
+import CreatePostModal from "../../screens/Forms/CreatePost/CreatePost";
+import LoadingScreen from "../../screens/Loading/Loading";
 
 // InitialGroupMenu
 import InitialAddGroup from "../../screens/InitialGroupMenu/Menus/AddGroup";
@@ -43,10 +47,16 @@ import JoinGroupRequestMenu from "../../screens/Home/GroupMenu/Menus/JoinGroupRe
 import ChangeGroupNameMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupName";
 import ChangeGroupDescriptionMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupDescription";
 
-
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
 };
+
+//Redux actions
+import { connect } from 'react-redux';
+
+import {
+  getGroups,
+} from '../../actions/groupActions';
 
 //Create a dedicated class that will manage the tabBar icon
 class TabIcon extends Component {
@@ -55,7 +65,25 @@ class TabIcon extends Component {
   }
 }
 
-export default class App extends Component {
+class App extends Component {
+
+
+  componentDidMount(){
+  }
+
+  componentDidUpdate(prevProps) {
+    // Display Loading Screen When Changing Group 
+    if (prevProps.loadingData !== this.props.loadingData) {
+      if (this.props.loadingData) {
+        Actions.loadingScreen();
+      } else{
+        Actions.home();
+      }
+    }
+
+
+  }
+
   render() {
     return (
       <Router
@@ -63,7 +91,8 @@ export default class App extends Component {
         titleStyle={{ color: "white" }}
         navigationBarStyle={{ backgroundColor: "#33C1FF" }}
       >
-        <Stack key="root" hideNavBar>
+
+        <Modal key="root" hideNavBar>
           <Scene
             key="login"
             component={LogIn}
@@ -163,6 +192,7 @@ export default class App extends Component {
               name="map"
               hideNavBar
             />
+
             <Scene
               key="chat"
               component={Chat}
@@ -170,6 +200,7 @@ export default class App extends Component {
               name="people"
               hideNavBar
             />
+
             <Scene
               key="events"
               component={Events}
@@ -177,6 +208,7 @@ export default class App extends Component {
               name="event"
               hideNavBar
             />
+
             <Scene
               key="profile"
               component={Profile}
@@ -185,8 +217,32 @@ export default class App extends Component {
               hideNavBar
             />
           </Stack>
-        </Stack >
-      </Router >
+
+          <Scene key="loadingScreen" component={LoadingScreen} />
+          <Scene key="createPostModal" component={CreatePostModal} />
+        </Modal>
+      </Router>
     );
   }
 }
+
+
+
+// Redux Getter to use: this.props.(name of any return)
+const mapStateToProps = state => {
+  return {
+    loadingData: state.groupReducer.loadingData
+  };
+};
+
+// Redux Setter to use: this.props.(name of any return)
+const mapDispatchToProps = dispatch => {
+  return {
+    getGroups: data => dispatch(getGroups(data)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);

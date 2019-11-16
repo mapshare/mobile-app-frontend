@@ -66,20 +66,6 @@ class EditGroup extends Component {
         };
     }
 
-    componentDidMount() {
-        if (this.props.currentEditingGroupIdStatus) {
-            this.setState({ editingGroupId: this.props.currentEditingGroupIdData })
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.currentEditingGroupIdStatus !== this.props.currentEditingGroupIdStatus) {
-            if (this.props.currentEditingGroupIdStatus) {
-                this.setState({ editingGroupId: this.props.currentEditingGroupIdData })
-            }
-        }
-    }
-
     leaveGroup() {
         const data = {
             token: this.props.token,
@@ -105,7 +91,7 @@ class EditGroup extends Component {
         const data = {
             token: this.props.token,
             groupImg: this.state.groupImg,
-            groupId: this.props.currentEditingGroupIdData,
+            groupId: this.props.currentEditingGroupData._id,
         }
         this.props.updateGroupSuccess(false);
         this.props.updateGroup(data);
@@ -137,8 +123,8 @@ class EditGroup extends Component {
     };
 
     setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible },()=>{
-            setTimeout(()=>{
+        this.setState({ succesModalVisible: visible }, () => {
+            setTimeout(() => {
                 this.setState({ succesModalVisible: !visible });
             }, 3000);
         });
@@ -166,11 +152,10 @@ class EditGroup extends Component {
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.content} >
-                    <Text style={styles.textBox}>Edit Group:</Text>
-
+                    <Text style={styles.textBox}>Edit Group: {this.props.currentEditingGroupData.groupName}</Text>
                     <View>
                         <View style={styles.flatListItemSeporator} />
-                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                        {(this.props.currentEditingGroupData.groupRolePermisionLevel >= 3) &&
                             <View>
                                 <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupNameMenu()}>
                                     <Text style={styles.textBox} >Change Group Name</Text>
@@ -180,7 +165,7 @@ class EditGroup extends Component {
                             </View>
                         }
 
-                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                        {(this.props.currentEditingGroupData.groupRolePermisionLevel >= 3) &&
                             <View>
                                 <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupDescriptionMenu()}>
                                     <Text style={styles.textBox} >Change Group Description</Text>
@@ -189,7 +174,7 @@ class EditGroup extends Component {
                             </View>
                         }
 
-                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                        {(this.props.currentEditingGroupData.groupRolePermisionLevel >= 3) &&
                             <View>
 
                                 <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.choosePhoto() }}>
@@ -205,7 +190,7 @@ class EditGroup extends Component {
 
                         <View style={styles.flatListItemSeporator} />
 
-                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                        {(this.props.currentEditingGroupData.groupRolePermisionLevel >= 3) &&
                             <View>
                                 <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.joinGroupRequestMenu()}>
                                     <Text style={styles.textBox} >Group Join Requests</Text>
@@ -215,7 +200,7 @@ class EditGroup extends Component {
                             </View>
                         }
 
-                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel <= 3) &&
+                        {(this.props.currentEditingGroupData.groupRolePermisionLevel <= 3) &&
                             <View>
                                 <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.leaveGroup()}>
                                     <Text style={styles.textBox} >Leave Group</Text>
@@ -225,7 +210,7 @@ class EditGroup extends Component {
                             </View>
                         }
 
-                        {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel == 4) &&
+                        {(this.props.currentEditingGroupData.groupRolePermisionLevel == 4) &&
                             <View>
                                 <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.deleteGroup()}>
                                     <Text style={styles.textBox} >Delete Group</Text>
@@ -257,8 +242,8 @@ const mapStateToProps = state => {
         onAddGroupFormStatus: state.addGroupFormReducer.onAddGroupFormStatus,
         currentContentStateData: state.groupMenuReducer.currentContentStateData,
         currentContentStatus: state.groupMenuReducer.currentContentStatus,
-        currentEditingGroupIdStatus: state.groupMenuReducer.currentEditingGroupIdStatus,
-        currentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        currentEditingGroupStatus: state.groupMenuReducer.currentEditingGroupStatus,
+        currentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
     };
 };
 

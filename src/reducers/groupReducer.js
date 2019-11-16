@@ -7,6 +7,11 @@ const INITIAL_GROUP_STATE = {
     groupExistsStatus: true,
     getUserGroupsData: "",
     getActiveGroupError: "",
+    getGroupMemberData: {
+        _id: ""
+    },
+    loadingData: false,
+    getGroupsData: "",
 };
 
 export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
@@ -25,6 +30,13 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, searchData: action.searchData };
         case keys.SEARCH_GROUP_ERROR:
             return { ...state, searchGroupError: action.searchGroupError };
+        // GET ALL GROUPS FOR LOCAL SEARCH     
+        case keys.GET_GROUPS_SUCCESS:
+            return { ...state, getGroupsSuccess: action.getGroupsSuccess };
+        case keys.GET_GROUPS_DATA_SUCCESS:
+            return { ...state, getGroupsData: action.getGroupsData };
+        case keys.GET_GROUPS_ERROR:
+            return { ...state, getGroupsError: action.getGroupsError };
         // GET GROUPS THAT A USER IS A MEMBER
         case keys.GET_USER_GROUP_SUCCESS:
             return { ...state, getUserGroupsStatus: action.getUserGroupsStatus };
@@ -39,6 +51,9 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, getActiveGroupData: action.getActiveGroupData };
         case keys.GET_ACTIVE_GROUP_ERROR:
             return { ...state, getActiveGroupError: action.getActiveGroupError };
+        // Loading Data
+        case keys.LOADING_DATA:
+            return { ...state, loadingData: action.loadingData };
         //  CHECK IF GROUP EXISTS
         case keys.GROUP_EXISTS_SUCCESS:
             return { ...state, groupExistsStatus: action.groupExistsStatus };

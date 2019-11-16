@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     FlatList,
     ScrollView,
+    SafeAreaView
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -41,32 +42,28 @@ class MyGroups extends Component {
     }
 
     componentDidMount() {
-        this.props.getAllGroupMemberSuccess(false);
+        const data = {
+            token: this.props.token,
+            groupId: this.props.currentEditingGroupData._id,
+        }
+        this.props.getAllGroupMember(data);
+        this.props.getUserGroupsSuccess(false);
+        
         // update every 5 seconds
         this.setState({
             interval: setInterval(() => {
-                this.props.getAllGroupMemberSuccess(false);
+                const data = {
+                    token: this.props.token,
+                    groupId: this.props.currentEditingGroupData._id,
+                }
+                this.props.getUserGroupsSuccess(false);
+                this.props.getAllGroupMember(data);
             }, 5000)
         });
     }
 
     componentWillUnmount() {
         clearInterval(this.state.interval);
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.getAllGroupMemberStatus !== this.props.getAllGroupMemberStatus) {
-            if (this.props.getAllGroupMemberStatus) {
-                this.setState({ data: this.props.getAllGroupMemberData });
-            } else {
-                const data = {
-                    token: this.props.token,
-                    groupId: this.props.getActiveGroupData._id,
-                }
-                this.props.getAllGroupMember(data);
-                this.props.getUserGroupsSuccess(false);
-            }
-        }
     }
 
     editGroupMember(data) {
@@ -78,14 +75,10 @@ class MyGroups extends Component {
     separator = () => <View style={styles.flatListItemSeporator} />
 
     showGroupMembers() {
-        let activeGroupId = "";
-        if (this.props.getActiveGroupData != undefined) {
-            activeGroupId = this.props.getActiveGroupData._id;
-        }
         return (
             <FlatList
                 ItemSeparatorComponent={this.separator}
-                data={this.state.data}
+                data={this.props.getAllGroupMemberData}
                 renderItem={(group) => {
                     return (
                         <View style={styles.flatListItem}>
@@ -96,13 +89,13 @@ class MyGroups extends Component {
                                 </Text>
                             </View>
                             <View style={styles.flatListColTwoSmall}>
-                                <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                <Text style={styles.flatListItemText}>
                                     {group.item.userFirstName + " " + group.item.userLastName}
                                 </Text>
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                {(this.props.getActiveGroupData.groupRole.groupRolePermisionLevel >= 3) &&
+                                {(this.props.currentEditingGroupData.groupRolePermisionLevel >= 3) &&
                                     (group.item.groupMemberRole.groupRolePermisionLevel <= 3) &&
                                     <TouchableOpacity onPress={() => this.editGroupMember(group.item)}>
                                         <Icon style={styles.editGroupIcon} name="note" size={30} />
@@ -126,12 +119,12 @@ class MyGroups extends Component {
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <ScrollView style={styles.content} >
+                <SafeAreaView style={styles.content} >
                     <Text style={styles.textBox}>Members:</Text>
                     <View style={styles.flatListItemSeporator} />
                     {this.showGroupMembers()}
                     <View style={styles.flatListItemSeporator} />
-                </ScrollView>
+                </SafeAreaView>
             </View>
         );
     }
@@ -144,6 +137,7 @@ const mapStateToProps = state => {
         getActiveGroupData: state.groupReducer.getActiveGroupData,
         getAllGroupMemberStatus: state.groupReducer.getAllGroupMemberStatus,
         getAllGroupMemberData: state.groupReducer.getAllGroupMemberData,
+        currentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
     };
 };
 

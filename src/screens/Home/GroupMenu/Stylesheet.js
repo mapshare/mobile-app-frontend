@@ -172,20 +172,21 @@ export default StyleSheet.create({
         position: 'absolute',
         alignSelf: 'center',
         width: '100%',
-        bottom: 20
+        bottom: 20,
+        zIndex: 1000
     },
     centerText: {
-        width:'100%',
-        alignContent:'center',
-        justifyContent:'center',
+        width: '100%',
+        alignContent: 'center',
+        justifyContent: 'center',
         alignItems: 'center',
     },
     SuccesModal: {
         backgroundColor: "rgba(50,50,50,.8)",
         position: 'absolute',
-        alignItems:'center',
+        alignItems: 'center',
         alignSelf: 'center',
-        borderRadius:10,
+        borderRadius: 10,
         width: '50%',
         bottom: 100
     }

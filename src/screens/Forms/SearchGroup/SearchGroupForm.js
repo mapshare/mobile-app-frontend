@@ -43,8 +43,9 @@ class SearchGroupForm extends Component {
             searchGroupError: '',
         };
     }
-
-    componentDidMount() {
+    
+    componentWillUnmount() {
+        this.searchGroupName("")
     }
 
     componentDidUpdate(prevProps) {
@@ -61,19 +62,22 @@ class SearchGroupForm extends Component {
         }
 
         if (this.props.getSearchGroupError) {
-            alert(JSON.stringify(this.props.getSearchGroupError));
             this.props.searchGroupError("");
         }
     }
 
-    searchGroup = async () => {
-        const data = {
-            token: this.props.token,
-            groupName: this.state.groupName,
-        }
+    searchGroupName(searchArg) {
+        this.setState({ groupName: searchArg });
+
+        let searchRegex = new RegExp('^.*' + searchArg + '.*$', 'gim');
+        const searchResult = this.props.getGroupsData.filter(
+            (group) => {
+                return (group.groupName.search(searchRegex) != -1) ? true : false;
+            }
+        );
         this.props.setSearchStatus(false);
-        this.props.searchGroup(data);
-    };
+        this.props.searchGroup(searchResult);
+    }
 
     formFocus(value) {
         this.props.onSearchFocusSuccess(false);
@@ -91,7 +95,7 @@ class SearchGroupForm extends Component {
                             onFocus={() => this.formFocus(true)}
                             onBlur={() => this.formFocus(false)}
                             style={{ fontSize: 25, paddingLeft: 15 }}
-                            onChangeText={GroupName => this.setState({ groupName: GroupName })}
+                            onChangeText={GroupName => this.searchGroupName(GroupName)}
                             value={this.state.groupName}
                             placeholder="Search For New Group"
                             placeholderTextColor="#B8B8B8"
@@ -99,7 +103,7 @@ class SearchGroupForm extends Component {
                             autoCorrect={false}
                             returnKeyType="next"
                             autoCapitalize="none"
-                            onSubmitEditing={() => this.searchGroup()}
+                            onSubmitEditing={() => this.searchGroupName(this.state.groupName)}
                             editable={this.props.enabled}
                         />
                         {this.state.searchGroupError ? <Text>{this.state.searchGroupError}</Text> : null}
@@ -115,6 +119,7 @@ const mapStateToProps = state => {
     return {
         searchStatus: state.groupReducer.searchStatus,
         searchData: state.groupReducer.searchData,
+        getGroupsData: state.groupReducer.getGroupsData,
         getSearchGroupError: state.groupReducer.searchGroupError,
         token: state.logInReducer.token,
         requestClearFieldStatus: state.searchGroupFormReducer.requestClearFieldStatus,
