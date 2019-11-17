@@ -56,17 +56,14 @@ class MyGroups extends Component {
     }
 
     componentDidMount() {
+        this.props.getUserGroupsSuccess(false);
+        this.props.getUserGroups({ token: this.props.token });
         // update every 5 seconds
         this.setState({
             interval: setInterval(() => {
-                this.props.getUserGroupsSuccess(false);
+                this.props.getUserGroups({ token: this.props.token });
             }, 5000)
         });
-
-        if (!this.props.getUserGroupsStatus) {
-            this.props.getUserGroupsSuccess(false);
-            this.props.getUserGroups({ token: this.props.token });
-        }
     }
 
     componentWillUnmount() {
@@ -74,23 +71,8 @@ class MyGroups extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.getUserGroupsStatus !== this.props.getUserGroupsStatus) {
-            if (this.props.getUserGroupsStatus) {
-                this.setState({ userGroups: this.props.getUserGroupsData });
-            } else {
-                this.props.getUserGroups({ token: this.props.token });
-            }
-        }
-
         if (this.props.getActiveGroupStatus) {
             Actions.navTab({ type: ActionConst.RESET });
-        }
-
-        // return to my groups after adding group
-        if (prevProps.status !== this.props.status) {
-            if (this.props.status) {
-                this.props.getUserGroupsSuccess(false);
-            }
         }
     }
 
@@ -101,10 +83,11 @@ class MyGroups extends Component {
         if (this.props.getActiveGroupData != undefined) {
             activeGroupId = this.props.getActiveGroupData._id;
         }
+        console.log(this.props.getUserGroupsData)
         return (
             <FlatList
                 ItemSeparatorComponent={this.separator}
-                data={this.state.userGroups}
+                data={this.props.getUserGroupsData}
                 renderItem={(group) => {
                     return (
                         <TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id)}>
@@ -152,12 +135,14 @@ class MyGroups extends Component {
                         <TouchableOpacity style={styles.addGroup} onPress={() => Actions.initialAddGroup()}>
                             <Icon style={styles.closeIcon} name="plus" size={30} />
                         </TouchableOpacity>
-                        <SafeAreaView style={[styles.content], { flex: 1 }} >
+                        <View style={styles.content}>
                             <TouchableWithoutFeedback onPress={() => Actions.initialSearchGroup()}>
                                 <View>
                                     <SearchGroupForm enabled={false} keyboardEnabled={false} />
                                 </View>
                             </TouchableWithoutFeedback>
+                        </View>
+                        <SafeAreaView style={[styles.content], { flex: 1 }} >
                             <Text style={styles.textBox}>My Groups:</Text>
                             <View style={styles.flatListItemSeporator} />
                             {this.showMyGroups()}
