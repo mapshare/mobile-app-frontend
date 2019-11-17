@@ -143,7 +143,7 @@ class MyGroups extends Component {
                             </TouchableWithoutFeedback>
                         </View>
                     </View>
-                    <SafeAreaView style={[styles.content, styles.fullHeight], { flex: 1 }} >
+                    <SafeAreaView style={styles.content, { flex: 1 }} >
                         <Text style={styles.textBox}>My Groups:</Text>
                         <View style={styles.flatListItemSeporator} />
                         {this.showMyGroups()}

@@ -145,10 +145,5 @@ export default StyleSheet.create({
         alignContent:'center',
         justifyContent:'center',
         alignItems: 'center',
-    },
-    fullHeight:{
-        width:'100%',
-        height:'100%',
-        backgroundColor: '#32CD32',
     }
 });
