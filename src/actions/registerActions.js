@@ -33,6 +33,7 @@ export const registerUser = data => {
     userPassword: data.userPassword,
   };
   return dispatch => {
+    console.log(API_URL)
     axios
       .post(API_URL + '/register', userData)
       .then(res => {

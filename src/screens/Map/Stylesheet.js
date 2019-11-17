@@ -38,6 +38,9 @@ const mapStyles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: 10
+  },
+  searchBar: {
+    flexDirection: 'row'
   }
 });
 

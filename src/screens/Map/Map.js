@@ -4,6 +4,8 @@ import Mapbox from "@react-native-mapbox-gl/maps";
 import { connect } from "react-redux";
 import Geolocation from "@react-native-community/geolocation";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import MSearch from './Search'
+import { MAPBOX } from 'react-native-dotenv';
 
 //Redux actions
 import { displayModalWindow } from "../../actions/modalWindowAction";
@@ -16,8 +18,10 @@ import { containerStyles, mapStyles, annotationStyles } from "./Stylesheet";
 import ModalWindow from "../ModalWindow/ModalWindow";
 import AddMark from "../AddMark/AddMark";
 
+console.log(MAPBOX)
+
 Mapbox.setAccessToken(
-  "sk.eyJ1IjoiendhaGFiMTE0IiwiYSI6ImNrMXR2cWRxZDB2MjUzY25zdTZkdHg1MGEifQ.pGh19KR7GqfLCg1qoga5rg"
+  MAPBOX
 );
 
 class Map extends Component {
@@ -29,6 +33,20 @@ class Map extends Component {
       latitude: 0.0,
       longitude: 0.0
     };
+  }
+
+  getCoordsFromName(loc) {
+    console.log(loc.lng, loc.lat)
+
+    this.location.longitude = loc.lng;
+    this.location.latitude = loc.lat;
+    this.setState(this.location);
+
+    // this.renderAnnotations()
+    this._mapcoord.setCamera({
+      centerCoordinate: [this.location.longitude, this.location.latitude],
+      zoomLevel: 8
+    });
   }
 
   findCoordinates = () => {
@@ -46,11 +64,16 @@ class Map extends Component {
       error => alert(error),
       { enableHighAccuracy: true, timeout: 2000 }
     );
+  };
+
+  zoomCoordinates = () => {
+    this.findCoordinates()
     this._mapcoord.setCamera({
       centerCoordinate: [this.location.longitude, this.location.latitude],
       zoomLevel: 8
     });
-  };
+    this.renderAnnotations()
+  }
 
   mapOnClick = data => {
     if (this.props.addGroupMarkOnClickStatus) {
@@ -60,11 +83,12 @@ class Map extends Component {
   };
 
   renderAnnotations() {
+    console.log("Test")
     return (
       <Mapbox.PointAnnotation
         key="pointAnnotation"
         id="pointAnnotation"
-        coordinate={[-79.39503177338315, 43.63353993681244]}
+        coordinate={[this.location.longitude, this.location.latitude]}
       >
         <View style={annotationStyles.container}>
           <View style={annotationStyles.fill} />
@@ -89,6 +113,7 @@ class Map extends Component {
           <View style={containerStyles.optionsContainer}>
             <AddMark />
           </View>
+          <MSearch notifyChange={(loc) => this.getCoordsFromName(loc)}/>
           <Mapbox.MapView
             styleURL={Mapbox.StyleURL.Light}
             onPress={data => this.mapOnClick(data)}
@@ -112,7 +137,7 @@ class Map extends Component {
             style={mapStyles.locationButton}
             name="location-pin"
             size={25}
-            onPress={this.findCoordinates}
+            onPress={this.zoomCoordinates}
           ></Icon>
         </View>
       </View>
