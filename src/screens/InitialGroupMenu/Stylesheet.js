@@ -146,4 +146,9 @@ export default StyleSheet.create({
         justifyContent:'center',
         alignItems: 'center',
     },
+    fullHeight:{
+        width:'100%',
+        height:'100%',
+        backgroundColor: '#32CD32',
+    }
 });
