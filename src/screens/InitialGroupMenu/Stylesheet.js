@@ -145,5 +145,5 @@ export default StyleSheet.create({
         alignContent:'center',
         justifyContent:'center',
         alignItems: 'center',
-    },
+    }
 });
