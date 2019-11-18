@@ -1,17 +1,21 @@
 // Import Libraries
 import React, { Component } from "react"
-import { Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, ImageBackground } from "react-native"
-import { Actions } from "react-native-router-flux";
+import { View } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
-// Creating Component
-class Loading extends Component {
+// Componenets Style
+import styles from "./Stylesheet";
+
+export default class Loading extends Component {
+
     render() {
         return (
-            <View>
-                <Text >Loading...</Text>
+            <View style={styles.container}>
+                <Spinner
+                   visible={true}
+                   textContent={'Please wait...'}
+                   textStyle={styles.spinnerTextStyle}></Spinner>
             </View>
-        );
+        )
     }
 }
-
-export default Loading
