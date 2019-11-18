@@ -34,8 +34,8 @@ import {
 
 
 import {
-    setCurrentEditingGroupId,
-    currentEditingGroupIdSuccess
+    setCurrentEditingGroup,
+    currentEditingGroupStatus
 } from '../../../../actions/GroupMenuAction';
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -87,10 +87,10 @@ class SearchGroup extends Component {
         this.props.getActiveGroup(data);
     }
 
-    editGroup(groupId) {
+    editGroup(group) {
         Actions.editGroupMenu();
-        this.props.currentEditingGroupIdSuccess(false);
-        this.props.setCurrentEditingGroupId(groupId);
+        this.props.currentEditingGroupStatus(false);
+        this.props.setCurrentEditingGroup(group);
     }
 
     showSearchResults() {
@@ -122,7 +122,7 @@ class SearchGroup extends Component {
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
+                                <TouchableOpacity onPress={() => this.editGroup(group.item)}>
                                     <Icon style={styles.editGroupIcon} name="note" size={30} />
                                 </TouchableOpacity>
                             </View>
@@ -221,8 +221,8 @@ const mapDispatchToProps = dispatch => {
         requestClearFieldSuccess: data => dispatch(requestClearFieldSuccess(data)),
         getUserGroupsSuccess: data => dispatch(getUserGroupsSuccess(data)),
         getUserGroups: data => dispatch(getUserGroups(data)),
-        currentEditingGroupIdSuccess: data => dispatch(currentEditingGroupIdSuccess(data)),
-        setCurrentEditingGroupId: data => dispatch(setCurrentEditingGroupId(data)),
+        currentEditingGroupStatus: data => dispatch(currentEditingGroupStatus(data)),
+        setCurrentEditingGroup: data => dispatch(setCurrentEditingGroup(data)),
     };
 };
 

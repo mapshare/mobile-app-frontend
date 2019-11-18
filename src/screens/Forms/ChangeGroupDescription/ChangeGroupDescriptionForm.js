@@ -43,7 +43,8 @@ class changeGroupDiscriptionForm extends Component {
         const data = {
             token: this.props.token,
             groupDescription: this.state.groupDescription,
-            groupId: this.props.currentEditingGroupIdData,
+            groupId: this.props.currentEditingGroupData._id,
+            activeGroupId: this.props.getActiveGroupData._id,
         }
         this.props.updateGroupSuccess(false);
         this.props.updateGroup(data);
@@ -103,9 +104,10 @@ const mapStateToProps = state => {
     return {
         status: state.groupReducer.status,
         groupData: state.groupReducer.groupData,
-        currentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        currentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
         updateGroupError: state.groupReducer.updateGroupError,
-        token: state.logInReducer.token
+        token: state.logInReducer.token,
+        getActiveGroupData: state.groupReducer.getActiveGroupData,
     };
 };
 

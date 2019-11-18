@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
-import SearchGroupForm from '../../Forms/SearchGroup/SearchGroupForm';
+import SearchGroupForm from '../../Forms/SearchGroup/SearchGroupFormDummy';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -26,7 +26,9 @@ import {
     requestToJoinGroup,
     requestToJoinGroupSuccess,
     getUserGroupsSuccess,
-    getUserGroups
+    getUserGroups,
+    getGroups,
+    getGroupsSuccess
 } from '../../../actions/groupActions';
 
 import {
@@ -60,9 +62,12 @@ class MyGroups extends Component {
         this.props.getUserGroups({ token: this.props.token });
         // update every 5 seconds
         this.setState({
-            interval: setInterval(() => {
+            interval: setInterval(async () => {
+                console.log("my groups Initial " + this.props.token[64] )
+                this.props.getGroupsSuccess(false);
                 this.props.getUserGroups({ token: this.props.token });
-            }, 5000)
+                this.props.getGroups({ token: this.props.token });
+            }, 10000)
         });
     }
 
@@ -72,7 +77,7 @@ class MyGroups extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.getActiveGroupStatus) {
-            Actions.navTab({ type: ActionConst.RESET });
+            Actions.navTab({ type: ActionConst.REPLACE });
         }
     }
 
@@ -83,7 +88,6 @@ class MyGroups extends Component {
         if (this.props.getActiveGroupData != undefined) {
             activeGroupId = this.props.getActiveGroupData._id;
         }
-        console.log(this.props.getUserGroupsData)
         return (
             <FlatList
                 ItemSeparatorComponent={this.separator}
@@ -191,6 +195,8 @@ const mapDispatchToProps = dispatch => {
         currentEditingGroupIdSuccess: data => dispatch(currentEditingGroupIdSuccess(data)),
         currentEditingGroupIdData: data => dispatch(currentEditingGroupIdData(data)),
         setCurrentEditingGroupId: data => dispatch(setCurrentEditingGroupId(data)),
+        getGroups: data => dispatch(getGroups(data)),
+        getGroupsSuccess: data => dispatch(getGroupsSuccess(data)),
     };
 };
 

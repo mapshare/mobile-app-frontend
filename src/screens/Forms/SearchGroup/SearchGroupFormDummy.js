@@ -1,4 +1,7 @@
-// Import Libraries
+/*
+    THIS FORM IS A PLACEHOLDER AND DOES NOT ACTUALLY WORK.
+    IT ALLOWS US TO SHOW THE USER A SEARCHBOX THAT WILL REDIRECT THEM TO REAL SEARCH.
+*/
 import React, { Component } from 'react';
 import {
     StyleSheet,
@@ -43,54 +46,8 @@ class SearchGroupForm extends Component {
             searchGroupError: '',
         };
     }
-    componentDidMount(){
-        this.searchGroupName();
-    }
-
-    componentWillUnmount() {
-        this.searchGroupName("")
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.searchStatus !== this.props.searchStatus) {
-            if (this.props.searchStatus) {
-                Keyboard.dismiss();
-            }
-        }
-
-        if (prevProps.requestClearFieldStatus !== this.props.requestClearFieldStatus) {
-            if (this.props.requestClearFieldStatus) {
-                this.setState({ groupName: "" });
-            }
-        }
-
-        if (this.props.getSearchGroupError) {
-            this.props.searchGroupError("");
-        }
-
-        if (prevProps.getGroupsSuccess !== this.props.getGroupsSuccess) {
-            if (this.props.getGroupsSuccess) {
-                this.searchGroupName();
-            }
-        }
-    }
 
     searchGroupName() {
-        try {
-            let searchRegex = new RegExp('^.*' + this.state.groupName + '.*$', 'gim');
-            let searchResult = this.props.getGroupsData.filter(
-                (group) => {
-                    return (group.groupName.search(searchRegex) != -1) ? true : false;
-                }
-            );
-            this.props.setSearchStatus(false);
-            this.props.searchGroup(searchResult);
-        } catch (error) {
-            this.props.setSearchStatus(false);
-            this.props.searchGroup([]);
-
-        }
-
     }
 
     formFocus(value) {
@@ -124,7 +81,6 @@ class SearchGroupForm extends Component {
                             onSubmitEditing={() => this.searchGroupName(this.state.groupName)}
                             editable={this.props.enabled}
                         />
-                        {this.state.searchGroupError ? <Text>{this.state.searchGroupError}</Text> : null}
                     </View>
                 </View>
             </View>

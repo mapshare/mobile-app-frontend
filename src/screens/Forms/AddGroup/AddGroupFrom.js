@@ -59,8 +59,6 @@ class AddGroupForm extends Component {
             }
             this.props.createGroupSuccess(false);
             this.props.createGroup(data);
-            this.setSuccesModalVisible(!this.state.succesModalVisible);
-            Actions.pop();
         }
     };
 
