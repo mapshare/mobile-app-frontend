@@ -13,6 +13,11 @@ export default StyleSheet.create({
     cameraIcon: {
         color: "#FFF",
     },
+    optionsIcon: {
+        color: "#000",
+        justifyContent: "center",
+        alignSelf: "flex-end",
+    },
     body: {
         backgroundColor: "rgba(110,110,110,0.9)",
         flex: 1,
@@ -57,29 +62,20 @@ export default StyleSheet.create({
     postCaptionForm: {
         width: '60%',
     },
-    flatListColOne: {
-        width: '10%'
+    headerColOne: {
+        flex: .20,
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
     },
-    flatListColOneWide: {
-        width: '30%',
+    headerColTwo: {
+        flex: .60,
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
     },
-    flatListColOneWideTwo: {
-        width: '20%',
-    },
-    flatListColTwo: {
-        width: '60%'
-    },
-    flatListColTwoSmall: {
-        width: '50%',
-    },
-    flatListColThree: {
-        width: '20%',
-    },
-    flatListColThreeWide: {
-        width: '30%',
-    },
-    flatListColFour: {
-        width: '20%',
+    headerColThree: {
+        flex: .20,
+        justifyContent: "flex-start",
+        alignItems: "center",
     },
     content: {
         zIndex: 1,
@@ -92,13 +88,6 @@ export default StyleSheet.create({
         marginTop: 41,
         textAlign: "center",
     },
-    row: {
-        flex: 1,
-        flexDirection: "row",
-        top: "20%",
-        justifyContent: 'space-evenly',
-        alignContent: 'space-around'
-    },
     groupPostContainer: {
 
     },
@@ -106,16 +95,16 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
     },
-    postText:{
+    postText: {
         fontSize: 16,
         fontWeight: 'bold',
     },
     groupPostHeader: {
         flex: 1,
-        width: '100%',
+        flexDirection: "row",
         height: 50,
-        justifyContent:"center",
-        paddingStart: 20
+        justifyContent: "flex-start",
+        alignItems: "center",
     },
     groupPostBody: {
         flex: 1,
@@ -127,9 +116,9 @@ export default StyleSheet.create({
         resizeMode: "cover",
         aspectRatio: 1.5,
     },
-    groupPostFooter:{
+    groupPostFooter: {
         flex: 1,
-        justifyContent:"center",
+        justifyContent: "center",
         paddingStart: 20,
         paddingEnd: 20
     },
@@ -139,13 +128,37 @@ export default StyleSheet.create({
         height: 1,
         alignSelf: 'center',
     },
-    footerPartOne:{
+    footerPartOne: {
         height: 20,
     },
-    footerPartTwo:{
+    footerPartTwo: {
         height: 40,
     },
-    footerPartThree:{
+    footerPartThree: {
         height: 40,
+    },
+    editGroupPost: {
+        flex: 1,
+        justifyContent: "flex-end",
+    },
+    editGroupPostPopup: {
+        flex: .4,
+        alignItems: "center",
+        justifyContent: "flex-end",
+        zIndex: 100000,
+        backgroundColor: "rgba(50,50,50,.8)",
+    },
+    roundCorners: {
+        borderRadius: 10
+    },
+    editGroupPopupRow: {
+        flex: .3,
+        alignSelf: "stretch",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    editGroupPopupText: {
+        fontSize: 20,
+        color: "#FFF"
     }
 });
