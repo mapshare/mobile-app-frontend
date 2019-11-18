@@ -15,7 +15,7 @@ import {
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
-import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
+import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupFormDummy';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -62,11 +62,12 @@ class MyGroups extends Component {
     }
 
     componentDidMount() {
-        this.setState({ userGroups: this.props.getUserGroupsData });
+        this.props.getUserGroupsSuccess(false);
+        this.props.getUserGroups({ token: this.props.token });
         // update active group and user group every 10 seconds
         this.setState({
             interval: setInterval(() => {
-                console.log("my groups Initial " + this.props.token[64] )
+                this.props.getGroupsSuccess(false);
                 this.props.getUserGroups({ token: this.props.token });
                 this.props.getGroups({ token: this.props.token });
             }, 10000)
@@ -213,7 +214,6 @@ const mapStateToProps = state => {
         getLeaveGroupError: state.groupReducer.leaveGroupError,
         deleteGroupStatus: state.groupReducer.deleteGroupStatus,
         getCurrentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
-        getGroupsSuccess: state.groupMenuReducer.getGroupsSuccess,
     };
 };
 

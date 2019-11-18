@@ -25,6 +25,8 @@ import {
     requestToJoinGroupSuccess,
     getUserGroupsSuccess,
     getUserGroups,
+    getGroupsSuccess,
+    getGroups
 } from '../../../../actions/groupActions';
 
 import {
@@ -50,22 +52,27 @@ class SearchGroup extends Component {
         super(props);
         this.state = {
             data: "",
-            changedGroup: false,
         };
-    }
-
-    componentDidMount() {
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.state.changedGroup) {
-            this.setState({ changedGroup: false });
-            Actions.home();
-        }
     }
 
     separator = () => <View style={styles.flatListItemSeporator} />
 
+    componentDidMount() {
+        this.props.getUserGroupsSuccess(false);
+        this.props.getUserGroups({ token: this.props.token });
+        // update active group and user group every 10 seconds
+        this.setState({
+            interval: setInterval(() => {
+                this.props.getGroupsSuccess(false);
+                this.props.getUserGroups({ token: this.props.token });
+                this.props.getGroups({ token: this.props.token });
+            }, 10000)
+        });
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
+    }
 
     joinGroup(groupId) {
         const data = {
@@ -82,7 +89,6 @@ class SearchGroup extends Component {
             token: this.props.token,
             groupId: groupId,
         }
-        this.setState({ changedGroup: true });
         this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroup(data);
     }
@@ -223,6 +229,8 @@ const mapDispatchToProps = dispatch => {
         getUserGroups: data => dispatch(getUserGroups(data)),
         currentEditingGroupStatus: data => dispatch(currentEditingGroupStatus(data)),
         setCurrentEditingGroup: data => dispatch(setCurrentEditingGroup(data)),
+        getGroupsSuccess: data => dispatch(getGroupsSuccess(data)),
+        getGroups: data => dispatch(getGroups(data)),
     };
 };
 

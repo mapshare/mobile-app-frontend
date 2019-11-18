@@ -87,7 +87,6 @@ class SearchGroup extends Component {
                 data={this.props.getSearchData}
                 keyExtractor={item => item._id}
                 renderItem={(group) => {
-                    console.log(group.item)
                     if (group.item.isMember) {
                         return (<TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id)}>
 
