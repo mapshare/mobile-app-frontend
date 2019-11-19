@@ -115,15 +115,15 @@ class Map extends Component {
           </View>
           <MSearch notifyChange={(loc) => this.getCoordsFromName(loc)}/>
           <Mapbox.MapView
-            styleURL={Mapbox.StyleURL.Light}
+            styleURL={'mapbox://styles/zwahab114/ck33vykpv454o1cpl7irwc7d7'}
             onPress={data => this.mapOnClick(data)}
             attributionEnabled={false}
             showUserLocation={true}
             logoEnabled={false}
+            compassEnabled={true}
             style={mapStyles.container}
             onDidFinishLoadingMap={this.findCoordinates}
           >
-            {this.renderAnnotations()}
             <Mapbox.Camera
               ref={Component => (this._mapcoord = Component)}
               centerCoordinate={[
