@@ -15,68 +15,77 @@ import {
 // Componenets Style
 import styles from "./Stylesheet";
 
+import Icon from "react-native-vector-icons/SimpleLineIcons";
+
 //Redux actions
 import { connect } from 'react-redux';
 import {
     connectToGroupFeed,
     groupFeedStatus,
 } from '../../../actions/groupFeedAction';
+import { Actions, Modal } from "react-native-router-flux";
 
 class GroupFeed extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            postData: "",
-            loading: false,
         };
-    }
-
-    componentDidMount() {
-    }
-
-    componentDidUpdate(prevProps) {
     }
 
     separator = () => <View style={styles.flatListItemSeporator} />
 
+    editPost() {
+        Actions.editPostModal();
+    }
+
     render() {
         return (
-            <SafeAreaView style={styles.groupPostContainer}>
+                <SafeAreaView style={styles.groupPostContainer}>
+                    <View style={styles.flatListItemSeporator} />
+                    <FlatList style={styles.list}
+                        ItemSeparatorComponent={this.separator}
+                        data={this.props.getGroupFeedData}
+                        keyExtractor={(item) => { return item._id; }}
+                        renderItem={({ item }) => {
+                            return (
+                                <View style={styles.groupPost}>
+                                    <View style={styles.groupPostHeader}>
+                                        <View style={styles.headerColOne}>
+                                            <Image
+                                                style={styles.groupPostProfilePic}
+                                                source={{ uri: 'data:image/png;base64,' + item.userProfilePic }}
+                                            />
+                                            <Text style={styles.postText}>Profile Pic</Text>
 
-                <View style={styles.flatListItemSeporator} />
-                <FlatList style={styles.list}
-                    ItemSeparatorComponent={this.separator}
-                    data={this.props.getGroupFeedData}
-                    keyExtractor={(item) => { return item._id; }}
-                    renderItem={({ item }) => {
-                        return (
-                            <View style={styles.groupPost}>
-                                <View style={styles.groupPostHeader}>
-                                    <Image
-                                        style={styles.groupPostProfilePic}
-                                        source={{ uri: 'data:image/png;base64,' + item.userProfilePic }}
-                                    />
-                                    <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>
-                                </View>
-                                <View style={styles.groupPostBody}>
-                                    <Image
-                                        style={styles.groupPostImage}
-                                        source={{ uri: 'data:image/png;base64,' + item.postImage }}
-                                    />
-                                </View>
-                                <View style={styles.groupPostFooter}>
-                                    <View style={styles.footerPartOne}></View>
-                                    <View style={styles.footerPartTwo}>
-                                        <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName} {item.postCaption}</Text>
+                                        </View>
+                                        <View style={styles.headerColTwo}>
+                                            <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>
+                                        </View>
+                                        <View style={styles.headerColThree}>
+                                            <TouchableOpacity onPress={() => this.editPost()}>
+                                                <Icon style={styles.optionsIcon} name="options" size={20} />
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                    <View style={styles.footerPartThree}></View>
+                                    <View style={styles.groupPostBody}>
+                                        <Image
+                                            style={styles.groupPostImage}
+                                            source={{ uri: 'data:image/png;base64,' + item.postImage }}
+                                        />
+                                    </View>
+                                    <View style={styles.groupPostFooter}>
+                                        <View style={styles.footerPartOne}></View>
+                                        <View style={styles.footerPartTwo}>
+                                            <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName} {item.postCaption}</Text>
+                                        </View>
+                                        <View style={styles.footerPartThree}></View>
+                                    </View>
                                 </View>
-                            </View>
-                        );
-                    }} />
+                            );
+                        }} />
 
-                <View style={styles.flatListItemSeporator} />
-            </SafeAreaView>
+                    <View style={styles.flatListItemSeporator} />
+                </SafeAreaView>
         );
     }
 }

@@ -96,10 +96,7 @@ class MyGroups extends Component {
                 <Modal
                     animationType="fade"
                     transparent={true}
-                    visible={this.state.succesModalVisible}
-                    onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
-                    }}>
+                    visible={this.state.succesModalVisible}>
                     <View style={styles.SuccesModal}>
                         <Text style={styles.textBox}>Success</Text>
                     </View>
@@ -110,7 +107,7 @@ class MyGroups extends Component {
                     transparent={true}
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
+                        Actions.pop();
                     }}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.modalStyle}>

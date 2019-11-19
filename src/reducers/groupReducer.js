@@ -10,6 +10,10 @@ const INITIAL_GROUP_STATE = {
     getGroupMemberData: {
         _id: ""
     },
+    getEditingGroupMemberData: {
+        _id: "",
+        memberRole:""
+    },
     loadingData: false,
     getGroupsData: "",
 };
@@ -99,6 +103,13 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, getGroupMemberData: action.getGroupMemberData };
         case keys.GET_GROUP_MEMBER_ERROR:
             return { ...state, getGroupMemberError: action.getGroupMemberError };
+        // GET EDITING GROUP MEMBER
+        case keys.GET_GROUP_MEMBER_SUCCESS:
+            return { ...state, getEditingGroupMemberStatus: action.getEditingGroupMemberStatus };
+        case keys.GET_EDITING_GROUP_MEMBER_DATA:
+            return { ...state, getEditingGroupMemberData: action.getEditingGroupMemberData };
+        case keys.GET_GROUP_MEMBER_ERROR:
+            return { ...state, getEditingGroupMemberError: action.getEditingGroupMemberError };
         // GET ALL GROUP MEMBER
         case keys.GET_ALL_GROUP_MEMBER_SUCCESS:
             return { ...state, getAllGroupMemberStatus: action.getAllGroupMemberStatus };

@@ -15,7 +15,7 @@ import {
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
-import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
+import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupFormDummy';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -58,15 +58,16 @@ class MyGroups extends Component {
             userGroups: "",
             groupName: '',
             interval: '',
-            changedGroup: false,
         };
     }
 
     componentDidMount() {
-        this.setState({ userGroups: this.props.getUserGroupsData });
+        this.props.getUserGroupsSuccess(false);
+        this.props.getUserGroups({ token: this.props.token });
         // update active group and user group every 10 seconds
         this.setState({
             interval: setInterval(() => {
+                this.props.getGroupsSuccess(false);
                 this.props.getUserGroups({ token: this.props.token });
                 this.props.getGroups({ token: this.props.token });
             }, 10000)
@@ -78,11 +79,6 @@ class MyGroups extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.state.changedGroup) {
-            this.setState({ changedGroup: false });
-            Actions.pop();
-        }
-
         // return to my groups after adding group
         if (prevProps.status !== this.props.status) {
             if (this.props.status) {
@@ -111,7 +107,7 @@ class MyGroups extends Component {
         this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroupDataSuccess("");
         this.props.getActiveGroupError("");
-        Actions.initial({ type: ActionConst.RESET });
+        Actions.initial({ type: ActionConst.REPLACE });
     }
 
     separator = () => <View style={styles.flatListItemSeporator} />
@@ -160,7 +156,6 @@ class MyGroups extends Component {
             token: this.props.token,
             groupId: groupId,
         }
-        this.setState({ changedGroup: true });
         this.props.getActiveGroup(data);
         this.props.getActiveGroupSuccess(false);
     }
@@ -219,7 +214,6 @@ const mapStateToProps = state => {
         getLeaveGroupError: state.groupReducer.leaveGroupError,
         deleteGroupStatus: state.groupReducer.deleteGroupStatus,
         getCurrentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
-        getGroupsSuccess: state.groupMenuReducer.getGroupsSuccess,
     };
 };
 

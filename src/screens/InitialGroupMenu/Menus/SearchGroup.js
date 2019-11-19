@@ -53,12 +53,6 @@ class SearchGroup extends Component {
         };
     }
 
-    componentDidMount() {
-    }
-
-    componentDidUpdate(prevProps) {
-    }
-
     separator = () => <View style={styles.flatListItemSeporator} />
 
 
