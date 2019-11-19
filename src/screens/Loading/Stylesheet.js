@@ -10,6 +10,11 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF'
-      }
+        backgroundColor: '#259fc4'
+      },
+    backgroundImage: {
+        width: '100%',
+        height: '100%',
+        justifyContent: "center"
+    },
 });
