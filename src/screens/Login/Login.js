@@ -21,7 +21,7 @@ class LogIn extends Component {
                 <ImageBackground resizeMode = "cover" style = {styles.backgroundImage} source = {require('../../assests/images/logo.png')}>
                         <Text style={styles.title}>Welcome to Pin IT!{"\n"}{"\n"}</Text>
                         <Text style={styles.text}>(Please note that this is WIP apk)</Text>
-                        <Text style={styles.text}>Current Build v1.92</Text>
+                        <Text style={styles.text}>Current Build v2.1</Text>
                         <LogInForm type="Login" style={styles.container} />
                         <View>
                             <Text style={styles.signupText}>

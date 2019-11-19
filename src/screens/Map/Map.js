@@ -62,7 +62,7 @@ class Map extends Component {
         console.log(this.location.longitude);
       },
       error => alert(error),
-      { enableHighAccuracy: true, timeout: 2000 }
+      { enableHighAccuracy: false, timeout: 2000 }
     );
   };
 
