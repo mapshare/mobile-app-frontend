@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View } from "react-native";
 import Mapbox from "@react-native-mapbox-gl/maps";
 import { connect } from "react-redux";
-import Geolocation from "@react-native-community/geolocation";
+import * as Geolocation from "@react-native-community/geolocation";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import MSearch from './Search'
 import { MAPBOX } from 'react-native-dotenv';
@@ -52,16 +52,11 @@ class Map extends Component {
   findCoordinates = () => {
     Geolocation.getCurrentPosition(
       position => {
-        console.log(position);
-
         this.location.longitude = position.coords.longitude;
         this.location.latitude = position.coords.latitude;
         this.setState(this.location);
-
-        console.log(this.location.latitude);
-        console.log(this.location.longitude);
       },
-      error => alert(error),
+      error => alert('Please make sure Location/GPS is Enabled', JSON.stringify(error)),
       { enableHighAccuracy: false, timeout: 2000 }
     );
   };
