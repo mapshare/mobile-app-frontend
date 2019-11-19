@@ -64,7 +64,6 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
-
     // Checks if Active Group Still Exists.
     // If Active Group has been deleted then clear users active group.
     if (prevProps.groupExistsStatus !== this.props.groupExistsStatus) {

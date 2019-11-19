@@ -78,38 +78,6 @@ class MyGroups extends Component {
         clearInterval(this.state.interval);
     }
 
-    componentDidUpdate(prevProps) {
-        // return to my groups after adding group
-        if (prevProps.status !== this.props.status) {
-            if (this.props.status) {
-                this.props.getUserGroupsSuccess(false);
-            }
-        }
-
-        if (prevProps.leaveGroupStatus !== this.props.leaveGroupStatus) {
-            if (this.props.leaveGroupStatus) {
-                this.clearActiveGroup();
-                this.props.getUserGroupsSuccess(false);
-            }
-        }
-
-        if (prevProps.deleteGroupStatus !== this.props.deleteGroupStatus) {
-            if (this.props.deleteGroupStatus) {
-                if (this.props.getActiveGroupData._id == this.props.getCurrentEditingGroupIdData) {
-                    this.clearActiveGroup();
-                }
-                this.props.getUserGroupsSuccess(false);
-            }
-        }
-    }
-
-    clearActiveGroup() {
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroupDataSuccess("");
-        this.props.getActiveGroupError("");
-        Actions.initial({ type: ActionConst.REPLACE });
-    }
-
     separator = () => <View style={styles.flatListItemSeporator} />
 
     showMyGroups() {
@@ -160,10 +128,10 @@ class MyGroups extends Component {
         this.props.getActiveGroupSuccess(false);
     }
 
-    editGroup(group) {
-        Actions.editGroupMenu();
+    editGroup = async (group) => {
         this.props.currentEditingGroupStatus(false);
         this.props.setCurrentEditingGroup(group);
+        Actions.editGroupMenu({ currentEditingGroup: group });
     }
 
     render() {
@@ -214,6 +182,7 @@ const mapStateToProps = state => {
         getLeaveGroupError: state.groupReducer.leaveGroupError,
         deleteGroupStatus: state.groupReducer.deleteGroupStatus,
         getCurrentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        getCurrentEditingGroupStatus: state.groupMenuReducer.currentEditingGroupStatus,
     };
 };
 
