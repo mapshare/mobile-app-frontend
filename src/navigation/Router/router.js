@@ -29,6 +29,7 @@ import AddGroup from "../../screens/ManageGroup/AddGroup/AddGroup";
 import ManageGroupJoinRequests from "../../screens/ManageGroup/ManageGroupJoinRequests/ManageGroupJoinRequests";
 import Chat from "../../screens/Groups/GroupChat/GroupChat";
 import CreatePostModal from "../../screens/Forms/CreatePost/CreatePost";
+import EditPostModal from "../../screens/Groups/GroupFeed/EditPostModal";
 import LoadingScreen from "../../screens/Loading/Loading";
 
 // InitialGroupMenu
@@ -66,24 +67,6 @@ class TabIcon extends Component {
 }
 
 class App extends Component {
-
-
-  componentDidMount(){
-  }
-
-  componentDidUpdate(prevProps) {
-    // Display Loading Screen When Changing Group 
-    if (prevProps.loadingData !== this.props.loadingData) {
-      if (this.props.loadingData) {
-        Actions.loadingScreen();
-      } else{
-        Actions.home();
-      }
-    }
-
-
-  }
-
   render() {
     return (
       <Router
@@ -92,14 +75,20 @@ class App extends Component {
         navigationBarStyle={{ backgroundColor: "#33C1FF" }}
       >
 
-        <Modal key="root" hideNavBar>
-          <Scene
-            key="login"
-            component={LogIn}
-            type={ActionConst.RESET}
-            hideNavBar
-          />
-          <Scene key="signup" component={SignUp} />
+        <Lightbox key="root" hideNavBar>
+          {/* Login & SignUp */}
+          <Stack key="Auth">
+            <Scene
+              key="login"
+              component={LogIn}
+              type={ActionConst.RESET}
+              hideNavBar
+            />
+            <Scene key="signup" component={SignUp}
+              hideNavBar />
+          </Stack>
+
+          {/* OLD NAVIGATION */}
           <Scene key="tester" component={Tester} type={ActionConst.RESET} />
           <Scene
             key="manageGroup"
@@ -133,6 +122,8 @@ class App extends Component {
             component={ManageGroupJoinRequests}
             title="ManageGroupJoinRequests"
           />
+
+          {/* INITIAL SELECT GROUP NAVIGATION */}
           <Stack key="initial" hideNavBar>
             <Scene
               key="initialMyGroups"
@@ -158,20 +149,7 @@ class App extends Component {
             />
           </Stack>
 
-          <Stack
-            hideNavBar
-            key="groupsMenu">
-            <Scene key='myGroupsMenu' component={MyGroupsMenu} />
-            <Scene key="searchGroupMenu" component={SearchGroupMenu} />
-            <Scene key="addGroupMenu" component={AddGroupMenu} />
-            <Scene key="editGroupMenu" component={EditGroupMenu} />
-            <Scene key="editGroupMemberMenu" component={EditGroupMemberMenu} />
-            <Scene key="groupMembersListMenu" component={GroupMembersListMenu} />
-            <Scene key="joinGroupRequestMenu" component={JoinGroupRequestMenu} />
-            <Scene key="changeGroupNameMenu" component={ChangeGroupNameMenu} />
-            <Scene key="changeGroupDescriptionMenu" component={ChangeGroupDescriptionMenu} />
-          </Stack>
-
+          {/* MAIN NAVIGATION */}
           <Stack key="navTab"
             titleStyle={{ color: "white" }}
             navigationBarStyle={{ backgroundColor: "#33C1FF" }}
@@ -218,20 +196,30 @@ class App extends Component {
             />
           </Stack>
 
+          {/* MANAGE GROUP NAVIGATION */}
+          <Scene key='myGroupsMenu' hideNavBar hideTabBar component={MyGroupsMenu} />
+          <Scene key="searchGroupMenu" hideNavBar hideTabBar component={SearchGroupMenu} />
+          <Scene key="addGroupMenu" hideNavBar hideTabBar component={AddGroupMenu} />
+          <Scene key="editGroupMenu" hideNavBar hideTabBar component={EditGroupMenu} />
+          <Scene key="editGroupMemberMenu" hideNavBar hideTabBar component={EditGroupMemberMenu} />
+          <Scene key="groupMembersListMenu" hideNavBar hideTabBar component={GroupMembersListMenu} />
+          <Scene key="joinGroupRequestMenu" hideNavBar hideTabBar component={JoinGroupRequestMenu} />
+          <Scene key="changeGroupNameMenu" hideNavBar hideTabBar component={ChangeGroupNameMenu} />
+          <Scene key="changeGroupDescriptionMenu" hideNavBar hideTabBar component={ChangeGroupDescriptionMenu} />
+
+          {/* MODALS */}
           <Scene key="loadingScreen" component={LoadingScreen} />
           <Scene key="createPostModal" component={CreatePostModal} />
-        </Modal>
+          <Scene key="editPostModal" component={EditPostModal} />
+        </Lightbox>
       </Router>
     );
   }
 }
 
-
-
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
-    loadingData: state.groupReducer.loadingData
   };
 };
 

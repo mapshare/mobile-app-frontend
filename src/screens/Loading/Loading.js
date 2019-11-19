@@ -9,6 +9,7 @@ import styles from "./Stylesheet";
 export default class Loading extends Component {
 
     render() {
+        console.log("HERE LOADING SCREEN")
         return (
             <View style={styles.container}>
                 <Spinner

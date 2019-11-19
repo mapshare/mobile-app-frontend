@@ -25,6 +25,8 @@ import {
     requestToJoinGroupSuccess,
     getUserGroupsSuccess,
     getUserGroups,
+    getGroupsSuccess,
+    getGroups
 } from '../../../../actions/groupActions';
 
 import {
@@ -34,8 +36,8 @@ import {
 
 
 import {
-    setCurrentEditingGroupId,
-    currentEditingGroupIdSuccess
+    setCurrentEditingGroup,
+    currentEditingGroupStatus
 } from '../../../../actions/GroupMenuAction';
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -50,22 +52,27 @@ class SearchGroup extends Component {
         super(props);
         this.state = {
             data: "",
-            changedGroup: false,
         };
-    }
-
-    componentDidMount() {
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.state.changedGroup) {
-            this.setState({ changedGroup: false });
-            Actions.home();
-        }
     }
 
     separator = () => <View style={styles.flatListItemSeporator} />
 
+    componentDidMount() {
+        this.props.getUserGroupsSuccess(false);
+        this.props.getUserGroups({ token: this.props.token });
+        // update active group and user group every 10 seconds
+        this.setState({
+            interval: setInterval(() => {
+                this.props.getGroupsSuccess(false);
+                this.props.getUserGroups({ token: this.props.token });
+                this.props.getGroups({ token: this.props.token });
+            }, 10000)
+        });
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
+    }
 
     joinGroup(groupId) {
         const data = {
@@ -82,15 +89,14 @@ class SearchGroup extends Component {
             token: this.props.token,
             groupId: groupId,
         }
-        this.setState({ changedGroup: true });
         this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroup(data);
     }
 
-    editGroup(groupId) {
+    editGroup(group) {
         Actions.editGroupMenu();
-        this.props.currentEditingGroupIdSuccess(false);
-        this.props.setCurrentEditingGroupId(groupId);
+        this.props.currentEditingGroupStatus(false);
+        this.props.setCurrentEditingGroup(group);
     }
 
     showSearchResults() {
@@ -122,7 +128,7 @@ class SearchGroup extends Component {
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
+                                <TouchableOpacity onPress={() => this.editGroup(group.item)}>
                                     <Icon style={styles.editGroupIcon} name="note" size={30} />
                                 </TouchableOpacity>
                             </View>
@@ -221,8 +227,10 @@ const mapDispatchToProps = dispatch => {
         requestClearFieldSuccess: data => dispatch(requestClearFieldSuccess(data)),
         getUserGroupsSuccess: data => dispatch(getUserGroupsSuccess(data)),
         getUserGroups: data => dispatch(getUserGroups(data)),
-        currentEditingGroupIdSuccess: data => dispatch(currentEditingGroupIdSuccess(data)),
-        setCurrentEditingGroupId: data => dispatch(setCurrentEditingGroupId(data)),
+        currentEditingGroupStatus: data => dispatch(currentEditingGroupStatus(data)),
+        setCurrentEditingGroup: data => dispatch(setCurrentEditingGroup(data)),
+        getGroupsSuccess: data => dispatch(getGroupsSuccess(data)),
+        getGroups: data => dispatch(getGroups(data)),
     };
 };
 

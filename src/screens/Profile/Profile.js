@@ -8,13 +8,12 @@ import {
 
 // Componenets Style
 import styles from "./Stylesheet"
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from "react-native-router-flux";
 
 export default class Profile extends Component {
 
   goLogin(){
-    Actions.login()
-    
+    Actions.Auth({ type: ActionConst.RESET })
   }
 
   goTester(){

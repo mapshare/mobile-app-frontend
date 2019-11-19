@@ -26,7 +26,8 @@ import {
   getActiveGroupError,
   getActiveGroupSuccess,
   getActiveGroupDataSuccess,
-  groupExists
+  groupExists,
+  getActiveGroupRefreshDataOnly
 } from '../../actions/groupActions';
 
 class Home extends Component {
@@ -47,6 +48,10 @@ class Home extends Component {
     this.setState({
       interval: setInterval(() => {
         this.checkIfGroupExists(this.props.getActiveGroupData._id);
+        this.props.getActiveGroupRefreshDataOnly({
+          groupId: this.props.getActiveGroupData._id,
+          token: this.props.token,
+        });
       }, 5000)
     });
   }
@@ -55,23 +60,19 @@ class Home extends Component {
     clearInterval(this.state.interval);
   }
 
+  loadingScreen() {
+  }
+
   componentDidUpdate(prevProps) {
+
+    // Checks if Active Group Still Exists.
+    // If Active Group has been deleted then clear users active group.
     if (prevProps.groupExistsStatus !== this.props.groupExistsStatus) {
       if (!this.props.groupExistsStatus) {
         this.clearActiveGroup();
       }
     }
 
-    if (prevProps.updateGroupStatus !== this.props.updateGroupStatus) {
-      if (this.props.updateGroupStatus) {
-        const data = {
-          token: this.props.token,
-          groupId: this.props.getActiveGroupData._id,
-        }
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroup(data);
-      }
-    }
   }
 
   checkIfGroupExists(groupId) {
@@ -129,6 +130,7 @@ const mapStateToProps = state => {
     groupExistsStatus: state.groupReducer.groupExistsStatus,
     updateGroupStatus: state.groupReducer.updateGroupStatus,
     updateGroupData: state.groupReducer.updateGroupStatus,
+    loadingData: state.groupReducer.loadingData
   };
 };
 
@@ -140,6 +142,7 @@ const mapDispatchToProps = dispatch => {
     getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
+    getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
   };
 }
 
