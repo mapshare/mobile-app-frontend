@@ -20,7 +20,8 @@ import {
     getAllGroupMemberDataSuccess,
     getAllGroupMemberSuccess,
     getGroups,
-    getEditingGroupMember
+    getEditingGroupMember,
+    getEditingGroupMemberSuccess
 } from '../../../../actions/groupActions';
 
 
@@ -40,8 +41,34 @@ class MyGroups extends Component {
         this.state = {
             data: "",
             groupName: '',
-            interval: '',
+            permission: 0
         };
+    }
+
+
+    componentDidMount() {
+        try {
+            this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
+        } catch (error) {
+            
+        }
+        // update every 5 seconds
+        this.setState({
+            interval: setInterval(() => {
+                const data = {
+                    token: this.props.token,
+                    groupId: this.props.getCurrentEditingGroupData._id,
+                }
+                this.props.getEditingGroupMemberSuccess(false);
+                this.props.getEditingGroupMember(data);
+                this.props.getAllGroupMember(data);
+                try {
+                    this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
+                } catch (error) {
+                    
+                }
+            }, 5000)
+        });
     }
 
     componentWillUnmount() {
@@ -77,7 +104,7 @@ class MyGroups extends Component {
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                {(this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel >= 3) &&
+                                {(this.state.permission >= 3) &&
                                     (group.item.groupMemberRole.groupRolePermisionLevel <= 3) &&
                                     <TouchableOpacity onPress={() => this.editGroupMember(group.item)}>
                                         <Icon style={styles.editGroupIcon} name="note" size={30} />
@@ -119,8 +146,8 @@ const mapStateToProps = state => {
         getActiveGroupData: state.groupReducer.getActiveGroupData,
         getAllGroupMemberStatus: state.groupReducer.getAllGroupMemberStatus,
         getAllGroupMemberData: state.groupReducer.getAllGroupMemberData,
-        currentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
         getEditingGroupMemberData: state.groupReducer.getEditingGroupMemberData,
+        getCurrentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
     };
 };
 
@@ -137,6 +164,7 @@ const mapDispatchToProps = dispatch => {
         getGroups: data => dispatch(getGroups(data)),
         getAllGroupMember: data => dispatch(getAllGroupMember(data)),
         getEditingGroupMember: data => dispatch(getEditingGroupMember(data)),
+        getEditingGroupMemberSuccess: data => dispatch(getEditingGroupMemberSuccess(data)),
     };
 };
 

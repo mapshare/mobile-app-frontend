@@ -276,7 +276,6 @@ export const getActiveGroupNoLoadingScreen = data => {
 
             const res = await axios.get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } });
 
-            console.log(res.data)
             dispatch(getActiveGroupDataSuccess(res.data));
             dispatch(getActiveGroupSuccess(true));
 
@@ -435,17 +434,16 @@ export const getEditingGroupMemberError = data => {
 };
 
 export const getEditingGroupMember = data => {
-    return dispatch => {
-        axios
-            .get(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(getEditingGroupMemberDataSuccess(res.data));
-                dispatch(getEditingGroupMemberSuccess(true));
-            })
-            .catch(err => {
-                dispatch(getEditingGroupMemberSuccess(false));
-                dispatch(getEditingGroupMemberError(err.response.data));
-            });
+    return async dispatch => {
+        try {
+            const res = await axios.get(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } });
+            dispatch(getEditingGroupMemberDataSuccess(res.data));
+            dispatch(getEditingGroupMemberSuccess(true));
+        } catch (err) {
+            console.log(err.response.data)
+            dispatch(getEditingGroupMemberSuccess(false));
+            dispatch(getEditingGroupMemberError(err.response.data));
+        }
     };
 };
 
