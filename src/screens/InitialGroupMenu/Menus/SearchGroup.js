@@ -158,10 +158,10 @@ class SearchGroup extends Component {
                             <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                         </TouchableOpacity>
                         <SafeAreaView style={[styles.content]} >
-                            <SearchGroupForm keyboardEnabled={true} />
-                            <View style={styles.flatListItemSeporator} />
-                            {this.showSearchResults()}
-                            <View style={styles.flatListItemSeporator} />
+                                <SearchGroupForm keyboardEnabled={true} />
+                                <View style={styles.flatListItemSeporator} />
+                                {this.showSearchResults()}
+                                <View style={styles.flatListItemSeporator} />
                         </SafeAreaView>
                     </View>
                 </ImageBackground>

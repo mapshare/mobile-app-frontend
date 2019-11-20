@@ -138,20 +138,18 @@ class MyGroups extends Component {
                         <TouchableOpacity style={styles.addGroup} onPress={() => Actions.initialAddGroup()}>
                             <Icon style={styles.closeIcon} name="plus" size={30} />
                         </TouchableOpacity>
-                        <View style={styles.content}>
+                        <SafeAreaView style={styles.content} >
                             <TouchableWithoutFeedback onPress={() => Actions.initialSearchGroup()}>
                                 <View>
                                     <SearchGroupForm enabled={false} keyboardEnabled={false} />
                                 </View>
                             </TouchableWithoutFeedback>
-                        </View>
+                            <Text style={styles.textBox}>My Groups:</Text>
+                            <View style={styles.flatListItemSeporator} />
+                            {this.showMyGroups()}
+                            <View style={styles.flatListItemSeporator} />
+                        </SafeAreaView>
                     </View>
-                    <SafeAreaView style={styles.content, { flex: 1 }} >
-                        <Text style={styles.textBox}>My Groups:</Text>
-                        <View style={styles.flatListItemSeporator} />
-                        {this.showMyGroups()}
-                        <View style={styles.flatListItemSeporator} />
-                    </SafeAreaView>
                 </ImageBackground>
             </View>
         );

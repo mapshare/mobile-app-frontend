@@ -15,10 +15,17 @@ export default StyleSheet.create({
     container: {
         zIndex: 1000,
         top: 20,
+        flex: 1,
     },
     content: {
+        flex: .95,
         zIndex: 1,
-        marginTop: 50,
+    },
+    searchBox: {
+        flex: .2,
+    },
+    flatlist: {
+        flex: .84,
     },
     GroupName: {
         color: "#FFF",
@@ -35,12 +42,14 @@ export default StyleSheet.create({
         zIndex: 1,
         top: 20,
         left: 20,
+        paddingBottom: 20
     },
     addGroup: {
         zIndex: 1,
         position: 'absolute',
         top: 20,
         right: 20,
+        paddingBottom: 20
     },
     closeIcon: {
         color: "#FFF",
@@ -87,7 +96,7 @@ export default StyleSheet.create({
         textAlign: "center",
     },
     flatListItem: {
-        height: 55,
+        height: 56,
         paddingTop: 10,
         paddingBottom: 10,
         flex: 1,
@@ -129,8 +138,9 @@ export default StyleSheet.create({
         color: "rgba(255,255,255,1)",
         fontSize: 24,
         fontWeight: 'bold',
-        alignSelf:'center',
-        top: 20,
+        alignSelf: 'center',
+        top: 20, 
+        paddingBottom: 20
     },
     textBoxSmall: {
         color: "rgba(255,255,255,1)",
@@ -141,9 +151,9 @@ export default StyleSheet.create({
         paddingStart: 50
     },
     centerText: {
-        width:'100%',
-        alignContent:'center',
-        justifyContent:'center',
+        width: '100%',
+        alignContent: 'center',
+        justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
 });
