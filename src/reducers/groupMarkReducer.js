@@ -12,7 +12,6 @@ export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
   switch (action.type) {
     // ADD GROUP MARK
     case keys.ADD_GROUP_MARK_SUCCESS:
-      console.log('add makr success');
       return { ...state, addGroupMarkStatus: action.addGroupMarkStatus };
     case keys.ADD_GROUP_MARK_ONCLICK:
       return {

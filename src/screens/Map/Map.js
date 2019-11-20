@@ -33,17 +33,6 @@ class Map extends Component {
       latitude: 0.0,
       longitude: 0.0
     };
-    this.marksArray = [];
-  }
-
-  componentWillMount() {
-    this.marksArray = this.props.getGroupAllMarksData;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.addGroupMarkStatus != prevProps.addGroupMarkStatus) {
-      this.marksArray = this.props.getGroupAllMarksData;
-    }
   }
 
   getCoordsFromName(loc) {
@@ -137,7 +126,7 @@ class Map extends Component {
             style={mapStyles.container}
             onDidFinishLoadingMap={this.findCoordinates}
           >
-            <Marks marksArray={this.marksArray} />
+            <Marks />
             <Mapbox.Camera
               ref={Component => (this._mapcoord = Component)}
               centerCoordinate={[
@@ -166,8 +155,7 @@ const mapStateToProps = state => {
     addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
     addMarkStatus: state.modalWindowReducer.addMarkStatus,
     onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
-    logInToken: state.logInReducer.token,
-    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData
+    logInToken: state.logInReducer.token
   };
 };
 

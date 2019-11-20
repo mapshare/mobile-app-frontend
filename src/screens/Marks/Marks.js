@@ -1,6 +1,6 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, TouchableHighlight } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import { connect } from 'react-redux';
 
@@ -13,7 +13,22 @@ import { containerStyles } from './Stylesheet';
 
 // Creating Component
 class Marks extends Component {
-  onClickMark = data => {
+  constructor(props) {
+    super(props);
+    this.marksArray = [];
+  }
+
+  componentWillMount() {
+    this.marksArray = this.props.getGroupAllMarksData;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.addGroupMarkStatus != prevProps.addGroupMarkStatus) {
+      this.marksArray = this.props.getGroupAllMarksData;
+    }
+  }
+
+  onClickMark = (data, event) => {
     if (!this.props.addGroupMarkOnClickStatus) {
       this.props.getCurrentOnClickMark(data);
       this.props.clickMarkModalWindow(true);
@@ -22,14 +37,14 @@ class Marks extends Component {
 
   renderMark = (data, index) => {
     const ref = `markId-${index}`;
-    const coordinate = this.props.marksArray[index].geometry.coordinates;
+    const coordinate = this.marksArray[index].geometry.coordinates;
 
     return (
       <Mapbox.PointAnnotation
         key={ref}
         id={ref}
         coordinate={coordinate}
-        onSelected={() => this.onClickMark(data)}
+        onSelected={event => this.onClickMark(data, event)}
       >
         <View style={containerStyles.container}>
           <View style={containerStyles.fill} />
@@ -41,7 +56,7 @@ class Marks extends Component {
   renderAnnotations() {
     const marksView = [];
 
-    this.props.marksArray.map((data, index) => {
+    this.marksArray.map((data, index) => {
       marksView.push(this.renderMark(data, index));
     });
 
@@ -60,7 +75,9 @@ const mapStateToProps = state => {
     getUserData: state.logInReducer.userData,
     logInToken: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
-    addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus
+    addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
+    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData,
+    addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus
   };
 };
 
@@ -72,7 +89,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default Marks = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Marks);
+export default Marks = connect(mapStateToProps, mapDispatchToProps)(Marks);
