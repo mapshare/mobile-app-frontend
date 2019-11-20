@@ -15,7 +15,7 @@ import {
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
-import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupForm';
+import SearchGroupForm from '../../../Forms/SearchGroup/SearchGroupFormDummy';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -29,7 +29,9 @@ import {
     requestToJoinGroup,
     requestToJoinGroupSuccess,
     getUserGroupsSuccess,
-    getUserGroups
+    getUserGroups,
+    getGroupsSuccess,
+    getGroups
 } from '../../../../actions/groupActions';
 
 import {
@@ -39,10 +41,9 @@ import {
 import {
     currentContentSuccess,
     setCurrentContentState,
-    currentEditingGroupIdStatus,
-    currentEditingGroupIdData,
-    setCurrentEditingGroupId,
-    currentEditingGroupIdSuccess
+    currentEditingGroupStatus,
+    currentEditingGroupData,
+    setCurrentEditingGroup,
 } from '../../../../actions/GroupMenuAction';
 
 // Componenets Style
@@ -57,79 +58,24 @@ class MyGroups extends Component {
             userGroups: "",
             groupName: '',
             interval: '',
-            changedGroup: false,
         };
     }
 
     componentDidMount() {
-        this.setState({ userGroups: this.props.getUserGroupsData });
+        this.props.getUserGroupsSuccess(false);
+        this.props.getUserGroups({ token: this.props.token });
         // update active group and user group every 10 seconds
         this.setState({
             interval: setInterval(() => {
-                this.props.getUserGroupsSuccess(false);
-                this.props.getActiveGroupSuccess(false);
+                this.props.getGroupsSuccess(false);
+                this.props.getUserGroups({ token: this.props.token });
+                this.props.getGroups({ token: this.props.token });
             }, 10000)
         });
     }
 
     componentWillUnmount() {
         clearInterval(this.state.interval);
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.state.changedGroup) {
-            this.setState({ changedGroup: false });
-            Actions.pop();
-        }
-
-        if (prevProps.getActiveGroupStatus !== this.props.getActiveGroupStatus) {
-            if (!this.props.getActiveGroupStatus) {
-                const data = {
-                    token: this.props.token,
-                    groupId: this.props.getActiveGroupData._id,
-                }
-                this.props.getActiveGroup(data);
-            }
-        }
-
-        // return to my groups after adding group
-        if (prevProps.status !== this.props.status) {
-            if (this.props.status) {
-                this.props.getUserGroupsSuccess(false);
-            }
-        }
-
-        if (prevProps.leaveGroupStatus !== this.props.leaveGroupStatus) {
-            if (this.props.leaveGroupStatus) {
-                this.clearActiveGroup();
-                this.props.getUserGroupsSuccess(false);
-            }
-        }
-
-        if (prevProps.deleteGroupStatus !== this.props.deleteGroupStatus) {
-            if (this.props.deleteGroupStatus) {
-                if (this.props.getActiveGroupData._id == this.props.getCurrentEditingGroupIdData) {
-                    this.clearActiveGroup();
-                }
-                this.props.getUserGroupsSuccess(false);
-            }
-        }
-
-        if (prevProps.getUserGroupsStatus !== this.props.getUserGroupsStatus) {
-            if (this.props.getUserGroupsStatus) {
-                this.setState({ userGroups: this.props.getUserGroupsData });
-            } else {
-                this.props.getUserGroups({ token: this.props.token });
-            }
-        }
-
-    }
-
-    clearActiveGroup() {
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroupDataSuccess("");
-        this.props.getActiveGroupError("");
-        Actions.initial({ type: ActionConst.RESET });
     }
 
     separator = () => <View style={styles.flatListItemSeporator} />
@@ -142,7 +88,7 @@ class MyGroups extends Component {
         return (
             <FlatList
                 ItemSeparatorComponent={this.separator}
-                data={this.state.userGroups}
+                data={this.props.getUserGroupsData}
                 renderItem={(group) => {
                     return (
                         <TouchableOpacity style={styles.flatListItem} onPress={() => this.setGroup(group.item._id, group.item.groupName)}>
@@ -159,7 +105,7 @@ class MyGroups extends Component {
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                <TouchableOpacity onPress={() => this.editGroup(group.item._id)}>
+                                <TouchableOpacity onPress={() => this.editGroup(group.item)}>
                                     <Icon style={styles.editGroupIcon} name="note" size={30} />
                                 </TouchableOpacity>
                             </View>
@@ -178,15 +124,14 @@ class MyGroups extends Component {
             token: this.props.token,
             groupId: groupId,
         }
-        this.setState({ changedGroup: true });
-        this.props.getActiveGroupSuccess(false);
         this.props.getActiveGroup(data);
+        this.props.getActiveGroupSuccess(false);
     }
 
-    editGroup(groupId) {
-        Actions.editGroupMenu();
-        this.props.currentEditingGroupIdSuccess(false);
-        this.props.setCurrentEditingGroupId(groupId);
+    editGroup = async (group) => {
+        this.props.currentEditingGroupStatus(false);
+        this.props.setCurrentEditingGroup(group);
+        Actions.editGroupMenu({ currentEditingGroup: group });
     }
 
     render() {
@@ -198,15 +143,14 @@ class MyGroups extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.closeButton} onPress={() => {
                         Actions.pop();
-                        this.setGroup(this.props.getActiveGroupData._id);
                     }}>
                         <Icon style={styles.closeIcon} name="close" size={30} />
                     </TouchableOpacity>
                 </View>
-                <SafeAreaView style={[styles.content, {flex: 1}]} >
+                <SafeAreaView style={[styles.content, { flex: 1 }]} >
                     <TouchableWithoutFeedback onPress={() => Actions.searchGroupMenu()}>
                         <View>
-                            <SearchGroupForm enabled={false} keyboardEnabled={false}  />
+                            <SearchGroupForm enabled={false} keyboardEnabled={false} />
                         </View>
                     </TouchableWithoutFeedback>
                     <Text style={styles.textBox}>My Groups:</Text>
@@ -238,6 +182,7 @@ const mapStateToProps = state => {
         getLeaveGroupError: state.groupReducer.leaveGroupError,
         deleteGroupStatus: state.groupReducer.deleteGroupStatus,
         getCurrentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        getCurrentEditingGroupStatus: state.groupMenuReducer.currentEditingGroupStatus,
     };
 };
 
@@ -257,9 +202,11 @@ const mapDispatchToProps = dispatch => {
         getUserGroups: data => dispatch(getUserGroups(data)),
         setCurrentContentState: data => dispatch(setCurrentContentState(data)),
         currentContentSuccess: data => dispatch(currentContentSuccess(data)),
-        currentEditingGroupIdSuccess: data => dispatch(currentEditingGroupIdSuccess(data)),
-        currentEditingGroupIdData: data => dispatch(currentEditingGroupIdData(data)),
-        setCurrentEditingGroupId: data => dispatch(setCurrentEditingGroupId(data)),
+        currentEditingGroupStatus: data => dispatch(currentEditingGroupStatus(data)),
+        currentEditingGroupData: data => dispatch(currentEditingGroupData(data)),
+        setCurrentEditingGroup: data => dispatch(setCurrentEditingGroup(data)),
+        getGroupsSuccess: data => dispatch(getGroupsSuccess(data)),
+        getGroups: data => dispatch(getGroups(data)),
     };
 };
 

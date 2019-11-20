@@ -11,6 +11,8 @@ import { modalWindowReducer } from "./modalWindowReducer";
 import { searchGroupFormReducer } from "./SearchGroupFromReducer";
 import { addGroupFormReducer } from "./AddGroupFromReducer";
 import { groupMenuReducer } from "./GroupMenuReducer";
+import { addPostReducer } from "./addPostReducer";
+import { groupFeedReducer } from "./groupFeedReducer";
 // for future form implementation
 import { reducer as formReducer } from "redux-form";
 
@@ -27,5 +29,7 @@ export default combineReducers({
   searchGroupFormReducer,
   addGroupFormReducer,
   groupMenuReducer,
+  addPostReducer,
+  groupFeedReducer,
   form: formReducer
 });

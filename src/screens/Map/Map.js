@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import { connect } from 'react-redux';
-import Geolocation from '@react-native-community/geolocation';
+import * as Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import MSearch from './Search';
+import { MAPBOX } from 'react-native-dotenv';
 
 //Redux actions
 import { addMarkModalWindow } from '../../actions/modalWindowAction';
@@ -18,9 +20,9 @@ import ModalWindow from '../ModalWindow/ModalWindow';
 import AddMark from '../AddMark/AddMark';
 import Marks from '../Marks/Marks';
 
-Mapbox.setAccessToken(
-  'sk.eyJ1IjoiendhaGFiMTE0IiwiYSI6ImNrMXR2cWRxZDB2MjUzY25zdTZkdHg1MGEifQ.pGh19KR7GqfLCg1qoga5rg'
-);
+console.log(MAPBOX);
+
+Mapbox.setAccessToken(MAPBOX);
 
 class Map extends Component {
   constructor(props) {
@@ -44,25 +46,43 @@ class Map extends Component {
     }
   }
 
-  findCoordinates = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        console.log(position);
+  getCoordsFromName(loc) {
+    console.log(loc.lng, loc.lat);
 
-        this.location.longitude = position.coords.longitude;
-        this.location.latitude = position.coords.latitude;
-        // this.setState(this.location);
+    this.location.longitude = loc.lng;
+    this.location.latitude = loc.lat;
+    this.setState(this.location);
 
-        console.log(this.location.latitude);
-        console.log(this.location.longitude);
-      },
-      error => alert(error),
-      { enableHighAccuracy: true, timeout: 2000 }
-    );
+    // this.renderAnnotations()
     this._mapcoord.setCamera({
       centerCoordinate: [this.location.longitude, this.location.latitude],
       zoomLevel: 8
     });
+  }
+
+  findCoordinates = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        this.location.longitude = position.coords.longitude;
+        this.location.latitude = position.coords.latitude;
+        this.setState(this.location);
+      },
+      error =>
+        alert(
+          'Please make sure Location/GPS is Enabled',
+          JSON.stringify(error)
+        ),
+      { enableHighAccuracy: false, timeout: 2000 }
+    );
+  };
+
+  zoomCoordinates = () => {
+    this.findCoordinates();
+    this._mapcoord.setCamera({
+      centerCoordinate: [this.location.longitude, this.location.latitude],
+      zoomLevel: 8
+    });
+    this.renderAnnotations();
   };
 
   mapOnClick = data => {
@@ -71,6 +91,22 @@ class Map extends Component {
       this.props.setCoordinates(data.geometry.coordinates);
     }
   };
+
+  renderAnnotations() {
+    console.log('Test');
+    return (
+      <Mapbox.PointAnnotation
+        key="pointAnnotation"
+        id="pointAnnotation"
+        coordinate={[this.location.longitude, this.location.latitude]}
+      >
+        <View style={annotationStyles.container}>
+          <View style={annotationStyles.fill} />
+        </View>
+        <Mapbox.Callout title="We did it!!" />
+      </Mapbox.PointAnnotation>
+    );
+  }
 
   render() {
     return (
@@ -90,12 +126,14 @@ class Map extends Component {
           <View style={containerStyles.optionsContainer}>
             <AddMark />
           </View>
+          <MSearch notifyChange={loc => this.getCoordsFromName(loc)} />
           <Mapbox.MapView
-            styleURL={Mapbox.StyleURL.Light}
+            styleURL={'mapbox://styles/zwahab114/ck33vykpv454o1cpl7irwc7d7'}
             onPress={data => this.mapOnClick(data)}
             attributionEnabled={false}
             showUserLocation={true}
             logoEnabled={false}
+            compassEnabled={true}
             style={mapStyles.container}
             onDidFinishLoadingMap={this.findCoordinates}
           >
@@ -113,7 +151,7 @@ class Map extends Component {
             style={mapStyles.locationButton}
             name="location-pin"
             size={25}
-            onPress={this.findCoordinates}
+            onPress={this.zoomCoordinates}
           ></Icon>
         </View>
       </View>

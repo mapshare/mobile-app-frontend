@@ -3,6 +3,11 @@ import { API_URL } from 'react-native-dotenv';
 
 import keys from '../data/key';
 
+import { getGroups, getUserGroups } from './groupActions';
+import { Actions, ActionConst } from 'react-native-router-flux';
+
+console.log(API_URL);
+
 export const logInSuccess = bool => {
   return {
     type: keys.LOG_IN_SUCCESS,
@@ -37,23 +42,21 @@ export const logInUser = data => {
     userPassword: data.userPassword
   };
 
-  return dispatch => {
-    axios
-      .post(API_URL + '/login', userData)
-      .then(res => {
-        console.log('data after logInUser request return data: ', res.data);
-        // console.log(
-        //   'data after logInUser request return header: ',
-        //   res.headers.authentication
-        // );
-        dispatch(logInUserDataSuccess(res.data));
-        dispatch(logInToken(res.headers.authentication));
-        dispatch(logInSuccess(true));
-      })
-      .catch(err => {
-        // console.log('logInUser errors: ', err.response);
-        dispatch(logInSuccess(false));
-        dispatch(logInUserError(err.response));
-      });
+  return async dispatch => {
+    try {
+      // Display Loading Screen (WIP - WILL IMPLEMENT WITH LOCAL STORAGE SAVING)
+      // Actions.loadingScreen({ type: ActionConst.RESET });
+
+      const res = await axios.post(API_URL + '/login', userData);
+      // Load all groups on user login
+      await dispatch(getUserGroups({ token: res.headers.authentication }));
+      await dispatch(getGroups({ token: res.headers.authentication }));
+      dispatch(logInUserDataSuccess(res.data));
+      dispatch(logInToken(res.headers.authentication));
+      dispatch(logInSuccess(true));
+    } catch (err) {
+      dispatch(logInSuccess(false));
+      dispatch(logInUserError(err.response.data));
+    }
   };
 };

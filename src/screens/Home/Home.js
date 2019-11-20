@@ -4,11 +4,15 @@ import {
   View,
   ImageBackground,
   TouchableOpacity,
-  Alert
+  Alert,
+  ScrollView,
+  SafeAreaView
 } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import Geolocation from '@react-native-community/geolocation';
 import GroupMenu from './GroupMenu/GroupMenu';
+import CreatePostButton from '../Groups/GroupFeed/CreatePostButton';
+import GroupFeed from '../Groups/GroupFeed/GroupFeed';
 
 // Componenets Style
 import styles from './Stylesheet';
@@ -22,7 +26,8 @@ import {
   getActiveGroupError,
   getActiveGroupSuccess,
   getActiveGroupDataSuccess,
-  groupExists
+  groupExists,
+  getActiveGroupRefreshDataOnly
 } from '../../actions/groupActions';
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 
@@ -44,10 +49,12 @@ class Home extends Component {
     this.setState({
       interval: setInterval(() => {
         this.checkIfGroupExists(this.props.getActiveGroupData._id);
+        this.props.getActiveGroupRefreshDataOnly({
+          groupId: this.props.getActiveGroupData._id,
+          token: this.props.token
+        });
       }, 5000)
     });
-
-    this.setState({ groupImg: this.props.getActiveGroupData.groupImg });
 
     const data = {
       groupMarkId: this.props.getActiveGroupData.groupMarks,
@@ -61,7 +68,11 @@ class Home extends Component {
     clearInterval(this.state.interval);
   }
 
+  loadingScreen() {}
+
   componentDidUpdate(prevProps) {
+    // Checks if Active Group Still Exists.
+    // If Active Group has been deleted then clear users active group.
     if (prevProps.groupExistsStatus !== this.props.groupExistsStatus) {
       if (!this.props.groupExistsStatus) {
         this.clearActiveGroup();
@@ -95,44 +106,12 @@ class Home extends Component {
     Actions.initial({ type: ActionConst.RESET });
   }
 
-  findCoordinates = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        console.log(position);
-
-        this.location.longitude = position.coords.longitude;
-        this.location.latitude = position.coords.latitude;
-        this.setState(this.location);
-
-        console.log(this.location.latitude);
-        console.log(this.location.longitude);
-      },
-      error => {
-        alert(error);
-        console.log(error);
-      },
-      { enableHighAccuracy: true, timeout: 2000 }
-    );
-  };
-
-  goMap() {
-    Actions.map();
-  }
-
-  getGroupImage() {
-    if (this.props.getActiveGroupData.groupImg) {
-      let data = 'data:image/png;base64,' + this.state.groupImg;
-      return { uri: data };
-    } else {
-      return require('../../assests/images/food.jpg');
-    }
-  }
-
   render() {
     return (
       <View style={styles.root}>
         <View style={styles.Body}>
           <GroupMenu />
+          <CreatePostButton />
           <View style={styles.InfoBody}>
             <ImageBackground
               source={
@@ -158,27 +137,9 @@ class Home extends Component {
               </View>
             </ImageBackground>
           </View>
-          <Mapbox.MapView
-            styleURL={Mapbox.StyleURL.Light}
-            showUserLocation={true}
-            zoomEnabled={false}
-            scrollEnabled={false}
-            pitchEnabled={false}
-            rotateEnabled={false}
-            attributionEnabled={false}
-            logoEnabled={false}
-            style={styles.Body}
-            onDidFinishLoadingMap={this.findCoordinates}
-            onPress={this.goMap}
-          >
-            <Mapbox.Camera
-              centerCoordinate={[
-                this.location.longitude,
-                this.location.latitude
-              ]}
-              zoomLevel={8}
-            />
-          </Mapbox.MapView>
+          <SafeAreaView style={styles.groupFeed}>
+            <GroupFeed />
+          </SafeAreaView>
         </View>
       </View>
     );
@@ -193,7 +154,8 @@ const mapStateToProps = state => {
     token: state.logInReducer.token,
     groupExistsStatus: state.groupReducer.groupExistsStatus,
     updateGroupStatus: state.groupReducer.updateGroupStatus,
-    updateGroupData: state.groupReducer.updateGroupStatus
+    updateGroupData: state.groupReducer.updateGroupStatus,
+    loadingData: state.groupReducer.loadingData
   };
 };
 
@@ -206,11 +168,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(getActiveGroupDataSuccess(data)),
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
-    getGroupAllMarks: data => dispatch(getGroupAllMarks(data))
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
+    getActiveGroupRefreshDataOnly: data =>
+      dispatch(getActiveGroupRefreshDataOnly(data))
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

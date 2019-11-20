@@ -24,24 +24,24 @@ export const setCurrentContentState = data => {
 };
 
 
-export const currentEditingGroupIdSuccess = bool => {
+export const currentEditingGroupStatus = bool => {
     return {
-        type: keys.CURRENT_EDITING_GROUP_ID_SUCCESS,
-        currentEditingGroupIdStatus: bool,
+        type: keys.CURRENT_EDITING_GROUP_SUCCESS,
+        currentEditingGroupStatus: bool,
     };
 };
 
-export const currentEditingGroupIdData = data => {
+export const currentEditingGroupData = data => {
     return {
-        type: keys.CURRENT_EDITING_GROUP_ID_DATA,
-        currentEditingGroupIdData: data,
+        type: keys.CURRENT_EDITING_GROUP_DATA,
+        currentEditingGroupData: data,
     };
 };
 
-export const setCurrentEditingGroupId = data => {
+export const setCurrentEditingGroup = data => {
     return dispatch => {
-        dispatch(currentEditingGroupIdData(data));
-        dispatch(currentEditingGroupIdSuccess(true));
+        dispatch(currentEditingGroupData(data));
+        dispatch(currentEditingGroupStatus(true));
     };
 };
 

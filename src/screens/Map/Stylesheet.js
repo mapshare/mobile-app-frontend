@@ -38,6 +38,19 @@ const mapStyles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: 10
+  },
+  searchBar: {
+    marginLeft: 5,
+    marginRight: 60,
+    flexDirection: 'row',
+    flexGrow: 1,
+    flexShrink: 0,
+    elevation: 9999,
+    position: 'absolute',
+    zIndex: 9999,
+    borderTopWidth: 0,
+    borderBottomWidth:0,
+    //borderRadius: 100,
   }
 });
 

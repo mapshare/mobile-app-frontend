@@ -6,7 +6,9 @@ import {
   Scene,
   ActionConst,
   View,
-  Lightbox
+  Lightbox,
+  Modal,
+  Actions
 } from "react-native-router-flux";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
@@ -26,6 +28,9 @@ import SelectGroup from "../../screens/ManageGroup/SelectGroup/SelectGroup";
 import AddGroup from "../../screens/ManageGroup/AddGroup/AddGroup";
 import ManageGroupJoinRequests from "../../screens/ManageGroup/ManageGroupJoinRequests/ManageGroupJoinRequests";
 import Chat from "../../screens/Groups/GroupChat/GroupChat";
+import CreatePostModal from "../../screens/Forms/CreatePost/CreatePost";
+import EditPostModal from "../../screens/Groups/GroupFeed/EditPostModal";
+import LoadingScreen from "../../screens/Loading/Loading";
 
 // InitialGroupMenu
 import InitialAddGroup from "../../screens/InitialGroupMenu/Menus/AddGroup";
@@ -43,10 +48,16 @@ import JoinGroupRequestMenu from "../../screens/Home/GroupMenu/Menus/JoinGroupRe
 import ChangeGroupNameMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupName";
 import ChangeGroupDescriptionMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupDescription";
 
-
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
 };
+
+//Redux actions
+import { connect } from 'react-redux';
+
+import {
+  getGroups,
+} from '../../actions/groupActions';
 
 //Create a dedicated class that will manage the tabBar icon
 class TabIcon extends Component {
@@ -55,7 +66,7 @@ class TabIcon extends Component {
   }
 }
 
-export default class App extends Component {
+class App extends Component {
   render() {
     return (
       <Router
@@ -63,14 +74,21 @@ export default class App extends Component {
         titleStyle={{ color: "white" }}
         navigationBarStyle={{ backgroundColor: "#33C1FF" }}
       >
-        <Stack key="root" hideNavBar>
-          <Scene
-            key="login"
-            component={LogIn}
-            type={ActionConst.RESET}
-            hideNavBar
-          />
-          <Scene key="signup" component={SignUp} />
+
+        <Lightbox key="root" hideNavBar>
+          {/* Login & SignUp */}
+          <Stack key="Auth">
+            <Scene
+              key="login"
+              component={LogIn}
+              type={ActionConst.RESET}
+              hideNavBar
+            />
+            <Scene key="signup" component={SignUp}
+              hideNavBar />
+          </Stack>
+
+          {/* OLD NAVIGATION */}
           <Scene key="tester" component={Tester} type={ActionConst.RESET} />
           <Scene
             key="manageGroup"
@@ -104,6 +122,8 @@ export default class App extends Component {
             component={ManageGroupJoinRequests}
             title="ManageGroupJoinRequests"
           />
+
+          {/* INITIAL SELECT GROUP NAVIGATION */}
           <Stack key="initial" hideNavBar>
             <Scene
               key="initialMyGroups"
@@ -129,20 +149,7 @@ export default class App extends Component {
             />
           </Stack>
 
-          <Stack
-            hideNavBar
-            key="groupsMenu">
-            <Scene key='myGroupsMenu' component={MyGroupsMenu} />
-            <Scene key="searchGroupMenu" component={SearchGroupMenu} />
-            <Scene key="addGroupMenu" component={AddGroupMenu} />
-            <Scene key="editGroupMenu" component={EditGroupMenu} />
-            <Scene key="editGroupMemberMenu" component={EditGroupMemberMenu} />
-            <Scene key="groupMembersListMenu" component={GroupMembersListMenu} />
-            <Scene key="joinGroupRequestMenu" component={JoinGroupRequestMenu} />
-            <Scene key="changeGroupNameMenu" component={ChangeGroupNameMenu} />
-            <Scene key="changeGroupDescriptionMenu" component={ChangeGroupDescriptionMenu} />
-          </Stack>
-
+          {/* MAIN NAVIGATION */}
           <Stack key="navTab"
             titleStyle={{ color: "white" }}
             navigationBarStyle={{ backgroundColor: "#33C1FF" }}
@@ -163,6 +170,7 @@ export default class App extends Component {
               name="map"
               hideNavBar
             />
+
             <Scene
               key="chat"
               component={Chat}
@@ -170,6 +178,7 @@ export default class App extends Component {
               name="people"
               hideNavBar
             />
+
             <Scene
               key="events"
               component={Events}
@@ -177,6 +186,7 @@ export default class App extends Component {
               name="event"
               hideNavBar
             />
+
             <Scene
               key="profile"
               component={Profile}
@@ -185,8 +195,42 @@ export default class App extends Component {
               hideNavBar
             />
           </Stack>
-        </Stack >
-      </Router >
+
+          {/* MANAGE GROUP NAVIGATION */}
+          <Scene key='myGroupsMenu' hideNavBar hideTabBar component={MyGroupsMenu} />
+          <Scene key="searchGroupMenu" hideNavBar hideTabBar component={SearchGroupMenu} />
+          <Scene key="addGroupMenu" hideNavBar hideTabBar component={AddGroupMenu} />
+          <Scene key="editGroupMenu" hideNavBar hideTabBar component={EditGroupMenu} />
+          <Scene key="editGroupMemberMenu" hideNavBar hideTabBar component={EditGroupMemberMenu} />
+          <Scene key="groupMembersListMenu" hideNavBar hideTabBar component={GroupMembersListMenu} />
+          <Scene key="joinGroupRequestMenu" hideNavBar hideTabBar component={JoinGroupRequestMenu} />
+          <Scene key="changeGroupNameMenu" hideNavBar hideTabBar component={ChangeGroupNameMenu} />
+          <Scene key="changeGroupDescriptionMenu" hideNavBar hideTabBar component={ChangeGroupDescriptionMenu} />
+
+          {/* MODALS */}
+          <Scene key="loadingScreen" component={LoadingScreen} />
+          <Scene key="createPostModal" component={CreatePostModal} />
+          <Scene key="editPostModal" component={EditPostModal} />
+        </Lightbox>
+      </Router>
     );
   }
 }
+
+// Redux Getter to use: this.props.(name of any return)
+const mapStateToProps = state => {
+  return {
+  };
+};
+
+// Redux Setter to use: this.props.(name of any return)
+const mapDispatchToProps = dispatch => {
+  return {
+    getGroups: data => dispatch(getGroups(data)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);

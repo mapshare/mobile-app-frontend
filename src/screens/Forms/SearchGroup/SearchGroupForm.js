@@ -19,7 +19,7 @@ import {
     searchGroup,
     searchGroupSuccess,
     searchGroupError,
-    searchGroupDataSuccess
+    searchGroupDataSuccess,
 } from '../../../actions/groupActions';
 
 
@@ -43,8 +43,12 @@ class SearchGroupForm extends Component {
             searchGroupError: '',
         };
     }
+    componentDidMount(){
+        this.searchGroupName();
+    }
 
-    componentDidMount() {
+    componentWillUnmount() {
+        this.searchGroupName("")
     }
 
     componentDidUpdate(prevProps) {
@@ -61,19 +65,33 @@ class SearchGroupForm extends Component {
         }
 
         if (this.props.getSearchGroupError) {
-            alert(JSON.stringify(this.props.getSearchGroupError));
             this.props.searchGroupError("");
+        }
+
+        if (prevProps.getGroupsSuccess !== this.props.getGroupsSuccess) {
+            if (this.props.getGroupsSuccess) {
+                this.searchGroupName();
+            }
         }
     }
 
-    searchGroup = async () => {
-        const data = {
-            token: this.props.token,
-            groupName: this.state.groupName,
+    searchGroupName() {
+        try {
+            let searchRegex = new RegExp('^.*' + this.state.groupName + '.*$', 'gim');
+            let searchResult = this.props.getGroupsData.filter(
+                (group) => {
+                    return (group.groupName.search(searchRegex) != -1) ? true : false;
+                }
+            );
+            this.props.setSearchStatus(false);
+            this.props.searchGroup(searchResult);
+        } catch (error) {
+            this.props.setSearchStatus(false);
+            this.props.searchGroup([]);
+
         }
-        this.props.setSearchStatus(false);
-        this.props.searchGroup(data);
-    };
+
+    }
 
     formFocus(value) {
         this.props.onSearchFocusSuccess(false);
@@ -91,7 +109,11 @@ class SearchGroupForm extends Component {
                             onFocus={() => this.formFocus(true)}
                             onBlur={() => this.formFocus(false)}
                             style={{ fontSize: 25, paddingLeft: 15 }}
-                            onChangeText={GroupName => this.setState({ groupName: GroupName })}
+                            onChangeText={GroupName => {
+                                this.setState({ groupName: GroupName }, () => {
+                                    this.searchGroupName();
+                                });
+                            }}
                             value={this.state.groupName}
                             placeholder="Search For New Group"
                             placeholderTextColor="#B8B8B8"
@@ -99,7 +121,7 @@ class SearchGroupForm extends Component {
                             autoCorrect={false}
                             returnKeyType="next"
                             autoCapitalize="none"
-                            onSubmitEditing={() => this.searchGroup()}
+                            onSubmitEditing={() => this.searchGroupName(this.state.groupName)}
                             editable={this.props.enabled}
                         />
                         {this.state.searchGroupError ? <Text>{this.state.searchGroupError}</Text> : null}
@@ -115,8 +137,10 @@ const mapStateToProps = state => {
     return {
         searchStatus: state.groupReducer.searchStatus,
         searchData: state.groupReducer.searchData,
+        getGroupsData: state.groupReducer.getGroupsData,
         getSearchGroupError: state.groupReducer.searchGroupError,
         token: state.logInReducer.token,
+        getGroupsSuccess: state.groupReducer.getGroupsSuccess,
         requestClearFieldStatus: state.searchGroupFormReducer.requestClearFieldStatus,
     };
 };

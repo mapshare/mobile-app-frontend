@@ -11,7 +11,7 @@ import {
   Button
 } from "react-native";
 
-console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
+import Moment from 'moment';
 
 // Componenets Style
 import styles from "./Stylesheet";
@@ -47,70 +47,9 @@ class GroupChat extends Component {
   }
 
   componentDidMount() {
-    const data = {
-      token: this.props.token,
-      groupId: this.props.getActiveGroupData._id,
-    }
-
-    if (this.props.connectToGroupChatStatus) {
-      this.props.disconnectGroupChatRoom({ socket: this.props.socket });
-    }
-    else {
-      this.props.joinGroupChatRoomSuccess(false);
-      this.props.connectToGroupChatSuccess(false);
-      this.props.connectToGroupChat(data);
-      this.props.getGroupMemberSuccess(false);
-      this.props.getGroupMember(data);
-      this.props.disconnectGroupChatRoomSuccess(false);
-    }
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.disconnectGroupChatRoomStatus !== this.props.disconnectGroupChatRoomStatus) {
-      if (this.props.disconnectGroupChatRoomStatus) {
-        const data = {
-          token: this.props.token,
-          groupId: this.props.getActiveGroupData._id,
-        }
-        this.props.joinGroupChatRoomSuccess(false);
-        this.props.connectToGroupChatSuccess(false);
-        this.props.connectToGroupChat(data);
-        this.props.getGroupMemberSuccess(false);
-        this.props.getGroupMember(data);
-        this.props.disconnectGroupChatRoomSuccess(false);
-      }
-    }
-
-    if (prevProps.connectToGroupChatStatus !== this.props.connectToGroupChatStatus) {
-      if (this.props.connectToGroupChatStatus) {
-        const joinData = {
-          socket: this.props.socket,
-          groupId: this.props.getActiveGroupData._id,
-          chatRoomName: "General"
-        }
-        this.props.joinGroupChatRoom(joinData);
-      }
-    }
-
-    if (prevProps.joinGroupChatRoomStatus !== this.props.joinGroupChatRoomStatus) {
-      if (this.props.joinGroupChatRoomStatus) {
-        this.setState({ chatRoomId: this.props.joinGroupChatRoomData._id });
-        this.setState({ data: this.props.joinGroupChatRoomData.data });
-      }
-    }
-
-    if (prevProps.getGroupMemberStatus !== this.props.getGroupMemberStatus) {
-      if (this.props.getGroupMemberStatus) {
-        this.setState({ groupMember: this.props.getGroupMemberData });
-      }
-    }
-
-    if (prevProps.getNewMessageStatus !== this.props.getNewMessageStatus) {
-      if (this.props.getNewMessageStatus) {
-        this.setState({ data: this.props.newMessageData });
-        this.props.newMessageStatus(false);
-      }
-    }
   }
 
   sendMessage() {
@@ -124,10 +63,9 @@ class GroupChat extends Component {
   }
 
   renderDate = (utcdate) => {
-    var date = new Date(utcdate);
     return (
       <Text style={styles.time}>
-        {date.toLocaleTimeString()}
+        {Moment(utcdate).format('LT')}
       </Text>
     );
   }
@@ -137,16 +75,16 @@ class GroupChat extends Component {
       <View style={styles.container}>
         <FlatList style={styles.list}
           inverted
-          data={this.state.data}
+          data={this.props.chatLogData.data}
           keyExtractor={(item) => { return item._id; }}
           renderItem={({ item }) => {
-            let inMessage = item.messageCreatedBy === this.state.groupMember._id;
+            let inMessage = item.messageCreatedBy === this.props.getGroupMemberData._id;
             let itemStyle = inMessage ? styles.itemIn : styles.itemOut;
             return (
               <View style={[styles.item, itemStyle]}>
                 <View style={[styles.balloon]}>
+                  <Text>{item.messageCreatedByName} {this.renderDate(item.messageCreatedAt)}</Text>
                   <Text>{item.messageBody}</Text>
-                  {this.renderDate(item.messageCreatedAt)}
                 </View>
               </View>
             )
@@ -176,12 +114,14 @@ const mapStateToProps = state => {
   return {
     socket: state.groupChatRoomReducer.socket,
     token: state.logInReducer.token,
+    getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     getGroupMemberData: state.groupReducer.getGroupMemberData,
     connectToGroupChatStatus: state.groupChatRoomReducer.connectToGroupChatStatus,
     getActiveGroupChatRoomData: state.groupChatRoomReducer.getActiveGroupChatRoomData,
     joinGroupChatRoomStatus: state.groupChatRoomReducer.joinGroupChatRoomStatus,
     joinGroupChatRoomData: state.groupChatRoomReducer.joinGroupChatRoomData,
+    chatLogData: state.groupChatRoomReducer.chatLogData,
     socket: state.groupChatRoomReducer.socket,
     newMessageData: state.groupChatRoomReducer.newMessageData,
     getNewMessageStatus: state.groupChatRoomReducer.getNewMessageStatus,

@@ -72,25 +72,32 @@ export const connectToGroupChatError = data => {
 export const connectToGroupChat = data => {
     return dispatch => {
         try {
-
-            console.log("connecting")
+            console.log("Connecting To ChatRoom")
             const socket = io.connect(CHAT_URL + '/' + data.groupId);
             if (!socket) throw ("Unable to connect to server");
+            dispatch(connectToGroupChatDataSuccess(socket));
 
             socket.on('connect', () => {
                 socket.emit('authenticate', data.token)
                     .on('authenticated', () => {
-                        console.log("authenticated")
-                        dispatch(connectToGroupChatDataSuccess(socket));
                         dispatch(connectToGroupChatSuccess(true));
+                        const joinChatData = {
+                            socket: socket,
+                            groupId: data.groupId,
+                            chatRoomName: "General"
+                        }
+                        dispatch(joinGroupChatRoom(joinChatData));
                     })
                     .on('unauthorized', (msg) => {
                         throw ("Unable to connect to server " + msg);
                     })
                     .on('new message', (data) => {
-                        console.log("new message responce")
-                        dispatch(newMessageData(data));
+                        dispatch(chatLogData(data));
                         dispatch(newMessageStatus(true));
+                    })
+                    .on('join room', (data) => {
+                        dispatch(chatLogData(data));
+                        dispatch(joinGroupChatRoomSuccess(true));
                     });
             });
         } catch (error) {
@@ -175,11 +182,6 @@ export const joinGroupChatRoom = data => {
     return dispatch => {
         try {
             data.socket.emit('join room', param);
-            data.socket.on('join room', (data) => {
-                console.log("ROOM Joined")
-                dispatch(joinGroupChatRoomDataSuccess(data));
-                dispatch(joinGroupChatRoomSuccess(true));
-            });
         } catch (error) {
             console.log("ERROR: " + error)
             dispatch(joinGroupChatRoomSuccess(false));

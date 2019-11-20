@@ -34,6 +34,7 @@ export const registerUser = data => {
   };
 
   return dispatch => {
+    console.log(API_URL)
     axios
       .post(API_URL + "/register", userData)
       .then(res => {
