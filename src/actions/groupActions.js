@@ -190,7 +190,6 @@ export const getActiveGroupError = data => {
 };
 
 export const getActiveGroup = data => {
-  console.log(data);
   return dispatch => {
     axios
       .get(API_URL + '/groups/' + data.groupId, {

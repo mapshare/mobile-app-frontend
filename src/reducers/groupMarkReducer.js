@@ -4,13 +4,15 @@ const INITIAL_GROUP_MARK_STATE = {
   addGroupMarkOnClickStatus: false,
   addGroupMarkStatus: false,
   coordinates: [],
-  getCurrentOnClickMarkData: {}
+  getCurrentOnClickMarkData: {},
+  getGroupAllMarksData: []
 };
 
 export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
   switch (action.type) {
     // ADD GROUP MARK
     case keys.ADD_GROUP_MARK_SUCCESS:
+      console.log('add makr success');
       return { ...state, addGroupMarkStatus: action.addGroupMarkStatus };
     case keys.ADD_GROUP_MARK_ONCLICK:
       return {
@@ -23,7 +25,13 @@ export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
         coordinates: action.coordinates
       };
     case keys.ADD_GROUP_MARK_DATA_SUCCESS:
-      return { ...state, addGroupMarkData: action.addGroupMarkData };
+      return {
+        ...state,
+        addGroupMarkData: action.addGroupMarkData,
+        getGroupAllMarksData: state.getGroupAllMarksData.concat(
+          action.addGroupMarkData
+        )
+      };
     case keys.ADD_GROUP_MARK_ERROR:
       return { ...state, addGroupMarkError: action.addGroupMarkError };
     // GET GROUP MARK

@@ -1,4 +1,4 @@
-import keys from "../data/key";
+import keys from '../data/key';
 
 export const addMarkModalWindow = bool => {
   return {

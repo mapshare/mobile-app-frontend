@@ -38,6 +38,12 @@ class Map extends Component {
     this.marksArray = this.props.getGroupAllMarksData;
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.addGroupMarkStatus != prevProps.addGroupMarkStatus) {
+      this.marksArray = this.props.getGroupAllMarksData;
+    }
+  }
+
   findCoordinates = () => {
     Geolocation.getCurrentPosition(
       position => {
@@ -119,6 +125,7 @@ class Map extends Component {
 const mapStateToProps = state => {
   return {
     addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
+    addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
     addMarkStatus: state.modalWindowReducer.addMarkStatus,
     onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
     logInToken: state.logInReducer.token,
@@ -135,7 +142,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Map);
+export default connect(mapStateToProps, mapDispatchToProps)(Map);

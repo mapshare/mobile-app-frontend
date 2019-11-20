@@ -60,20 +60,18 @@ export const addGroupMark = data => {
     groupMarkCreatedBy: data.groupMarkCreatedBy
   };
 
-  console.log(data);
-
   return dispatch => {
     axios
       .post(API_URL + '/groups/' + data.groupId + '/mark', markData, {
         headers: { 'authentication': data.token }
       })
       .then(res => {
-        console.log('Add group mark success, return: ', res);
-        dispatch(addGroupMarkDataSuccess(res.data));
+        // console.log('Add group mark success, return: ', res);
+        dispatch(addGroupMarkDataSuccess(markData));
         dispatch(addGroupMarkSuccess(true));
       })
       .catch(err => {
-        console.log('Add group mark failed, error: ', err);
+        // console.log('Add group mark failed, error: ', err);
         dispatch(addGroupMarkSuccess(false));
         dispatch(addGroupMarkError(err.response.data));
       });
