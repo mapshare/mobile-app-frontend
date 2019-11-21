@@ -52,7 +52,6 @@ class AddMarkForm extends Component {
   };
 
   submit = values => {
-    console.log('price: ', this.state.priceRange);
     const formValues = {
       markName: values.markName,
       markLocations: {
