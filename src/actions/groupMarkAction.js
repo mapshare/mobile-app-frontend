@@ -1,7 +1,7 @@
-import axios from "axios";
-import { API_URL } from "react-native-dotenv";
+import axios from 'axios';
+import { API_URL } from 'react-native-dotenv';
 
-import keys from "../data/key";
+import keys from '../data/key';
 
 /* Routes
  *
@@ -60,16 +60,20 @@ export const addGroupMark = data => {
     groupMarkCreatedBy: data.groupMarkCreatedBy
   };
 
+  console.log('call add action!');
+
   return dispatch => {
     axios
-      .post(API_URL + "/groups/" + data.groupId + "/mark", markData, {
+      .post(API_URL + '/groups/' + data.groupId + '/mark', markData, {
         headers: { authentication: data.token }
       })
       .then(res => {
+        console.log('success add!');
         dispatch(addGroupMarkDataSuccess(res.data));
         dispatch(addGroupMarkSuccess(true));
       })
       .catch(err => {
+        console.log('failed add! ', err);
         dispatch(addGroupMarkSuccess(false));
         dispatch(addGroupMarkError(err.response.data));
       });
@@ -103,7 +107,7 @@ export const getGroupMarkError = data => {
 export const getGroupMark = data => {
   return dispatch => {
     axios
-      .get(API_URL + "/groups/" + data.groupId + "/mark/" + data.markId, {
+      .get(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
         headers: { authentication: data.token }
       })
       .then(res => {
@@ -152,7 +156,7 @@ export const updateGroupMark = data => {
   return dispatch => {
     axios
       .put(
-        API_URL + "/groups/" + data.groupId + "/mark/" + data.markId,
+        API_URL + '/groups/' + data.groupId + '/mark/' + data.markId,
         markData,
         { headers: { authentication: data.token } }
       )
@@ -194,7 +198,7 @@ export const deleteGroupMarkError = data => {
 export const deleteGroupMark = data => {
   return dispatch => {
     axios
-      .post(API_URL + "/groups/" + data.groupId + "/mark/" + data.markId, {
+      .post(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
         headers: { authentication: data.token }
       })
       .then(res => {
