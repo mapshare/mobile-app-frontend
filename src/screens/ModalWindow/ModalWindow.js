@@ -1,28 +1,38 @@
-import React, { Component } from "react";
-import { View, TouchableOpacity, Text } from "react-native";
-import { connect } from "react-redux";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
+import React, { Component } from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //Redux actions
-import { displayModalWindow } from "../../actions/modalWindowAction";
+import {
+  addMarkModalWindow,
+  clickMarkModalWindow
+} from '../../actions/modalWindowAction';
 
 // Componenets Style
-import { containerStyles } from "./Stylesheet";
+import { containerStyles } from './Stylesheet';
 
-import AddMarkForm from "../Forms/AddMark/AddMarkForm";
+import AddMarkForm from '../Forms/AddMark/AddMarkForm';
+import LocationDetailWindow from '../LocationDetailWindow/LocationDetailWindow';
 
 class ModalWindow extends Component {
   content = type => {
     switch (type) {
-      case "addMark":
+      case 'addMark':
         return <AddMarkForm />;
+      case 'onClickMark':
+        return <LocationDetailWindow />;
       default:
-        return console.error("pass an existing modalWindowType");
+        return console.error('pass an existing modalWindowType');
     }
   };
 
   closeButtonOnClick = () => {
-    this.props.displayModalWindow(false);
+    if (this.props.modalContent === 'addMark') {
+      this.props.addMarkModalWindow(false);
+    } else if (this.props.modalContent === 'onClickMark') {
+      this.props.clickMarkModalWindow(false);
+    }
   };
 
   render() {
@@ -52,7 +62,8 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    displayModalWindow: bool => dispatch(displayModalWindow(bool))
+    addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
+    clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool))
   };
 };
 

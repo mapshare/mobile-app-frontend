@@ -1,8 +1,15 @@
-import keys from "../data/key";
+import keys from '../data/key';
 
-export const displayModalWindow = bool => {
+export const addMarkModalWindow = bool => {
   return {
-    type: keys.MODAL_WINDOW,
-    status: bool
+    type: keys.ADD_MARK_MODAL_WINDOW,
+    addMarkStatus: bool
+  };
+};
+
+export const clickMarkModalWindow = bool => {
+  return {
+    type: keys.CLICK_MARK_MODAL_WINDOW,
+    onClickMarkStatus: bool
   };
 };

@@ -1,9 +1,11 @@
-import keys from "../data/key";
+import keys from '../data/key';
 
 const INITIAL_GROUP_MARK_STATE = {
   addGroupMarkOnClickStatus: false,
   addGroupMarkStatus: false,
-  coordinates: []
+  coordinates: [],
+  getCurrentOnClickMarkData: {},
+  getGroupAllMarksData: []
 };
 
 export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
@@ -22,7 +24,13 @@ export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
         coordinates: action.coordinates
       };
     case keys.ADD_GROUP_MARK_DATA_SUCCESS:
-      return { ...state, addGroupMarkData: action.addGroupMarkData };
+      return {
+        ...state,
+        addGroupMarkData: action.addGroupMarkData,
+        getGroupAllMarksData: state.getGroupAllMarksData.concat(
+          action.addGroupMarkData
+        )
+      };
     case keys.ADD_GROUP_MARK_ERROR:
       return { ...state, addGroupMarkError: action.addGroupMarkError };
     // GET GROUP MARK
@@ -32,6 +40,13 @@ export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
       return { ...state, getGroupMarkData: action.getGroupMarkData };
     case keys.GET_GROUP_MARK_ERROR:
       return { ...state, getGroupMarkError: action.getGroupMarkError };
+    case keys.GET_GROUP_ALL_MARKS:
+      return { ...state, getGroupAllMarksData: action.getGroupAllMarksData };
+    case keys.GET_CURRENT_MARK:
+      return {
+        ...state,
+        getCurrentOnClickMarkData: action.getCurrentOnClickMarkData
+      };
     // UPDATE GROUP MARK
     case keys.UPDATE_GROUP_MARK_SUCCESS:
       return { ...state, updateGroupMarkStatus: action.updateGroupMarkStatus };

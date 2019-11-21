@@ -73,7 +73,6 @@ export const addGroupMark = data => {
         dispatch(addGroupMarkSuccess(true));
       })
       .catch(err => {
-        console.log('failed add! ', err);
         dispatch(addGroupMarkSuccess(false));
         dispatch(addGroupMarkError(err.response.data));
       });
@@ -104,11 +103,43 @@ export const getGroupMarkError = data => {
   };
 };
 
+export const getGroupAllMarksData = data => {
+  return {
+    type: keys.GET_GROUP_ALL_MARKS,
+    getGroupAllMarksData: data
+  };
+};
+
+export const getCurrentOnClickMark = data => {
+  return {
+    type: keys.GET_CURRENT_MARK,
+    getCurrentOnClickMarkData: data
+  };
+};
+
+export const getGroupAllMarks = data => {
+  return dispatch => {
+    axios
+      .get(API_URL + '/groups/groupMarks/' + data.groupMarkId, {
+        headers: { 'authentication': data.token }
+      })
+      .then(res => {
+        // console.log('get all marks', res.data);
+        dispatch(getGroupAllMarksData(res.data.groupMarks));
+        dispatch(getGroupMarkSuccess(true));
+      })
+      .catch(err => {
+        dispatch(getGroupMarkSuccess(false));
+        dispatch(getGroupMarkError(err.response.data));
+      });
+  };
+};
+
 export const getGroupMark = data => {
   return dispatch => {
     axios
       .get(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
-        headers: { authentication: data.token }
+        headers: { 'authentication': data.token }
       })
       .then(res => {
         dispatch(getGroupMarkDataSuccess(res.data));
@@ -158,7 +189,7 @@ export const updateGroupMark = data => {
       .put(
         API_URL + '/groups/' + data.groupId + '/mark/' + data.markId,
         markData,
-        { headers: { authentication: data.token } }
+        { headers: { 'authentication': data.token } }
       )
       .then(res => {
         dispatch(updateGroupMarkDataSuccess(res.data));
@@ -199,7 +230,7 @@ export const deleteGroupMark = data => {
   return dispatch => {
     axios
       .post(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
-        headers: { authentication: data.token }
+        headers: { 'authentication': data.token }
       })
       .then(res => {
         dispatch(deleteGroupMarkDataSuccess(res.data));
