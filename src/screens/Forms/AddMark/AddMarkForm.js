@@ -1,11 +1,14 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Image, Picker } from 'react-native';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
 import { addGroupMark } from '../../../actions/groupMarkAction';
+import { displayModalWindow } from '../../../actions/modalWindowAction';
 
 // Componenets Style
 import { containerStyles } from './Stylesheet';
@@ -15,13 +18,47 @@ import { RenderField } from '../RenderField/RenderField';
 
 // Creating Component
 class AddMarkForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      photo: null,
+      empty: false,
+      priceRange: 0
+    };
+  }
+
+  choosePhoto = () => {
+    let options = {
+      title: null,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        this.setState({
+          photo: response,
+          empty: true
+        });
+      }
+    });
+  };
+
   submit = values => {
     const formValues = {
       markName: values.markName,
       markLocations: {
         locationAddress: values.locationAddress,
-        loactionPriceRange: values.loactionPriceRange,
-        additionalInformation: values.additionalInformation
+        loactionPriceRange: this.state.priceRange,
+        additionalInformation: values.additionalInformation,
+        locationImageSet: [{ locationImageData: this.state.photo }]
       },
       geometry: { coordinates: this.props.coordinates },
       groupMarkCreatedBy: this.props.getUserData._id,
@@ -29,6 +66,7 @@ class AddMarkForm extends Component {
       token: this.props.logInToken
     };
 
+    this.props.displayModalWindow(false);
     this.props.addGroupMark(formValues);
   };
 
@@ -49,16 +87,25 @@ class AddMarkForm extends Component {
           type="text"
           label="Location Address"
         />
-        <Field
-          name="loactionPriceRange"
-          component={RenderField}
-          type="text"
-          label="Price"
-        />
+
+        <Text style={containerStyles.textStyle}>Price Range</Text>
+        <View style={containerStyles.priceRangeContainer}>
+          <Picker
+            selectedValue={this.state.priceRange}
+            style={containerStyles.priceRangeList}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({ priceRange: itemValue })
+            }
+          >
+            <Picker.Item label="$" value="0" />
+            <Picker.Item label="$$" value="1" />
+            <Picker.Item label="$$$" value="2" />
+          </Picker>
+        </View>
         <Field
           name="locationReview"
           component={RenderField}
-          type="textarea"
+          type="text"
           label="Review"
         />
         <Field
@@ -67,12 +114,22 @@ class AddMarkForm extends Component {
           type="textarea"
           label="Description"
         />
-        <Field
-          name="image"
-          component={RenderField}
-          type="text"
-          label="Upload"
-        />
+        <Text style={containerStyles.textStyle}>Upload an image</Text>
+        <View>
+          {this.state.empty ? (
+            <Image
+              source={{ uri: this.state.photo.uri }}
+              style={containerStyles.imageStyle}
+            />
+          ) : (
+            <TouchableOpacity
+              style={containerStyles.imageUpload}
+              onPress={this.choosePhoto}
+            >
+              <Icon name="plus" size={30}></Icon>
+            </TouchableOpacity>
+          )}
+        </View>
         <TouchableOpacity
           style={containerStyles.buttonContainer}
           onPress={handleSubmit(this.submit)}
@@ -126,14 +183,12 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    addGroupMark: bool => dispatch(addGroupMark(bool))
+    addGroupMark: data => dispatch(addGroupMark(data)),
+    displayModalWindow: bool => dispatch(displayModalWindow(bool))
   };
 };
 
-AddMarkForm = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddMarkForm);
+AddMarkForm = connect(mapStateToProps, mapDispatchToProps)(AddMarkForm);
 
 export default reduxForm({
   form: 'addMarkRF',
