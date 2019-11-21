@@ -1,28 +1,28 @@
-import React, { Component } from "react";
-import { View } from "react-native";
-import Mapbox from "@react-native-mapbox-gl/maps";
-import { connect } from "react-redux";
-import * as Geolocation from "@react-native-community/geolocation";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
-import MSearch from './Search'
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import Mapbox from '@react-native-mapbox-gl/maps';
+import { connect } from 'react-redux';
+import * as Geolocation from '@react-native-community/geolocation';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import MSearch from './Search';
 import { MAPBOX } from 'react-native-dotenv';
 
 //Redux actions
-import { displayModalWindow } from "../../actions/modalWindowAction";
-import { setCoordinates } from "../../actions/groupMarkAction";
+import { addMarkModalWindow } from '../../actions/modalWindowAction';
+import { setCoordinates } from '../../actions/groupMarkAction';
+import { getGroupById } from '../../actions/groupActions';
 
 // Componenets Style
-import { containerStyles, mapStyles, annotationStyles } from "./Stylesheet";
+import { containerStyles, mapStyles, annotationStyles } from './Stylesheet';
 
 // Screens
-import ModalWindow from "../ModalWindow/ModalWindow";
-import AddMark from "../AddMark/AddMark";
+import ModalWindow from '../ModalWindow/ModalWindow';
+import AddMark from '../AddMark/AddMark';
+import Marks from '../Marks/Marks';
 
-console.log(MAPBOX)
+console.log(MAPBOX);
 
-Mapbox.setAccessToken(
-  MAPBOX
-);
+Mapbox.setAccessToken(MAPBOX);
 
 class Map extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class Map extends Component {
   }
 
   getCoordsFromName(loc) {
-    console.log(loc.lng, loc.lat)
+    console.log(loc.lng, loc.lat);
 
     this.location.longitude = loc.lng;
     this.location.latitude = loc.lat;
@@ -56,29 +56,33 @@ class Map extends Component {
         this.location.latitude = position.coords.latitude;
         this.setState(this.location);
       },
-      error => alert('Please make sure Location/GPS is Enabled', JSON.stringify(error)),
+      error =>
+        alert(
+          'Please make sure Location/GPS is Enabled',
+          JSON.stringify(error)
+        ),
       { enableHighAccuracy: false, timeout: 2000 }
     );
   };
 
   zoomCoordinates = () => {
-    this.findCoordinates()
+    this.findCoordinates();
     this._mapcoord.setCamera({
       centerCoordinate: [this.location.longitude, this.location.latitude],
       zoomLevel: 8
     });
-    this.renderAnnotations()
-  }
+    this.renderAnnotations();
+  };
 
   mapOnClick = data => {
     if (this.props.addGroupMarkOnClickStatus) {
-      this.props.displayModalWindow(true);
+      this.props.addMarkModalWindow(true);
       this.props.setCoordinates(data.geometry.coordinates);
     }
   };
 
   renderAnnotations() {
-    console.log("Test")
+    console.log('Test');
     return (
       <Mapbox.PointAnnotation
         key="pointAnnotation"
@@ -96,7 +100,10 @@ class Map extends Component {
   render() {
     return (
       <View style={containerStyles.container}>
-        {this.props.modalWindowStatus && <ModalWindow modalContent="addMark" />}
+        {this.props.addMarkStatus && <ModalWindow modalContent="addMark" />}
+        {this.props.onClickMarkStatus && (
+          <ModalWindow modalContent="onClickMark" />
+        )}
         <View
           style={[
             containerStyles.container,
@@ -108,7 +115,7 @@ class Map extends Component {
           <View style={containerStyles.optionsContainer}>
             <AddMark />
           </View>
-          <MSearch notifyChange={(loc) => this.getCoordsFromName(loc)}/>
+          <MSearch notifyChange={loc => this.getCoordsFromName(loc)} />
           <Mapbox.MapView
             styleURL={'mapbox://styles/zwahab114/ck33vykpv454o1cpl7irwc7d7'}
             onPress={data => this.mapOnClick(data)}
@@ -119,6 +126,7 @@ class Map extends Component {
             style={mapStyles.container}
             onDidFinishLoadingMap={this.findCoordinates}
           >
+            <Marks />
             <Mapbox.Camera
               ref={Component => (this._mapcoord = Component)}
               centerCoordinate={[
@@ -144,19 +152,20 @@ class Map extends Component {
 const mapStateToProps = state => {
   return {
     addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
-    modalWindowStatus: state.modalWindowReducer.status
+    addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
+    addMarkStatus: state.modalWindowReducer.addMarkStatus,
+    onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
+    logInToken: state.logInReducer.token
   };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    displayModalWindow: bool => dispatch(displayModalWindow(bool)),
-    setCoordinates: data => dispatch(setCoordinates(data))
+    addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
+    setCoordinates: data => dispatch(setCoordinates(data)),
+    getGroupById: data => dispatch(getGroupById(data))
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Map);
+export default connect(mapStateToProps, mapDispatchToProps)(Map);

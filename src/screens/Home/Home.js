@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -6,18 +6,18 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  SafeAreaView,
-} from "react-native";
-import Mapbox from "@react-native-mapbox-gl/maps";
-import Geolocation from "@react-native-community/geolocation";
-import GroupMenu from "./GroupMenu/GroupMenu";
-import CreatePostButton from "../Groups/GroupFeed/CreatePostButton";
-import GroupFeed from "../Groups/GroupFeed/GroupFeed";
+  SafeAreaView
+} from 'react-native';
+import Mapbox from '@react-native-mapbox-gl/maps';
+import Geolocation from '@react-native-community/geolocation';
+import GroupMenu from './GroupMenu/GroupMenu';
+import CreatePostButton from '../Groups/GroupFeed/CreatePostButton';
+import GroupFeed from '../Groups/GroupFeed/GroupFeed';
 
 // Componenets Style
-import styles from "./Stylesheet";
-import { Actions, ActionConst } from "react-native-router-flux";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
+import styles from './Stylesheet';
+import { Actions, ActionConst } from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -29,6 +29,7 @@ import {
   groupExists,
   getActiveGroupRefreshDataOnly
 } from '../../actions/groupActions';
+import { getGroupAllMarks } from '../../actions/groupMarkAction';
 
 class Home extends Component {
   constructor(props) {
@@ -38,8 +39,8 @@ class Home extends Component {
       longitude: 0.0
     };
     this.state = {
-      interval: "",
-      groupImg: "",
+      interval: '',
+      groupImg: ''
     };
   }
 
@@ -50,18 +51,24 @@ class Home extends Component {
         this.checkIfGroupExists(this.props.getActiveGroupData._id);
         this.props.getActiveGroupRefreshDataOnly({
           groupId: this.props.getActiveGroupData._id,
-          token: this.props.token,
+          token: this.props.token
         });
       }, 5000)
     });
+
+    const data = {
+      groupMarkId: this.props.getActiveGroupData.groupMarks,
+      token: this.props.token
+    };
+
+    this.props.getGroupAllMarks(data);
   }
 
   componentWillUnmount() {
     clearInterval(this.state.interval);
   }
 
-  loadingScreen() {
-  }
+  loadingScreen() {}
 
   componentDidUpdate(prevProps) {
     // Checks if Active Group Still Exists.
@@ -72,20 +79,30 @@ class Home extends Component {
       }
     }
 
+    if (prevProps.updateGroupStatus !== this.props.updateGroupStatus) {
+      if (this.props.updateGroupStatus) {
+        const data = {
+          token: this.props.token,
+          groupId: this.props.getActiveGroupData._id
+        };
+        this.props.getActiveGroupSuccess(false);
+        this.props.getActiveGroup(data);
+      }
+    }
   }
 
   checkIfGroupExists(groupId) {
     const data = {
       token: this.props.token,
-      groupId: groupId,
-    }
+      groupId: groupId
+    };
     this.props.groupExists(data);
   }
 
   clearActiveGroup() {
     this.props.getActiveGroupSuccess(false);
-    this.props.getActiveGroupDataSuccess("");
-    this.props.getActiveGroupError("");
+    this.props.getActiveGroupDataSuccess('');
+    this.props.getActiveGroupError('');
     Actions.initial({ type: ActionConst.RESET });
   }
 
@@ -97,14 +114,23 @@ class Home extends Component {
           <CreatePostButton />
           <View style={styles.InfoBody}>
             <ImageBackground
-              source={this.props.getActiveGroupData.groupImg ? { uri: 'data:image/png;base64,' + this.props.getActiveGroupData.groupImg }
-                : require("../../assests/images/food.jpg")
+              source={
+                this.props.getActiveGroupData.groupImg
+                  ? {
+                      uri:
+                        'data:image/png;base64,' +
+                        this.props.getActiveGroupData.groupImg
+                    }
+                  : require('../../assests/images/food.jpg')
               }
               resizeMode="cover"
               style={styles.image}
             >
               <View style={styles.Overlay}>
-                <Text style={styles.GroupName}>{this.props.getActiveGroupData.groupName}{"\n"}</Text>
+                <Text style={styles.GroupName}>
+                  {this.props.getActiveGroupData.groupName}
+                  {'\n'}
+                </Text>
                 <Text style={styles.Message}>
                   {this.props.getActiveGroupData.groupDescription}
                 </Text>
@@ -138,14 +164,14 @@ const mapDispatchToProps = dispatch => {
   return {
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
-    getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
+    getActiveGroupDataSuccess: data =>
+      dispatch(getActiveGroupDataSuccess(data)),
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
-    getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
+    getActiveGroupRefreshDataOnly: data =>
+      dispatch(getActiveGroupRefreshDataOnly(data))
   };
-}
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
