@@ -17,13 +17,17 @@ import {
     getUserGroupsSuccess,
     getUserGroups,
     getAllGroupMember,
-    getAllGroupMemberSuccess
+    getAllGroupMemberDataSuccess,
+    getAllGroupMemberSuccess,
+    getGroups,
+    getEditingGroupMember,
+    getEditingGroupMemberSuccess
 } from '../../../../actions/groupActions';
 
 
 import {
     setCurrentEditingGroupMember,
-    currentEditingGroupMemberSuccess
+    currentEditingGroupMemberSuccess,
 } from '../../../../actions/GroupMenuAction';
 
 // Componenets Style
@@ -37,27 +41,32 @@ class MyGroups extends Component {
         this.state = {
             data: "",
             groupName: '',
-            interval: '',
+            permission: 0
         };
     }
 
+
     componentDidMount() {
-        const data = {
-            token: this.props.token,
-            groupId: this.props.currentEditingGroupData._id,
+        try {
+            this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
+        } catch (error) {
+            
         }
-        this.props.getAllGroupMember(data);
-        this.props.getUserGroupsSuccess(false);
-        
         // update every 5 seconds
         this.setState({
             interval: setInterval(() => {
                 const data = {
                     token: this.props.token,
-                    groupId: this.props.currentEditingGroupData._id,
+                    groupId: this.props.getCurrentEditingGroupData._id,
                 }
-                this.props.getUserGroupsSuccess(false);
+                this.props.getEditingGroupMemberSuccess(false);
+                this.props.getEditingGroupMember(data);
                 this.props.getAllGroupMember(data);
+                try {
+                    this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
+                } catch (error) {
+                    
+                }
             }, 5000)
         });
     }
@@ -95,7 +104,7 @@ class MyGroups extends Component {
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                {(this.props.currentEditingGroupData.groupRolePermisionLevel >= 3) &&
+                                {(this.state.permission >= 3) &&
                                     (group.item.groupMemberRole.groupRolePermisionLevel <= 3) &&
                                     <TouchableOpacity onPress={() => this.editGroupMember(group.item)}>
                                         <Icon style={styles.editGroupIcon} name="note" size={30} />
@@ -137,7 +146,8 @@ const mapStateToProps = state => {
         getActiveGroupData: state.groupReducer.getActiveGroupData,
         getAllGroupMemberStatus: state.groupReducer.getAllGroupMemberStatus,
         getAllGroupMemberData: state.groupReducer.getAllGroupMemberData,
-        currentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
+        getEditingGroupMemberData: state.groupReducer.getEditingGroupMemberData,
+        getCurrentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
     };
 };
 
@@ -147,10 +157,14 @@ const mapDispatchToProps = dispatch => {
         getActiveGroup: data => dispatch(getActiveGroup(data)),
         getUserGroupsSuccess: data => dispatch(getUserGroupsSuccess(data)),
         getUserGroups: data => dispatch(getUserGroups(data)),
-        getAllGroupMember: data => dispatch(getAllGroupMember(data)),
         getAllGroupMemberSuccess: data => dispatch(getAllGroupMemberSuccess(data)),
         setCurrentEditingGroupMember: data => dispatch(setCurrentEditingGroupMember(data)),
         currentEditingGroupMemberSuccess: data => dispatch(currentEditingGroupMemberSuccess(data)),
+        getAllGroupMemberDataSuccess: data => dispatch(getAllGroupMemberDataSuccess(data)),
+        getGroups: data => dispatch(getGroups(data)),
+        getAllGroupMember: data => dispatch(getAllGroupMember(data)),
+        getEditingGroupMember: data => dispatch(getEditingGroupMember(data)),
+        getEditingGroupMemberSuccess: data => dispatch(getEditingGroupMemberSuccess(data)),
     };
 };
 

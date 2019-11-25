@@ -71,7 +71,7 @@ class GroupMenu extends Component {
     goMyGroupMenu() {
         this.props.getUserGroupsSuccess(false);
         this.props.getUserGroups({ token: this.props.token });
-        Actions.groupsMenu();
+        Actions.myGroupsMenu();
     }
     render() {
         return (

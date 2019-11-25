@@ -1,5 +1,5 @@
 // Import Libraries
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,21 +8,21 @@ import {
   TouchableOpacity,
   AsyncStorage,
   Keyboard
-} from "react-native";
-import { Actions, ActionConst, } from "react-native-router-flux";
-import { connect } from "react-redux";
+} from 'react-native';
+import { Actions, ActionConst } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 
 //Redux actions
 import {
   logInUser,
   logInSuccess,
   logInUserError
-} from "../../../actions/logInActions";
+} from '../../../actions/logInActions';
 
 // Componenets Style
-import styles from "../Stylesheet";
+import styles from '../Stylesheet';
 
-import validator from "../validate/validation_wrapper";
+import validator from '../validate/validation_wrapper';
 
 // Creating Component
 class LogInForm extends Component {
@@ -30,16 +30,15 @@ class LogInForm extends Component {
     super(props);
     this.state = {
       user: {
-        userEmail: "",
-        userPassword: ""
+        userEmail: '',
+        userPassword: ''
       },
-      emailError: "",
-      passwordError: ""
+      emailError: '',
+      passwordError: ''
     };
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   componentDidUpdate(prevProps) {
     if (prevProps.logInStatus !== this.props.logInStatus) {
@@ -48,23 +47,23 @@ class LogInForm extends Component {
         // Actions.tester();
         // When we setup local storage we would want to load active group before checking if we have one selected
         if (this.props.getActiveGroupStatus) {
-          Actions.navTab({type:ActionConst.RESET})
+          Actions.navTab({ type: ActionConst.RESET });
         } else {
-          console.log("initialMyGroups")
-          Actions.initial({type:ActionConst.RESET});
+          console.log('initialMyGroups');
+          Actions.initial({ type: ActionConst.RESET });
         }
       }
     }
 
     if (this.props.getLogInError) {
       alert(this.props.getLogInError);
-      this.props.logInUserError("");
+      this.props.logInUserError('');
     }
   }
 
   LoginUser = async () => {
-    const emailError = validator("email", this.state.user.userEmail);
-    const passwordError = validator("password", this.state.user.userPassword);
+    const emailError = validator('email', this.state.user.userEmail);
+    const passwordError = validator('password', this.state.user.userPassword);
 
     this.setState(
       {
@@ -76,17 +75,17 @@ class LogInForm extends Component {
           this.props.logInSuccess(false);
           this.props.logInUser(this.state.user);
         } else {
-          console.log("this.state.emailError " + this.state.emailError);
-          console.log("this.state.passwordError " + this.state.passwordError);
+          console.log('this.state.emailError ' + this.state.emailError);
+          console.log('this.state.passwordError ' + this.state.passwordError);
         }
       }
     );
   };
 
   showData = async () => {
-    let loginDetails = await AsyncStorage.getItem("loginDetails");
+    let loginDetails = await AsyncStorage.getItem('loginDetails');
     let ld = JSON.parse(loginDetails);
-    alert("email: " + ld.email + " " + "password: " + ld.password);
+    alert('email: ' + ld.email + ' ' + 'password: ' + ld.password);
   };
 
   render() {
@@ -157,7 +156,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LogInForm);
+export default connect(mapStateToProps, mapDispatchToProps)(LogInForm);

@@ -43,8 +43,10 @@ class changeGroupNameForm extends Component {
         const data = {
             token: this.props.token,
             groupName: this.state.groupName,
-            groupId: this.props.currentEditingGroupIdData,
+            groupId: this.props.currentEditingGroupData._id,
+            activeGroupId: this.props.getActiveGroupData._id,
         }
+        
         this.props.updateGroupSuccess(false);
         this.props.updateGroup(data);
         this.setSuccesModalVisible(!this.state.succesModalVisible);
@@ -103,9 +105,10 @@ const mapStateToProps = state => {
     return {
         status: state.groupReducer.status,
         groupData: state.groupReducer.groupData,
-        currentEditingGroupIdData: state.groupMenuReducer.currentEditingGroupIdData,
+        currentEditingGroupData: state.groupMenuReducer.currentEditingGroupData,
         updateGroupError: state.groupReducer.updateGroupError,
-        token: state.logInReducer.token
+        token: state.logInReducer.token,
+        getActiveGroupData: state.groupReducer.getActiveGroupData,
     };
 };
 

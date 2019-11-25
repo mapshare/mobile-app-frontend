@@ -1,7 +1,7 @@
-import axios from "axios";
-import { API_URL } from "react-native-dotenv";
+import axios from 'axios';
+import { API_URL } from 'react-native-dotenv';
 
-import keys from "../data/key";
+import keys from '../data/key';
 
 /* Routes
  *
@@ -60,12 +60,15 @@ export const addGroupMark = data => {
     groupMarkCreatedBy: data.groupMarkCreatedBy
   };
 
+  console.log('call add action!');
+
   return dispatch => {
     axios
-      .post(API_URL + "/groups/" + data.groupId + "/mark", markData, {
+      .post(API_URL + '/groups/' + data.groupId + '/mark', markData, {
         headers: { authentication: data.token }
       })
       .then(res => {
+        console.log('success add!');
         dispatch(addGroupMarkDataSuccess(res.data));
         dispatch(addGroupMarkSuccess(true));
       })
@@ -100,11 +103,43 @@ export const getGroupMarkError = data => {
   };
 };
 
+export const getGroupAllMarksData = data => {
+  return {
+    type: keys.GET_GROUP_ALL_MARKS,
+    getGroupAllMarksData: data
+  };
+};
+
+export const getCurrentOnClickMark = data => {
+  return {
+    type: keys.GET_CURRENT_MARK,
+    getCurrentOnClickMarkData: data
+  };
+};
+
+export const getGroupAllMarks = data => {
+  return dispatch => {
+    axios
+      .get(API_URL + '/groups/groupMarks/' + data.groupMarkId, {
+        headers: { 'authentication': data.token }
+      })
+      .then(res => {
+        // console.log('get all marks', res.data);
+        dispatch(getGroupAllMarksData(res.data.groupMarks));
+        dispatch(getGroupMarkSuccess(true));
+      })
+      .catch(err => {
+        dispatch(getGroupMarkSuccess(false));
+        dispatch(getGroupMarkError(err.response.data));
+      });
+  };
+};
+
 export const getGroupMark = data => {
   return dispatch => {
     axios
-      .get(API_URL + "/groups/" + data.groupId + "/mark/" + data.markId, {
-        headers: { authentication: data.token }
+      .get(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
+        headers: { 'authentication': data.token }
       })
       .then(res => {
         dispatch(getGroupMarkDataSuccess(res.data));
@@ -152,9 +187,9 @@ export const updateGroupMark = data => {
   return dispatch => {
     axios
       .put(
-        API_URL + "/groups/" + data.groupId + "/mark/" + data.markId,
+        API_URL + '/groups/' + data.groupId + '/mark/' + data.markId,
         markData,
-        { headers: { authentication: data.token } }
+        { headers: { 'authentication': data.token } }
       )
       .then(res => {
         dispatch(updateGroupMarkDataSuccess(res.data));
@@ -194,8 +229,8 @@ export const deleteGroupMarkError = data => {
 export const deleteGroupMark = data => {
   return dispatch => {
     axios
-      .post(API_URL + "/groups/" + data.groupId + "/mark/" + data.markId, {
-        headers: { authentication: data.token }
+      .post(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
+        headers: { 'authentication': data.token }
       })
       .then(res => {
         dispatch(deleteGroupMarkDataSuccess(res.data));
