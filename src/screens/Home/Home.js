@@ -27,12 +27,10 @@ import {
   getActiveGroupSuccess,
   getActiveGroupDataSuccess,
   groupExists,
-  getActiveGroupRefreshDataOnly
+  getActiveGroupRefreshDataOnly,
+  getGroupMember
 } from '../../actions/groupActions';
-import {
-  getGroupAllMarks,
-  addGroupMarkSuccess
-} from '../../actions/groupMarkAction';
+import { getGroupAllMarks } from '../../actions/groupMarkAction';
 
 class Home extends Component {
   constructor(props) {
@@ -59,6 +57,11 @@ class Home extends Component {
 
         this.props.getGroupAllMarks({
           groupMarkId: this.props.getActiveGroupData.groupMarks,
+          token: this.props.token
+        });
+
+        this.props.getGroupMember({
+          groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
       }, 5000)
@@ -173,7 +176,7 @@ const mapDispatchToProps = dispatch => {
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
     getActiveGroupRefreshDataOnly: data =>
       dispatch(getActiveGroupRefreshDataOnly(data)),
-    addGroupMarkSuccess: bool => dispatch(addGroupMarkSuccess(bool))
+    getGroupMember: data => dispatch(getGroupMember(data))
   };
 };
 

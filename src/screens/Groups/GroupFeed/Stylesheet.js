@@ -129,20 +129,20 @@ export default StyleSheet.create({
         alignSelf: 'center',
     },
     footerPartOne: {
-        height: 20,
+        flex: .2,
     },
     footerPartTwo: {
-        height: 40,
+        flex: .4,
     },
     footerPartThree: {
-        height: 40,
+        flex: .4,
     },
     editGroupPost: {
         flex: 1,
         justifyContent: "flex-end",
     },
     editGroupPostPopup: {
-        flex: .4,
+        flex: .3,
         alignItems: "center",
         justifyContent: "flex-end",
         zIndex: 100000,
@@ -152,13 +152,13 @@ export default StyleSheet.create({
         borderRadius: 10
     },
     editGroupPopupRow: {
-        flex: .3,
+        flex: .4,
         alignSelf: "stretch",
         alignItems: "center",
         justifyContent: "center",
     },
     editGroupPopupText: {
         fontSize: 20,
-        color: "#FFF"
+        color: "#FFF",
     }
 });

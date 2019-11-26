@@ -21,11 +21,16 @@ import {
     setImage,
     imageStatus,
 } from '../../../actions/addPostActions';
+import {
+    deletePostGroupFeed
+} from '../../../actions/groupFeedAction';
+
 
 // Componenets Style
 import styles from "./Stylesheet";
 import { Actions } from "react-native-router-flux";
 import ImagePicker from 'react-native-image-picker';
+import { continueStatement } from "@babel/types";
 
 // Group Menu
 class EditPostModalGroup extends Component {
@@ -42,17 +47,19 @@ class EditPostModalGroup extends Component {
     }
 
     editPost() {
-
+        Actions.pop();
+        Actions.editPostForm({ editingPost: this.props.editingPost });
     }
+
     deletePost() {
-
+        const data = {
+            postId: this.props.editingPost._id,
+            groupFeedSocket: this.props.groupFeedSocket,
+        }
+        this.props.deletePostGroupFeed(data);
+        Actions.pop();
     }
-    hidePost() {
 
-    }
-    reportPost() {
-
-    }
     render() {
         return (
             <Modal
@@ -66,22 +73,11 @@ class EditPostModalGroup extends Component {
                 <TouchableWithoutFeedback onPress={() => Actions.pop()}>
                     <View style={styles.editGroupPost}>
                         <View style={styles.editGroupPostPopup}>
-                            {/* If creator of the post show edit and delete button */}
-                            {(true) &&
-                                <TouchableOpacity style={styles.editGroupPopupRow} onPress={() => this.editPost()}>
-                                    <Text style={styles.editGroupPopupText} >Edit</Text>
-                                </TouchableOpacity>
-                            }
-                            {(true) &&
-                                <TouchableOpacity style={styles.editGroupPopupRow} onPress={() => this.deletePost()}>
-                                    <Text style={styles.editGroupPopupText} >Delete</Text>
-                                </TouchableOpacity>
-                            }
-                            <TouchableOpacity style={styles.editGroupPopupRow} onPress={() => this.hidePost()}>
-                                <Text style={styles.editGroupPopupText} >Hide</Text>
+                            <TouchableOpacity style={styles.editGroupPopupRow} onPress={() => this.editPost()}>
+                                <Text style={styles.editGroupPopupText} >Edit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.editGroupPopupRow} onPress={() => this.reportPost()}>
-                                <Text style={styles.editGroupPopupText} >Report</Text>
+                            <TouchableOpacity style={styles.editGroupPopupRow} onPress={() => this.deletePost()}>
+                                <Text style={styles.editGroupPopupText} >Delete</Text>
                             </TouchableOpacity>
                             <View style={styles.flatListItemSeporator} />
                             <TouchableOpacity style={styles.editGroupPopupRow} onPress={() => Actions.pop()}>
@@ -98,6 +94,8 @@ class EditPostModalGroup extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
     return {
+        groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
+        getGroupFeedData: state.groupFeedReducer.groupFeedData,
     };
 };
 
@@ -106,6 +104,7 @@ const mapDispatchToProps = dispatch => {
     return {
         setImage: data => dispatch(setImage(data)),
         imageStatus: data => dispatch(imageStatus(data)),
+        deletePostGroupFeed: data => dispatch(deletePostGroupFeed(data)),
     };
 };
 

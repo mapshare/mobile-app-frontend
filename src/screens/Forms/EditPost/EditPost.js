@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/SimpleLineIcons";
 import { connect } from 'react-redux';
 import {
     sendPostToGroupFeed,
+    updatePostInGroupFeed
 } from '../../../actions/groupFeedAction';
 
 
@@ -25,6 +26,7 @@ import {
 import styles from '../Stylesheet';
 
 import validator from '../validate/validation_wrapper'
+import ImagePicker from 'react-native-image-picker';
 
 // Creating Component
 class AddPostCaption extends Component {
@@ -32,24 +34,34 @@ class AddPostCaption extends Component {
         super(props);
         this.state = {
             postCaption: '',
-            succesModalVisible: false,
-            addPostError: ''
+            postImage: '',
+            editPostError: '',
         };
     }
 
-    createPost() {
+    componentDidMount() {
+        try {
+            this.setState({ postCaption: this.props.editingPost.postCaption });
+            this.setState({ postImage: this.props.editingPost.postImage });
+        } catch (error) {
 
-        const addPostError = validator('postCaption', this.state.postCaption);
+        }
+    }
 
-        this.setState({ addPostError: addPostError },
+    editPost() {
+
+        const editPostError = validator('postCaption', this.state.postCaption);
+
+        this.setState({ editPostError: editPostError },
             () => {
-                if (!addPostError) {
+                if (!editPostError) {
                     const data = {
-                        postImage: this.props.imageData,
+                        postId: this.props.editingPost._id,
+                        postImage: this.state.postImage,
                         postCaption: this.state.postCaption,
                         groupFeedSocket: this.props.groupFeedSocket,
                     }
-                    this.props.sendPostToGroupFeed(data);
+                    this.props.updatePostInGroupFeed(data);
                     Actions.pop();
                 }
             }
@@ -58,37 +70,37 @@ class AddPostCaption extends Component {
     }
 
     updatePostCaption(postCaption) {
-        const addPostError = validator('postCaption', postCaption);
-        if (!addPostError) {
-            this.setState({ postCaption: postCaption, addPostError: "" });
+        const editPostError = validator('postCaption', postCaption);
+        if (!editPostError) {
+            this.setState({ postCaption: postCaption, editPostError: "" });
         } else {
-            this.setState({ postCaption: this.state.postCaption, addPostError: addPostError });
+            this.setState({ postCaption: this.state.postCaption, editPostError: editPostError });
         }
     }
 
-    setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible }, () => {
-            setTimeout(() => {
-                this.setState({ succesModalVisible: !visible });
-            }, 3000);
+    choosePhoto() {
+        let options = {
+            title: null,
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else {
+                this.setState({ postImage: response.data });
+            }
         });
-    }
+    };
 
     render() {
         return (
             <View style={styles.body} >
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={this.state.succesModalVisible}
-                    onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
-                    }}>
-                    <View style={styles.SuccesModal}>
-                        <Text style={styles.textBox}>Success</Text>
-                    </View>
-                </Modal>
-
                 <View style={styles.cancelPost}>
                     <TouchableOpacity style={styles.cancelPostButton} onPress={() => {
                         Actions.pop();
@@ -99,17 +111,22 @@ class AddPostCaption extends Component {
                 </View>
                 <View style={styles.CreatePost}>
                     <TouchableOpacity style={styles.CreatePostButton} onPress={() => {
-                        this.createPost();
+                        this.editPost();
                     }}>
                         <Icon style={styles.CreatePostIcon} name="check" size={30} />
                     </TouchableOpacity>
                 </View>
+
                 <View style={styles.row}>
                     <View style={styles.postImagePreview}>
-                        <Image
-                            style={styles.previewImage}
-                            source={{ uri: 'data:image/png;base64,' + this.props.imageData }}
-                        />
+                        <TouchableOpacity style={styles.CreatePostButton} onPress={() => {
+                            this.choosePhoto();
+                        }}>
+                            <Image
+                                style={styles.previewImage}
+                                source={{ uri: 'data:image/png;base64,' + this.state.postImage }}
+                            />
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.postCaptionForm}>
                         <TextInput
@@ -126,7 +143,7 @@ class AddPostCaption extends Component {
                             autoCapitalize="none"
                             onSubmitEditing={() => { }}
                         />
-                        {this.state.addPostError ? <Text>{this.state.addPostError}</Text> : null}
+                        {this.state.editPostError ? <Text>{this.state.editPostError}</Text> : null}
                     </View>
                 </View>
             </View>
@@ -147,7 +164,7 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
     return {
-        sendPostToGroupFeed: data => dispatch(sendPostToGroupFeed(data)),
+        updatePostInGroupFeed: data => dispatch(updatePostInGroupFeed(data)),
     };
 };
 
