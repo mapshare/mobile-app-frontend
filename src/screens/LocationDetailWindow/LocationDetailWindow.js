@@ -93,6 +93,25 @@ class LocationDetailWindow extends Component {
     );
   }
 
+  renderPriceRange = data => {
+    let priceRange = 'N/A';
+    if (data === 0) {
+      priceRange = '$';
+    } else if (data === 1) {
+      priceRange = '$$';
+    } else if (data === 2) {
+      priceRange = '$$$';
+    } else if (data === 3) {
+      priceRange = 'Free';
+    }
+
+    return (
+      <Text style={locationDetailStyles.priceRangeStyle}>
+        Price Range: {priceRange}
+      </Text>
+    );
+  };
+
   renderAdditionalInfo = data => {
     if ('additionalInformation' in data) {
       return (
@@ -188,9 +207,10 @@ class LocationDetailWindow extends Component {
             </Text>
           </View>
           <View style={locationDetailStyles.infoContainer}>
-            <Text style={locationDetailStyles.priceRangeStyle}>
-              Price range: $
-            </Text>
+            {this.renderPriceRange(
+              this.props.getCurrentOnClickMarkData.markLocations
+                .loactionPriceRange
+            )}
           </View>
           {this.renderAdditionalInfo(
             this.props.getCurrentOnClickMarkData.markLocations

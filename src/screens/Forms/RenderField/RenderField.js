@@ -24,6 +24,7 @@ const renderOnType = (input, type, props) => {
           onChangeText={input.onChange}
           value={input.value}
           {...input.restInput}
+          {...inputProps}
           textAlignVertical="top"
         />
       );

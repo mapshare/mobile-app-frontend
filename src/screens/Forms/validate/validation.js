@@ -67,14 +67,14 @@ const validation = {
     }
   },
 
-  locationReview: {
+  additionalInformation: {
     presence: {
-      message: '^Review is required',
+      message: '^Description is required',
       allowEmpty: false
     },
     length: {
       maximum: 150,
-      message: '^Maximum of 200 characters'
+      message: '^Maximum of 150 characters'
     },
     format: {
       pattern: '.*[^ ].*',

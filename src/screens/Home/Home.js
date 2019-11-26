@@ -29,7 +29,10 @@ import {
   groupExists,
   getActiveGroupRefreshDataOnly
 } from '../../actions/groupActions';
-import { getGroupAllMarks } from '../../actions/groupMarkAction';
+import {
+  getGroupAllMarks,
+  addGroupMarkSuccess
+} from '../../actions/groupMarkAction';
 
 class Home extends Component {
   constructor(props) {
@@ -53,15 +56,13 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+
+        this.props.getGroupAllMarks({
+          groupMarkId: this.props.getActiveGroupData.groupMarks,
+          token: this.props.token
+        });
       }, 5000)
     });
-
-    const data = {
-      groupMarkId: this.props.getActiveGroupData.groupMarks,
-      token: this.props.token
-    };
-
-    this.props.getGroupAllMarks(data);
   }
 
   componentWillUnmount() {
@@ -155,7 +156,8 @@ const mapStateToProps = state => {
     groupExistsStatus: state.groupReducer.groupExistsStatus,
     updateGroupStatus: state.groupReducer.updateGroupStatus,
     updateGroupData: state.groupReducer.updateGroupStatus,
-    loadingData: state.groupReducer.loadingData
+    loadingData: state.groupReducer.loadingData,
+    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData
   };
 };
 
@@ -170,7 +172,8 @@ const mapDispatchToProps = dispatch => {
     groupExists: data => dispatch(groupExists(data)),
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
     getActiveGroupRefreshDataOnly: data =>
-      dispatch(getActiveGroupRefreshDataOnly(data))
+      dispatch(getActiveGroupRefreshDataOnly(data)),
+    addGroupMarkSuccess: bool => dispatch(addGroupMarkSuccess(bool))
   };
 };
 

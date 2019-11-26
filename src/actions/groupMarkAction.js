@@ -17,6 +17,13 @@ import keys from '../data/key';
 /*
  *   ADD GROUP MARK
  */
+export const newMarkAdded = bool => {
+  return {
+    type: keys.NEW_MARK_ADDED,
+    newMarkAddedFlag: bool
+  };
+};
+
 export const addGroupMarkSuccess = bool => {
   return {
     type: keys.ADD_GROUP_MARK_SUCCESS,
@@ -59,8 +66,6 @@ export const addGroupMark = data => {
     geometry: data.geometry,
     groupMarkCreatedBy: data.groupMarkCreatedBy
   };
-
-  console.log('call add action!');
 
   return dispatch => {
     axios
@@ -124,11 +129,15 @@ export const getGroupAllMarks = data => {
         headers: { 'authentication': data.token }
       })
       .then(res => {
-        // console.log('get all marks', res.data);
+        // console.log(
+        //   'get all marks',
+        //   res.data.groupMarks[res.data.groupMarks.length - 1]
+        // );
         dispatch(getGroupAllMarksData(res.data.groupMarks));
         dispatch(getGroupMarkSuccess(true));
       })
       .catch(err => {
+        console.log('get all marks error: ', err);
         dispatch(getGroupMarkSuccess(false));
         dispatch(getGroupMarkError(err.response.data));
       });

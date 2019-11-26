@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
-import { addGroupMark } from '../../../actions/groupMarkAction';
-import { displayModalWindow } from '../../../actions/modalWindowAction';
+import { addGroupMark, newMarkAdded } from '../../../actions/groupMarkAction';
+import { addMarkModalWindow } from '../../../actions/modalWindowAction';
 
 // Componenets Style
 import { containerStyles } from './Stylesheet';
@@ -66,8 +66,9 @@ class AddMarkForm extends Component {
       token: this.props.logInToken
     };
 
-    this.props.displayModalWindow(false);
+    this.props.addMarkModalWindow(false);
     this.props.addGroupMark(formValues);
+    this.props.newMarkAdded(!this.props.newMarkAddedFlag);
   };
 
   render() {
@@ -100,14 +101,9 @@ class AddMarkForm extends Component {
             <Picker.Item label="$" value="0" />
             <Picker.Item label="$$" value="1" />
             <Picker.Item label="$$$" value="2" />
+            <Picker.Item label="Free" value="3" />
           </Picker>
         </View>
-        <Field
-          name="locationReview"
-          component={RenderField}
-          type="text"
-          label="Review"
-        />
         <Field
           name="additionalInformation"
           component={RenderField}
@@ -144,24 +140,21 @@ class AddMarkForm extends Component {
 const validate = values => {
   const errors = {};
 
-  if (!values.markName) {
-    errors.markName = validator('markName', values.markName);
-  }
-  if (!values.locationAddress) {
-    errors.locationAddress = validator(
-      'locationAddress',
-      values.locationAddress
-    );
-  }
+  errors.markName = validator('markName', values.markName);
+
+  errors.locationAddress = validator('locationAddress', values.locationAddress);
+
   if (!values.loactionPriceRange) {
     errors.loactionPriceRange = validator(
       'loactionPriceRange',
       values.loactionPriceRange
     );
   }
-  if (!values.locationReview) {
-    errors.locationReview = validator('locationReview', values.locationReview);
-  }
+
+  errors.additionalInformation = validator(
+    'additionalInformation',
+    values.additionalInformation
+  );
 
   return errors;
 };
@@ -176,7 +169,8 @@ const mapStateToProps = state => {
     coordinates: state.groupMarkReducer.coordinates,
     getUserData: state.logInReducer.userData,
     logInToken: state.logInReducer.token,
-    getActiveGroup: state.groupReducer.getActiveGroupData
+    getActiveGroup: state.groupReducer.getActiveGroupData,
+    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag
   };
 };
 
@@ -184,7 +178,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addGroupMark: data => dispatch(addGroupMark(data)),
-    displayModalWindow: bool => dispatch(displayModalWindow(bool))
+    addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
+    newMarkAdded: bool => dispatch(newMarkAdded(bool))
   };
 };
 
