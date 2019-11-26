@@ -80,6 +80,13 @@ const validation = {
       pattern: '.*[^ ].*',
       message: '^only white space is not allowed'
     }
+  },
+
+  postCaption:{
+    length: {
+      maximum: 100,
+      message: '^Maximum of 100 characters'
+    },
   }
 };
 

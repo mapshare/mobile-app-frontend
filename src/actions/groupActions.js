@@ -209,7 +209,7 @@ export const getUserGroups = data => {
 *   GET ACTIVE GROUP
 */
 import { connectToGroupChat } from "./groupChatRoomAction"
-import { connectToGroupFeed, groupFeedData } from "./groupFeedAction"
+import { connectToGroupFeed, setGroupFeedData } from "./groupFeedAction"
 
 export const getActiveGroupSuccess = bool => {
   return {
@@ -244,7 +244,7 @@ export const getActiveGroup = data => {
         // Display Loading Screen
         Actions.loadingScreen({ type: ActionConst.RESET });
         // clear groupFeed 
-        dispatch(groupFeedData([]));
+        dispatch(setGroupFeedData([]));
         // connect to the new group chat
         dispatch(connectToGroupChat(newData));
         // connect to the new group feed
@@ -280,7 +280,7 @@ export const getActiveGroupNoLoadingScreen = data => {
             }
 
             // clear groupFeed 
-            dispatch(groupFeedData([]));
+            dispatch(setGroupFeedData([]));
             // connect to the new group chat
             dispatch(connectToGroupChat(newData));
             // connect to the new group feed

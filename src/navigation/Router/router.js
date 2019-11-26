@@ -30,6 +30,7 @@ import ManageGroupJoinRequests from "../../screens/ManageGroup/ManageGroupJoinRe
 import Chat from "../../screens/Groups/GroupChat/GroupChat";
 import CreatePostModal from "../../screens/Forms/CreatePost/CreatePost";
 import EditPostModal from "../../screens/Groups/GroupFeed/EditPostModal";
+import EditPostForm from "../../screens/Forms/EditPost/EditPost";
 import LoadingScreen from "../../screens/Loading/Loading";
 
 // InitialGroupMenu
@@ -211,6 +212,7 @@ class App extends Component {
           <Scene key="loadingScreen" component={LoadingScreen} />
           <Scene key="createPostModal" component={CreatePostModal} />
           <Scene key="editPostModal" component={EditPostModal} />
+          <Scene key="editPostForm" component={EditPostForm} />
         </Lightbox>
       </Router>
     );
