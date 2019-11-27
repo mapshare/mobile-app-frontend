@@ -69,6 +69,7 @@ class EditGroup extends Component {
             editingGroupId: "",
             groupImg: '',
             succesModalVisible: false,
+            modalVisible: false,
             permission: 0,
         };
     }
@@ -168,6 +169,10 @@ class EditGroup extends Component {
         });
     };
 
+    setModalVisible(visible) {
+        this.setState({ modalVisible: visible });
+    }
+
     setSuccesModalVisible(visible) {
         this.setState({ succesModalVisible: visible }, () => {
             setTimeout(() => {
@@ -179,6 +184,34 @@ class EditGroup extends Component {
     render() {
         return (
             <View style={styles.modalStyle}>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        Actions.pop();
+                    }}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={styles.modalStyle}>
+
+                            <View style={styles.content} >
+                                <Text style={styles.textBox}>Are you sure you want to delete this Group?</Text>
+
+                                <View style={styles.flatListItemSeporator} />
+                                <TouchableOpacity style={styles.groupRolePicker} onPress={() => this.deleteGroup()}>
+                                    <Text style={styles.textBox} >YES</Text>
+                                </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                                <TouchableOpacity style={styles.groupRolePicker} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                                    <Text style={styles.textBox} >NO</Text>
+                                </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
 
                 <Modal
                     animationType="fade"
@@ -258,7 +291,7 @@ class EditGroup extends Component {
 
                         {(this.state.permission == 4) &&
                             <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.deleteGroup()}>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
                                     <Text style={styles.textBox} >Delete Group</Text>
                                 </TouchableOpacity>
 
