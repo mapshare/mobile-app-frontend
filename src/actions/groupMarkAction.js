@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from 'react-native-dotenv';
+import { API_URL, MAPBOX } from 'react-native-dotenv';
 
 import keys from '../data/key';
 
@@ -56,6 +56,38 @@ export const setCoordinates = data => {
   return {
     type: keys.SET_COORDINATES,
     coordinates: data
+  };
+};
+
+export const getGeocodingLocation = data => {
+  return {
+    type: keys.GET_GEOCODING_LOCATION,
+    getGeocodingLocation: data
+  };
+};
+
+export const geocodingLocation = data => {
+  let url =
+    'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
+    data[0] +
+    '%2C' +
+    data[1] +
+    '.json?access_token=' +
+    MAPBOX;
+
+  return async dispatch => {
+    dispatch(setCoordinates(data));
+
+    try {
+      const res = await axios.get(url);
+      let saveAddress = res.data.features[0].place_name.split(',');
+      let parsedAddress =
+        saveAddress[0] + ',' + saveAddress[1] + ',' + saveAddress[2];
+
+      dispatch(getGeocodingLocation(parsedAddress));
+    } catch (err) {
+      console.log('geocoding error: ', err);
+    }
   };
 };
 

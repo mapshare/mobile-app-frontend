@@ -14,7 +14,7 @@ import { addMarkModalWindow } from '../../../actions/modalWindowAction';
 import { containerStyles } from './Stylesheet';
 
 import validator from '../validate/validation_wrapper';
-import { RenderField } from '../RenderField/RenderField';
+import RenderField from '../RenderField/RenderField';
 
 // Creating Component
 class AddMarkForm extends Component {
@@ -24,8 +24,17 @@ class AddMarkForm extends Component {
     this.state = {
       photo: null,
       empty: false,
-      priceRange: 0
+      priceRange: 0,
+      address: this.props.getGeocodingLocation
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.getGeocodingLocation !== prevProps.getGeocodingLocation) {
+      this.setState({
+        address: this.props.getGeocodingLocation
+      });
+    }
   }
 
   choosePhoto = () => {
@@ -139,6 +148,7 @@ class AddMarkForm extends Component {
 
 const validate = values => {
   const errors = {};
+  console.log('values: ', values);
 
   errors.markName = validator('markName', values.markName);
 
@@ -170,7 +180,10 @@ const mapStateToProps = state => {
     getUserData: state.logInReducer.userData,
     logInToken: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
-    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag
+    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
+    initialValues: {
+      locationAddress: state.groupMarkReducer.getGeocodingLocation
+    }
   };
 };
 
@@ -183,10 +196,14 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-AddMarkForm = connect(mapStateToProps, mapDispatchToProps)(AddMarkForm);
-
-export default reduxForm({
-  form: 'addMarkRF',
-  onSubmitSuccess: clearUpForm,
-  validate
-})(AddMarkForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  reduxForm({
+    form: 'addMarkRF',
+    onSubmitSuccess: clearUpForm,
+    enableReinitialize: true,
+    validate
+  })(AddMarkForm)
+);

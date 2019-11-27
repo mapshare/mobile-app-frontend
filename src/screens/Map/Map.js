@@ -10,8 +10,8 @@ import { MAPBOX } from 'react-native-dotenv';
 //Redux actions
 import { addMarkModalWindow } from '../../actions/modalWindowAction';
 import {
-  setCoordinates,
-  getGroupAllMarks
+  getGroupAllMarks,
+  geocodingLocation
 } from '../../actions/groupMarkAction';
 import { getGroupById } from '../../actions/groupActions';
 
@@ -98,7 +98,7 @@ class Map extends Component {
   mapOnClick = data => {
     if (this.props.addGroupMarkOnClickStatus) {
       this.props.addMarkModalWindow(true);
-      this.props.setCoordinates(data.geometry.coordinates);
+      this.props.geocodingLocation(data.geometry.coordinates);
     }
   };
 
@@ -186,9 +186,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
-    setCoordinates: data => dispatch(setCoordinates(data)),
     getGroupById: data => dispatch(getGroupById(data)),
-    getGroupAllMarks: data => dispatch(getGroupAllMarks(data))
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
+    geocodingLocation: data => dispatch(geocodingLocation(data))
   };
 };
 

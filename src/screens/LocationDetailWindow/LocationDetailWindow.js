@@ -93,6 +93,25 @@ class LocationDetailWindow extends Component {
     );
   }
 
+  renderAddress = data => {
+    let parseData = data.split(', ');
+
+    return (
+      <View>
+        <View style={locationDetailStyles.infoContainer}>
+          <Icon name="location-pin" size={20} />
+          <Text style={locationDetailStyles.textStyle}>{parseData[0]}</Text>
+        </View>
+        <View style={locationDetailStyles.infoContainer}>
+          <Icon name="directions" size={20} />
+          <Text style={locationDetailStyles.textStyle}>
+            {parseData[1] + ', ' + parseData[2]}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   renderPriceRange = data => {
     let priceRange = 'N/A';
     if (data === 0) {
@@ -197,15 +216,9 @@ class LocationDetailWindow extends Component {
           </View>
         </View>
         <View style={locationDetailStyles.mainContainer}>
-          <View style={locationDetailStyles.infoContainer}>
-            <Icon name="location-pin" size={20} />
-            <Text style={locationDetailStyles.textStyle}>
-              {
-                this.props.getCurrentOnClickMarkData.markLocations
-                  .locationAddress
-              }
-            </Text>
-          </View>
+          {this.renderAddress(
+            this.props.getCurrentOnClickMarkData.markLocations.locationAddress
+          )}
           <View style={locationDetailStyles.infoContainer}>
             {this.renderPriceRange(
               this.props.getCurrentOnClickMarkData.markLocations

@@ -55,8 +55,8 @@ const validation = {
       allowEmpty: false
     },
     format: {
-      pattern: '^[0-9]+ .+$',
-      message: '^Please enter a valid address'
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
     }
   },
 
@@ -82,11 +82,11 @@ const validation = {
     }
   },
 
-  postCaption:{
+  postCaption: {
     length: {
       maximum: 100,
       message: '^Maximum of 100 characters'
-    },
+    }
   }
 };
 

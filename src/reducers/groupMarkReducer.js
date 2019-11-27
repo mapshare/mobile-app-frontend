@@ -6,7 +6,8 @@ const INITIAL_GROUP_MARK_STATE = {
   addGroupMarkStatus: false,
   coordinates: [],
   getCurrentOnClickMarkData: {},
-  getGroupAllMarksData: []
+  getGroupAllMarksData: [],
+  getGeocodingLocation: ''
 };
 
 export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
@@ -25,6 +26,11 @@ export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
       return {
         ...state,
         coordinates: action.coordinates
+      };
+    case keys.GET_GEOCODING_LOCATION:
+      return {
+        ...state,
+        getGeocodingLocation: action.getGeocodingLocation
       };
     case keys.ADD_GROUP_MARK_DATA_SUCCESS:
       return {
