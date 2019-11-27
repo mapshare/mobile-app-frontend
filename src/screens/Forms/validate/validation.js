@@ -102,7 +102,42 @@ const validation = {
       maximum: 100,
       message: '^Maximum of 100 characters'
     },
-  }
+  },
+
+  groupNamePresent: {
+    presence: {
+      message: '^A Group Name is required',
+      allowEmpty: false
+    },
+  },
+
+  groupNameMinLength: {
+    length: {
+      minimum: 3,
+      message: '^Group Name must be at least 3 characters',
+    }
+  },
+
+  groupNameMaxLength: {
+    length: {
+      maximum: 15,
+      message: '^Group Name must be less than 15 characters',
+    }
+  },
+
+  groupDescriptionPresent:{
+    presence: {
+      message: '^A Group Description is required',
+      allowEmpty: false
+    },
+  },
+
+  groupDescriptionMaxLength:{
+    length: {
+      maximum: 50,
+      message: '^Group Description must be less than 50 characters',
+    }
+  },
 
 };
 
