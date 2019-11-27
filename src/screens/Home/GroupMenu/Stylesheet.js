@@ -7,8 +7,6 @@ export default StyleSheet.create({
     container: {
         zIndex: 1000,
         position: 'absolute',
-        top: 20,
-        left: 20,
     },
     GroupName: {
         color: "#FFF",
@@ -16,6 +14,9 @@ export default StyleSheet.create({
     },
     menuButton: {
         color: "#FFF",
+    },
+    menuButtonPadding: {
+        padding:20,
     },
     modalStyle: {
         backgroundColor: "rgba(110,110,110,0.9)",
@@ -30,14 +31,14 @@ export default StyleSheet.create({
     closeButton: {
         zIndex: 1,
         position: 'absolute',
-        top: 20,
-        left: 20,
+        padding:20,
     },
     addGroup: {
         zIndex: 1,
         position: 'absolute',
-        top: 20,
-        right: 20,
+        top: 0,
+        right: 0,
+        padding:20,
     },
     closeIcon: {
         color: "#FFF",
@@ -48,6 +49,9 @@ export default StyleSheet.create({
     editGroupIcon: {
         paddingStart: 40,
         color: "#FFF",
+    },
+    editGroupIconPadding:{
+        paddingVertical:25,
     },
     activeGroupIcon: {
         color: "#000",
@@ -86,7 +90,7 @@ export default StyleSheet.create({
     },
     content: {
         zIndex: 1,
-        marginTop: 50,
+        marginTop: 80,
     },
     addGroupText: {
         color: "rgba(255,255,255,1)",
@@ -96,7 +100,7 @@ export default StyleSheet.create({
         textAlign: "center",
     },
     flatListItem: {
-        height: 55,
+        height: 80,
         paddingTop: 10,
         paddingBottom: 10,
         flex: 1,

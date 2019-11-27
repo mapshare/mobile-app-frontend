@@ -76,7 +76,11 @@ class EditGroup extends Component {
     componentDidMount() {
         // Rest list content to make sure old data is not displayed
         this.props.getAllGroupMemberDataSuccess([])
-        this.setState({ permission: this.props.currentEditingGroup.groupRolePermisionLevel });
+        try {
+            this.setState({ permission: this.props.currentEditingGroup.groupRolePermisionLevel });
+        } catch (error) {
+
+        }
         const data = {
             token: this.props.token,
             groupId: this.props.getCurrentEditingGroupData._id,
@@ -97,7 +101,7 @@ class EditGroup extends Component {
                 try {
                     this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
                 } catch (error) {
-                    
+
                 }
             }, 5000)
         });

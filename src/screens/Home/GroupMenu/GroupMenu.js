@@ -76,7 +76,7 @@ class GroupMenu extends Component {
     render() {
         return (
             <View style={styles.container} >
-                <TouchableOpacity onPress={() => this.goMyGroupMenu()}>
+                <TouchableOpacity style={styles.menuButtonPadding} onPress={() => this.goMyGroupMenu()}>
                     <Icon style={styles.menuButton} name="menu" size={30} />
                 </TouchableOpacity>
             </View>

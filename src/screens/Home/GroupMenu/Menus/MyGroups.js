@@ -102,10 +102,13 @@ class MyGroups extends Component {
                                 <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
                                     {group.item.groupName}
                                 </Text>
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Owner: {group.item.createdBy.userFirstName + " " + group.item.createdBy.userLastName}
+                                </Text>
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                <TouchableOpacity onPress={() => this.editGroup(group.item)}>
+                                <TouchableOpacity style={styles.editGroupIconPadding} onPress={() => this.editGroup(group.item)}>
                                     <Icon style={styles.editGroupIcon} name="note" size={30} />
                                 </TouchableOpacity>
                             </View>
