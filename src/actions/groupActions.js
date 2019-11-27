@@ -198,7 +198,7 @@ export const getUserGroups = data => {
             const res = await axios.get(API_URL + '/groups/user', { headers: { 'authentication': data.token } });
             dispatch(getUserGroupsDataSuccess(res.data));
             dispatch(getUserGroupsSuccess(true));
-        } catch (error) {
+        } catch (err) {
             dispatch(getUserGroupsSuccess(false));
             dispatch(getUserGroupsError(err.response));
         }

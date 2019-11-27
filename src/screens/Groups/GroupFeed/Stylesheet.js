@@ -7,8 +7,8 @@ export default StyleSheet.create({
     container: {
         zIndex: 1000,
         position: 'absolute',
-        top: 20,
-        right: 20,
+        top: 0,
+        right: 0,
     },
     cameraIcon: {
         color: "#FFF",
@@ -40,9 +40,7 @@ export default StyleSheet.create({
         color: "#F00",
     },
     CreatePost: {
-        top: 20,
-        right: 20,
-        position: 'absolute',
+        padding:20,
     },
     CreatePostButton: {
 

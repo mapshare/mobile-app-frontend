@@ -82,12 +82,28 @@ const validation = {
     }
   },
 
-  postCaption:{
+  postCaption: {
+    presence: {
+      message: '^Caption is required',
+      allowEmpty: false
+    },
+    length: {
+      maximum: 100,
+      message: '^Maximum of 100 characters'
+    },
+  },
+
+  chatMessage: {
+    presence: {
+      message: '^A Message is required',
+      allowEmpty: false
+    },
     length: {
       maximum: 100,
       message: '^Maximum of 100 characters'
     },
   }
+
 };
 
 export default validation;

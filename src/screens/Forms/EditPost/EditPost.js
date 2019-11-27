@@ -55,10 +55,11 @@ class AddPostCaption extends Component {
         this.setState({ editPostError: editPostError },
             () => {
                 if (!editPostError) {
+                    const trimedCaption = this.state.postCaption.slice(0, 100).trim();
                     const data = {
                         postId: this.props.editingPost._id,
                         postImage: this.state.postImage,
-                        postCaption: this.state.postCaption,
+                        postCaption: trimedCaption,
                         groupFeedSocket: this.props.groupFeedSocket,
                     }
                     this.props.updatePostInGroupFeed(data);
@@ -71,11 +72,8 @@ class AddPostCaption extends Component {
 
     updatePostCaption(postCaption) {
         const editPostError = validator('postCaption', postCaption);
-        if (!editPostError) {
-            this.setState({ postCaption: postCaption, editPostError: "" });
-        } else {
-            this.setState({ postCaption: this.state.postCaption, editPostError: editPostError });
-        }
+        const trimedCaption = postCaption.slice(0, 100);
+        this.setState({ postCaption: trimedCaption, editPostError: editPostError ? editPostError : "" });
     }
 
     choosePhoto() {
@@ -139,6 +137,7 @@ class AddPostCaption extends Component {
                             selectionColor="#fff"
                             autoCorrect={false}
                             multiline={true}
+                            maxLength={100}
                             returnKeyType="next"
                             autoCapitalize="none"
                             onSubmitEditing={() => { }}
