@@ -103,7 +103,10 @@ class MyGroups extends Component {
                                     {group.item.groupName}
                                 </Text>
                                 <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
-                                    Owner: {group.item.createdBy.userFirstName + " " + group.item.createdBy.userLastName}
+                                    Owner: {group.item.createdBy.userFirstName}
+                                    <Text style={[styles.idTextBox, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        {" #" + group.item.createdBy._id.slice(0, 6)}
+                                    </Text>
                                 </Text>
                             </View>
 

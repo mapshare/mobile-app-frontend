@@ -156,4 +156,9 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    idTextBox:{
+        color: "rgba(240,240,240,1)",
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
 });

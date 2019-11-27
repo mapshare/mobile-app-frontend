@@ -30,6 +30,8 @@ class GroupFeed extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // Requred to pervent button spam
+            singleActivation: false,
         };
     }
 
@@ -73,7 +75,17 @@ class GroupFeed extends Component {
                                         {(item.postCreatedBy == this.props.getGroupMemberData._id ||
                                             permission >= 3) &&
 
-                                            <TouchableOpacity onPress={() => this.editPost(item)}>
+                                            <TouchableOpacity
+                                                style={styles.optionsIconPadding}
+                                                disabled={this.state.singleActivation}
+                                                onPress={() => {
+                                                    this.setState({ singleActivation: true }, () => {
+                                                        this.editPost(item);
+                                                        setTimeout(() => {
+                                                            this.setState({ singleActivation: false });
+                                                        }, 1000)
+                                                    });
+                                                }}>
                                                 <Icon style={styles.optionsIcon} name="options" size={20} />
                                             </TouchableOpacity>
                                         }

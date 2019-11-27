@@ -59,6 +59,8 @@ class GroupMenu extends Component {
         this.state = {
             modalVisible: false,
             currentContentState: 1,
+            // Requred to pervent button spam
+            singleActivation: false,
         };
     }
 
@@ -76,7 +78,17 @@ class GroupMenu extends Component {
     render() {
         return (
             <View style={styles.container} >
-                <TouchableOpacity style={styles.menuButtonPadding} onPress={() => this.goMyGroupMenu()}>
+                <TouchableOpacity
+                    disabled={this.state.singleActivation}
+                    onPress={() => {
+                        this.setState({ singleActivation: true }, () => {
+                            this.goMyGroupMenu();
+                            setTimeout(() => {
+                                this.setState({ singleActivation: false });
+                            }, 1000)
+                        });
+                    }}
+                    style={styles.menuButtonPadding}>
                     <Icon style={styles.menuButton} name="menu" size={30} />
                 </TouchableOpacity>
             </View>

@@ -54,6 +54,8 @@ class MyGroups extends Component {
         this.state = {
             userGroups: "",
             interval: '',
+            // Requred to pervent button spam
+            singleActivation: false,
         };
     }
 
@@ -104,6 +106,12 @@ class MyGroups extends Component {
                                 <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
                                     {group.item.groupName}
                                 </Text>
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Owner: {group.item.createdBy.userFirstName}
+                                    <Text style={[styles.idTextBox, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        {" #" + group.item.createdBy._id.slice(0, 6)}
+                                    </Text>
+                                </Text>
                             </View>
 
                             <View style={styles.flatListColThree}>
@@ -135,11 +143,30 @@ class MyGroups extends Component {
                     <View style={styles.container} >
 
                         <Text style={styles.textBoxCenterTop}>SELECT GROUP</Text>
-                        <TouchableOpacity style={styles.addGroup} onPress={() => Actions.initialAddGroup()}>
+                        <TouchableOpacity
+                            disabled={this.state.singleActivation}
+                            style={styles.addGroup}
+                            onPress={() => {
+                                this.setState({ singleActivation: true }, () => {
+                                    Actions.initialAddGroup();
+                                    setTimeout(() => {
+                                        this.setState({ singleActivation: false });
+                                    }, 1000)
+                                });
+                            }}>
                             <Icon style={styles.closeIcon} name="plus" size={30} />
                         </TouchableOpacity>
                         <SafeAreaView style={styles.content} >
-                            <TouchableWithoutFeedback onPress={() => Actions.initialSearchGroup()}>
+                            <TouchableWithoutFeedback
+                                disabled={this.state.singleActivation}
+                                onPress={() => {
+                                    this.setState({ singleActivation: true }, () => {
+                                        Actions.initialSearchGroup();
+                                        setTimeout(() => {
+                                            this.setState({ singleActivation: false });
+                                        }, 1000)
+                                    });
+                                }}>
                                 <View>
                                     <SearchGroupForm enabled={false} keyboardEnabled={false} />
                                 </View>

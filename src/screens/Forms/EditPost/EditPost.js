@@ -36,6 +36,8 @@ class AddPostCaption extends Component {
             postCaption: '',
             postImage: '',
             editPostError: '',
+            // Requred to pervent button spam
+            singleActivation: false,
         };
     }
 
@@ -117,12 +119,18 @@ class AddPostCaption extends Component {
 
                 <View style={styles.row}>
                     <View style={styles.postImagePreview}>
-                        <TouchableOpacity style={styles.CreatePostButton} onPress={() => {
-                            this.choosePhoto();
-                        }}>
+                        <TouchableOpacity 
+                            disabled={this.state.singleActivation}
+                            onPress={() => {
+                                this.setState({ singleActivation: true }, () => {
+                                    this.choosePhoto();
+                                    setTimeout(() => {
+                                        this.setState({ singleActivation: false });
+                                    }, 1000)
+                                });
+                            }}>
                             <Image
-                                style={styles.previewImage}
-                                source={{ uri: 'data:image/png;base64,' + this.state.postImage }}
+                                source={{ uri: 'data:image/png;base64,' + this.state.postImage, width: 120, height: 120, scale: 1.1 }}
                             />
                         </TouchableOpacity>
                     </View>

@@ -84,8 +84,7 @@ class AddPostCaption extends Component {
                 <View style={styles.row}>
                     <View style={styles.postImagePreview}>
                         <Image
-                            style={styles.previewImage}
-                            source={{ uri: 'data:image/png;base64,' + this.props.imageData }}
+                            source={{ uri: 'data:image/png;base64,' + this.props.imageData, width: 120, height: 120, scale: 1.1}}
                         />
                     </View>
                     <View style={styles.postCaptionForm}>

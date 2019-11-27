@@ -71,6 +71,8 @@ class EditGroup extends Component {
             succesModalVisible: false,
             modalVisible: false,
             permission: 0,
+            // Requred to pervent button spam
+            singleActivation: false,
         };
     }
 
@@ -256,14 +258,23 @@ class EditGroup extends Component {
                         {(this.state.permission >= 3) &&
                             <View>
 
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.choosePhoto() }}>
+                                <TouchableOpacity style={styles.editGroupOptions}
+                                    disabled={this.state.singleActivation}
+                                    onPress={() => {
+                                        this.setState({ singleActivation: true }, () => {
+                                            this.choosePhoto();
+                                            setTimeout(() => {
+                                                this.setState({ singleActivation: false });
+                                            }, 1000)
+                                        });
+                                    }}>
                                     <Text style={styles.textBox} >Change Group Picture</Text>
                                 </TouchableOpacity>
                                 <View style={styles.flatListItemSeporator} />
                             </View>
                         }
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { Actions.groupMembersListMenu({ currentEditingGroup: this.props.currentEditingGroup }) }}>
+                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { Actions.groupMembersListMenu() }}>
                             <Text style={styles.textBox} >Group Members</Text>
                         </TouchableOpacity>
 

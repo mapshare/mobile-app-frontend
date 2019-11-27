@@ -158,5 +158,8 @@ export default StyleSheet.create({
     editGroupPopupText: {
         fontSize: 20,
         color: "#FFF",
+    },
+    optionsIconPadding:{
+        padding:15
     }
 });

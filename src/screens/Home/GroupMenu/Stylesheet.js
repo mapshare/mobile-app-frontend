@@ -143,6 +143,11 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    idTextBox:{
+        color: "rgba(240,240,240,1)",
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
     textBoxRoles: {
         color: "rgba(255,255,255,1)",
         fontSize: 16,
@@ -150,7 +155,9 @@ export default StyleSheet.create({
         paddingStart: 20
     },
     editGroupOptions: {
-        paddingStart: 50
+        paddingStart: 50,
+        height: 80,
+        justifyContent: 'center',
     },
     groupRolePicker: {
         height: 55,

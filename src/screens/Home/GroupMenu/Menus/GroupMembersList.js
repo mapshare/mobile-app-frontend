@@ -47,11 +47,19 @@ class MyGroups extends Component {
 
 
     componentDidMount() {
+        
+        const data = {
+            token: this.props.token,
+            groupId: this.props.getCurrentEditingGroupData._id,
+        }
+        this.props.getEditingGroupMember(data);
+
         try {
             this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
         } catch (error) {
             
         }
+
         // update every 5 seconds
         this.setState({
             interval: setInterval(() => {

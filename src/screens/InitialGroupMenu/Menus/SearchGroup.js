@@ -99,8 +99,11 @@ class SearchGroup extends Component {
                                 <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
                                     {group.item.groupName}
                                 </Text>
-                                <Text style={styles.textBoxSmall}>
-                                    Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Owner: {group.item.createdBy.userFirstName}
+                                    <Text style={[styles.idTextBox, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        {" #" + group.item.createdBy._id.slice(0, 6)}
+                                    </Text>
                                 </Text>
                             </View>
 
@@ -121,7 +124,10 @@ class SearchGroup extends Component {
                                         {group.item.groupName}
                                     </Text>
                                     <Text style={styles.textBoxSmall}>
-                                        Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                        Owner: {group.item.createdBy.userFirstName}
+                                        <Text style={styles.idTextBox}>
+                                            {" #" + group.item.createdBy._id.slice(0, 6)}
+                                        </Text>
                                     </Text>
                                 </View>
 
@@ -158,10 +164,10 @@ class SearchGroup extends Component {
                             <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                         </TouchableOpacity>
                         <SafeAreaView style={[styles.content]} >
-                                <SearchGroupForm keyboardEnabled={true} />
-                                <View style={styles.flatListItemSeporator} />
-                                {this.showSearchResults()}
-                                <View style={styles.flatListItemSeporator} />
+                            <SearchGroupForm keyboardEnabled={true} />
+                            <View style={styles.flatListItemSeporator} />
+                            {this.showSearchResults()}
+                            <View style={styles.flatListItemSeporator} />
                         </SafeAreaView>
                     </View>
                 </ImageBackground>

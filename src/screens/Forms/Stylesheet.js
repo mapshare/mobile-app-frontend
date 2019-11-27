@@ -97,14 +97,13 @@ export default StyleSheet.create({
         position: 'absolute',
     },
     CreatePostButton: {
-        padding: 20
+        padding:20
     },
     CreatePostIcon: {
         color: "#0F0",
     },
     postImagePreview: {
-        width: '20%',
-        height: '20%',
+        paddingTop: 20
     },
     previewImage: {
         backgroundColor: "rgba(0,0,0,0.9)",
@@ -113,6 +112,7 @@ export default StyleSheet.create({
     },
     postCaptionForm: {
         width: '60%',
+        paddingTop: 50
     },
     row: {
         flex: 1,
