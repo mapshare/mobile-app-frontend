@@ -9,7 +9,8 @@ import {
     TextInput,
     FlatList,
     Button,
-    SafeAreaView
+    SafeAreaView,
+    ActivityIndicator,
 } from "react-native";
 
 // Componenets Style
@@ -51,67 +52,73 @@ class GroupFeed extends Component {
         return (
             <SafeAreaView style={styles.groupPostContainer}>
                 <View style={styles.flatListItemSeporator} />
-                <FlatList style={styles.list}
-                    data={this.props.getGroupFeedData}
-                    keyExtractor={(item) => { return item._id; }}
-                    renderItem={({ item }) => {
-                        return (
-                            <View style={styles.groupPost}>
-                                <View style={styles.groupPostHeader}>
-                                    <View style={styles.headerColOne}>
+                {this.props.getGroupFeedData.length <= 0 &&
+
+                    <ActivityIndicator style={styles.spinnerStyle} size="large" color="#000" />
+                }
+                {this.props.getGroupFeedData.length > 0 &&
+                    <FlatList style={styles.list}
+                        data={this.props.getGroupFeedData}
+                        keyExtractor={(item) => { return item._id; }}
+                        renderItem={({ item }) => {
+                            return (
+                                <View style={styles.groupPost}>
+                                    <View style={styles.groupPostHeader}>
+                                        <View style={styles.headerColOne}>
+                                            <Image
+                                                style={styles.groupPostProfilePic}
+                                                source={{ uri: 'data:image/png;base64,' + item.userProfilePic }}
+                                            />
+                                            <Text style={styles.postText}>Profile Pic</Text>
+
+                                        </View>
+                                        <View style={styles.headerColTwo}>
+                                            <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>
+                                        </View>
+                                        <View style={styles.headerColThree}>
+
+                                            {/* If creator of the post or Admin/Owner show option menu for edit and delete */}
+                                            {(item.postCreatedBy == this.props.getGroupMemberData._id ||
+                                                permission >= 3) &&
+
+                                                <TouchableOpacity
+                                                    style={styles.optionsIconPadding}
+                                                    disabled={this.state.singleActivation}
+                                                    onPress={() => {
+                                                        this.setState({ singleActivation: true }, () => {
+                                                            this.editPost(item);
+                                                            setTimeout(() => {
+                                                                this.setState({ singleActivation: false });
+                                                            }, 1000)
+                                                        });
+                                                    }}>
+                                                    <Icon style={styles.optionsIcon} name="options" size={20} />
+                                                </TouchableOpacity>
+                                            }
+                                        </View>
+                                    </View>
+                                    <View style={styles.groupPostBody}>
                                         <Image
-                                            style={styles.groupPostProfilePic}
-                                            source={{ uri: 'data:image/png;base64,' + item.userProfilePic }}
+                                            style={styles.groupPostImage}
+                                            source={{ uri: 'data:image/png;base64,' + item.postImage }}
                                         />
-                                        <Text style={styles.postText}>Profile Pic</Text>
-
                                     </View>
-                                    <View style={styles.headerColTwo}>
-                                        <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>
-                                    </View>
-                                    <View style={styles.headerColThree}>
+                                    <View style={styles.groupPostFooter}>
+                                        <View style={styles.footerPartOne}></View>
+                                        <View style={styles.footerPartTwo}>
+                                            <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName} {item.postCaption}</Text>
 
-                                        {/* If creator of the post or Admin/Owner show option menu for edit and delete */}
-                                        {(item.postCreatedBy == this.props.getGroupMemberData._id ||
-                                            permission >= 3) &&
-
-                                            <TouchableOpacity
-                                                style={styles.optionsIconPadding}
-                                                disabled={this.state.singleActivation}
-                                                onPress={() => {
-                                                    this.setState({ singleActivation: true }, () => {
-                                                        this.editPost(item);
-                                                        setTimeout(() => {
-                                                            this.setState({ singleActivation: false });
-                                                        }, 1000)
-                                                    });
-                                                }}>
-                                                <Icon style={styles.optionsIcon} name="options" size={20} />
-                                            </TouchableOpacity>
-                                        }
+                                        </View>
+                                        <View style={styles.footerPartThree}>
+                                            <Text style={styles.time}>
+                                                {"\n" + Moment(item.postCreatedAt).calendar() + "\n"}
+                                            </Text>
+                                        </View>
                                     </View>
                                 </View>
-                                <View style={styles.groupPostBody}>
-                                    <Image
-                                        style={styles.groupPostImage}
-                                        source={{ uri: 'data:image/png;base64,' + item.postImage }}
-                                    />
-                                </View>
-                                <View style={styles.groupPostFooter}>
-                                    <View style={styles.footerPartOne}></View>
-                                    <View style={styles.footerPartTwo}>
-                                        <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName} {item.postCaption}</Text>
-
-                                    </View>
-                                    <View style={styles.footerPartThree}>
-                                        <Text style={styles.time}>
-                                            {"\n" + Moment(item.postCreatedAt).calendar() + "\n"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View>
-                        );
-                    }} />
+                            );
+                        }} />
+                }
             </SafeAreaView>
         );
     }

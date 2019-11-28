@@ -10,6 +10,9 @@ export default StyleSheet.create({
         top: 0,
         right: 0,
     },
+    spinnerStyle: {
+        paddingTop: 60
+    },
     cameraIcon: {
         color: "#FFF",
     },
@@ -40,7 +43,7 @@ export default StyleSheet.create({
         color: "#F00",
     },
     CreatePost: {
-        padding:20,
+        padding: 20,
     },
     CreatePostButton: {
 
@@ -159,7 +162,7 @@ export default StyleSheet.create({
         fontSize: 20,
         color: "#FFF",
     },
-    optionsIconPadding:{
-        padding:15
+    optionsIconPadding: {
+        padding: 15
     }
 });
