@@ -13,3 +13,10 @@ export const clickMarkModalWindow = bool => {
     onClickMarkStatus: bool
   };
 };
+
+export const addCustomMarkModalWindow = bool => {
+  return {
+    type: keys.ADD_CUSTOM_MARK_MODAL_WINDOW,
+    addCustomMarkStatus: bool
+  };
+};

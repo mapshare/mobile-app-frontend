@@ -58,7 +58,9 @@ class AddMarkForm extends Component {
         locationAddress: values.locationAddress,
         loactionPriceRange: this.state.priceRange,
         additionalInformation: values.additionalInformation,
-        locationImageSet: [{ locationImageData: this.state.photo }]
+        locationImageSet: this.state.photo && [
+          { locationImageData: this.state.photo }
+        ]
       },
       geometry: { coordinates: this.props.coordinates },
       groupMarkCreatedBy: this.props.getUserData._id,

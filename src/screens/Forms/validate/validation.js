@@ -82,11 +82,26 @@ const validation = {
     }
   },
 
-  postCaption:{
+  postCaption: {
     length: {
       maximum: 100,
       message: '^Maximum of 100 characters'
+    }
+  },
+
+  customMarkCategoryName: {
+    presence: {
+      message: '^Empty is not allowed',
+      allowEmpty: false
     },
+    length: {
+      maximum: 10,
+      message: '^Maximum of 10 characters'
+    },
+    format: {
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
+    }
   }
 };
 

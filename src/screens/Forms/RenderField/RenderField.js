@@ -27,6 +27,16 @@ const renderOnType = (input, type, props) => {
           textAlignVertical="top"
         />
       );
+    case 'addCustomMark':
+      return (
+        <TextInput
+          style={mainStyles.addCustomMarkStyle}
+          onChangeText={input.onChange}
+          value={input.value}
+          {...input.restInput}
+          {...inputProps}
+        />
+      );
     default:
       return <TextInput />;
   }
@@ -34,7 +44,7 @@ const renderOnType = (input, type, props) => {
 
 const RenderField = ({ input, label, type, meta: { touched, error } }) => (
   <View>
-    <Text>{label}</Text>
+    {type !== 'addCustomMark' && <Text>{label}</Text>}
     {renderOnType(input, type)}
     {touched && error && <Text style={mainStyles.errorText}>{error}</Text>}
   </View>

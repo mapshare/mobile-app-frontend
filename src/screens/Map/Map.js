@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import { connect } from 'react-redux';
 import * as Geolocation from '@react-native-community/geolocation';
@@ -18,7 +18,9 @@ import { containerStyles, mapStyles, annotationStyles } from './Stylesheet';
 // Screens
 import ModalWindow from '../ModalWindow/ModalWindow';
 import AddMark from '../AddMark/AddMark';
+import Categories from '../Categories/Categories';
 import Marks from '../Marks/Marks';
+import CategoryOptions from '../CategoryOptions/CategoryOptions';
 
 console.log(MAPBOX);
 
@@ -99,50 +101,58 @@ class Map extends Component {
 
   render() {
     return (
-      <View style={containerStyles.container}>
-        {this.props.addMarkStatus && <ModalWindow modalContent="addMark" />}
-        {this.props.onClickMarkStatus && (
-          <ModalWindow modalContent="onClickMark" />
-        )}
-        <View
-          style={[
-            containerStyles.container,
-            this.props.addGroupMarkOnClickStatus
-              ? containerStyles.addMarkTrue
-              : null
-          ]}
-        >
-          <View style={containerStyles.optionsContainer}>
-            <AddMark />
-          </View>
-          <MSearch notifyChange={loc => this.getCoordsFromName(loc)} />
-          <Mapbox.MapView
-            styleURL={'mapbox://styles/zwahab114/ck33vykpv454o1cpl7irwc7d7'}
-            onPress={data => this.mapOnClick(data)}
-            attributionEnabled={false}
-            showUserLocation={true}
-            logoEnabled={false}
-            compassEnabled={true}
-            style={mapStyles.container}
-            onDidFinishLoadingMap={this.findCoordinates}
+      <View style={containerStyles.mainContainer}>
+        <View style={containerStyles.container}>
+          {this.props.addMarkStatus && <ModalWindow modalContent="addMark" />}
+          {this.props.onClickMarkStatus && (
+            <ModalWindow modalContent="onClickMark" />
+          )}
+          <View
+            style={[
+              containerStyles.container,
+              this.props.addGroupMarkOnClickStatus
+                ? containerStyles.addMarkTrue
+                : null
+            ]}
           >
-            <Marks />
-            <Mapbox.Camera
-              ref={Component => (this._mapcoord = Component)}
-              centerCoordinate={[
-                this.location.longitude,
-                this.location.latitude
-              ]}
-              zoomLevel={8}
-            ></Mapbox.Camera>
-          </Mapbox.MapView>
-          <Icon
-            style={mapStyles.locationButton}
-            name="location-pin"
-            size={25}
-            onPress={this.zoomCoordinates}
-          ></Icon>
+            <View style={containerStyles.optionsContainer}>
+              <AddMark />
+              <Categories />
+            </View>
+            <MSearch notifyChange={loc => this.getCoordsFromName(loc)} />
+            <Mapbox.MapView
+              styleURL={'mapbox://styles/zwahab114/ck33vykpv454o1cpl7irwc7d7'}
+              onPress={data => this.mapOnClick(data)}
+              attributionEnabled={false}
+              showUserLocation={true}
+              logoEnabled={false}
+              compassEnabled={true}
+              style={mapStyles.container}
+              onDidFinishLoadingMap={this.findCoordinates}
+            >
+              <Marks />
+              <Mapbox.Camera
+                ref={Component => (this._mapcoord = Component)}
+                centerCoordinate={[
+                  this.location.longitude,
+                  this.location.latitude
+                ]}
+                zoomLevel={8}
+              ></Mapbox.Camera>
+            </Mapbox.MapView>
+            <Icon
+              style={mapStyles.locationButton}
+              name="location-pin"
+              size={25}
+              onPress={this.zoomCoordinates}
+            ></Icon>
+          </View>
         </View>
+        {this.props.categoriesOptionOnClickStatus && (
+          <View style={containerStyles.categoryContainer}>
+            <CategoryOptions />
+          </View>
+        )}
       </View>
     );
   }
@@ -155,7 +165,9 @@ const mapStateToProps = state => {
     addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
     addMarkStatus: state.modalWindowReducer.addMarkStatus,
     onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
-    logInToken: state.logInReducer.token
+    logInToken: state.logInReducer.token,
+    categoriesOptionOnClickStatus:
+      state.groupDefaultMarkCategoryReducer.categoriesOptionOnClickStatus
   };
 };
 

@@ -1,20 +1,21 @@
-import { combineReducers } from "redux";
-import { logInReducer } from "./logInReducer";
-import { registerReducer } from "./registerReducer";
-import { groupReducer } from "./groupReducer";
-import { groupPostReducer } from "./groupPostReducer";
-import { groupMarkReducer } from "./groupMarkReducer";
-import { groupCustomMarkCategoryReducer } from "./groupCustomMarkCategoryReducer";
-import { groupEventReducer } from "./groupEventReducer";
-import { groupChatRoomReducer } from "./groupChatRoomReducer";
-import { modalWindowReducer } from "./modalWindowReducer";
-import { searchGroupFormReducer } from "./SearchGroupFromReducer";
-import { addGroupFormReducer } from "./AddGroupFromReducer";
-import { groupMenuReducer } from "./GroupMenuReducer";
-import { addPostReducer } from "./addPostReducer";
-import { groupFeedReducer } from "./groupFeedReducer";
+import { combineReducers } from 'redux';
+import { logInReducer } from './logInReducer';
+import { registerReducer } from './registerReducer';
+import { groupReducer } from './groupReducer';
+import { groupPostReducer } from './groupPostReducer';
+import { groupMarkReducer } from './groupMarkReducer';
+import { groupCustomMarkCategoryReducer } from './groupCustomMarkCategoryReducer';
+import { groupEventReducer } from './groupEventReducer';
+import { groupChatRoomReducer } from './groupChatRoomReducer';
+import { modalWindowReducer } from './modalWindowReducer';
+import { searchGroupFormReducer } from './SearchGroupFromReducer';
+import { addGroupFormReducer } from './AddGroupFromReducer';
+import { groupMenuReducer } from './GroupMenuReducer';
+import { addPostReducer } from './addPostReducer';
+import { groupFeedReducer } from './groupFeedReducer';
+import { groupDefaultMarkCategoryReducer } from './groupDefaultMarkCategoryReducer';
 // for future form implementation
-import { reducer as formReducer } from "redux-form";
+import { reducer as formReducer } from 'redux-form';
 
 export default combineReducers({
   logInReducer,
@@ -31,5 +32,6 @@ export default combineReducers({
   groupMenuReducer,
   addPostReducer,
   groupFeedReducer,
+  groupDefaultMarkCategoryReducer,
   form: formReducer
 });

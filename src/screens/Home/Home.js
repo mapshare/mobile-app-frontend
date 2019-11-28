@@ -31,6 +31,7 @@ import {
   getGroupMember
 } from '../../actions/groupActions';
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
+import { getGroupDefaultMarkCategory } from '../../actions/groupDefaultMarkCategory';
 
 class Home extends Component {
   constructor(props) {
@@ -67,13 +68,14 @@ class Home extends Component {
     };
 
     this.props.getGroupAllMarks(data);
+    this.props.getGroupDefaultMarkCategory({ token: this.props.token });
   }
 
   componentWillUnmount() {
     clearInterval(this.state.interval);
   }
 
-  loadingScreen() { }
+  loadingScreen() {}
 
   componentDidUpdate(prevProps) {
     // Checks if Active Group Still Exists.
@@ -122,10 +124,10 @@ class Home extends Component {
               source={
                 this.props.getActiveGroupData.groupImg
                   ? {
-                    uri:
-                      'data:image/png;base64,' +
-                      this.props.getActiveGroupData.groupImg
-                  }
+                      uri:
+                        'data:image/png;base64,' +
+                        this.props.getActiveGroupData.groupImg
+                    }
                   : require('../../assests/images/food.jpg')
               }
               resizeMode="cover"
@@ -169,12 +171,16 @@ const mapDispatchToProps = dispatch => {
   return {
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
-    getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
+    getActiveGroupDataSuccess: data =>
+      dispatch(getActiveGroupDataSuccess(data)),
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
-    getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
-    getGroupMember: data => dispatch(getGroupMember(data))
+    getActiveGroupRefreshDataOnly: data =>
+      dispatch(getActiveGroupRefreshDataOnly(data)),
+    getGroupMember: data => dispatch(getGroupMember(data)),
+    getGroupDefaultMarkCategory: data =>
+      dispatch(getGroupDefaultMarkCategory(data))
   };
 };
 
