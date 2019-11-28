@@ -156,6 +156,7 @@ class App extends Component {
             tabs={true}>
 
             <Scene
+              title="HOME"
               key="home"
               component={Home}
               hideNavBar
@@ -164,6 +165,7 @@ class App extends Component {
             />
 
             <Scene
+              title="MAP"
               key="map"
               component={Map}
               icon={TabIcon}
@@ -172,6 +174,7 @@ class App extends Component {
             />
 
             <Scene
+              title="CHAT"
               key="chat"
               component={Chat}
               icon={TabIcon}
@@ -180,6 +183,7 @@ class App extends Component {
             />
 
             <Scene
+              title="EVENTS"
               key="events"
               component={Events}
               icon={TabIcon}
@@ -188,6 +192,7 @@ class App extends Component {
             />
 
             <Scene
+              title="MORE"
               key="profile"
               component={Profile}
               icon={TabIcon}

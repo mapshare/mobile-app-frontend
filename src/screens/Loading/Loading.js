@@ -17,10 +17,6 @@ export default class Loading extends Component {
                    visible={true}
                    textContent={'Please wait...'}
                    textStyle={styles.spinnerTextStyle}>
-<<<<<<< HEAD
-                       
-=======
->>>>>>> 78dbd0ac3b63a41e49b7d34de5f727da66a2210c
                    </Spinner>
             </View>
         )

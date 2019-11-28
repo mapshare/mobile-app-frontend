@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import configureStore from './src/reduxStore/configureStore';
 import SplashScreen from 'react-native-splash-screen'
 
+import { API_URL, CHAT_URL } from 'react-native-dotenv'
+
 // Import Libraries
 
 import Routes from './src/navigation/Router/router';
@@ -17,6 +19,7 @@ export default class signIn extends Component {
   }
 
   render() {
+    console.log(API_URL, CHAT_URL)
     return (
       <Provider store={store}>
         <Routes />

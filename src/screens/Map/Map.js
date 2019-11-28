@@ -126,10 +126,6 @@ class Map extends Component {
             style={mapStyles.container}
             onDidFinishLoadingMap={this.findCoordinates}
           >
-<<<<<<< HEAD
-=======
-            <Marks />
->>>>>>> 78dbd0ac3b63a41e49b7d34de5f727da66a2210c
             <Mapbox.Camera
               ref={Component => (this._mapcoord = Component)}
               centerCoordinate={[

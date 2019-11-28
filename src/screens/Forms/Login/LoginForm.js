@@ -119,7 +119,8 @@ class LogInForm extends Component {
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="rgba(0,0,0,0.7)"
-          // returnKeyType="Login"
+          returnKeyType="go"
+          onSubmitEditing={this.LoginUser}
           ref={input => (this.password = input)}
         />
         {this.state.passwordError ? (

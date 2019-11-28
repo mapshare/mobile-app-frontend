@@ -24,7 +24,7 @@ export default class EventsView extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container} {...alert("alert", "Event Details WIP")}>
         <FlatList enableEmptySections={true}
           data={[{day:1, month: 'Sep'}, 
                  {day:2, month: 'Jan'}, 
