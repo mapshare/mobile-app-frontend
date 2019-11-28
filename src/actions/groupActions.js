@@ -264,6 +264,7 @@ export const getActiveGroup = data => {
       })
       .catch(err => {
         //console.log(err.response.data)
+        Actions.initial({ type: ActionConst.RESET });
         dispatch(getActiveGroupSuccess(false));
         dispatch(getActiveGroupError(err.response));
       });
@@ -295,6 +296,7 @@ export const getActiveGroupNoLoadingScreen = data => {
 
     } catch (err) {
       console.log(err)
+      Actions.initial({ type: ActionConst.RESET });
       dispatch(getActiveGroupSuccess(false));
       dispatch(getActiveGroupError(err.response));
     }
@@ -313,6 +315,7 @@ export const getActiveGroupRefreshDataOnly = data => {
 
     } catch (err) {
       console.log(err.response.data)
+      Actions.initial({ type: ActionConst.RESET });
       dispatch(getActiveGroupSuccess(false));
       dispatch(getActiveGroupError(err.response));
     }
@@ -584,7 +587,7 @@ export const requestToJoinGroup = data => {
 
       await dispatch(getUserGroups({ token: data.token }));
       await dispatch(getGroups({ token: data.token }));
-      
+
       dispatch(requestToJoinGroupDataSuccess(res.data));
       dispatch(requestToJoinGroupSuccess(true));
     } catch (err) {
@@ -677,6 +680,82 @@ export const getAllJoinGroupRequests = data => {
         dispatch(allJoinGroupRequestsSuccess(false));
         dispatch(allJoinGroupRequestsError(err.response.data));
       });
+  };
+};
+
+/*
+ *   GET BANED USER FROM GROUP
+ */
+
+export const bannedUserData = data => {
+  return {
+    type: keys.BANNED_USER_DATA,
+    bannedUserData: data
+  };
+};
+
+export const getBannedUsers = data => {
+  return async dispatch => {
+    try {
+      const res = await axios.get(API_URL + '/groups/' + data.groupId + '/ban', { headers: { 'authentication': data.token } });
+      dispatch(bannedUserData(res.data));
+    } catch (err) {
+      console.log(err.response)
+    }
+  };
+};
+
+/*
+ *   BAN MEMBER FROM GROUP
+ */
+export const banMemberFromGroup = data => {
+  return async dispatch => {
+    try {
+      // Display Loading Screen
+      Actions.loadingScreen({ type: ActionConst.RESET });
+
+      const res = await axios.post(API_URL + '/groups/' + data.groupId + '/banMember/' + data.memberId, {}, { headers: { 'authentication': data.token } });
+      await dispatch(getEditingGroupMember({
+        token: data.token,
+        groupId: data.groupId,
+      }));
+
+      // Go to home after loading new group
+      Actions.navTab({ type: ActionConst.RESET });
+      // Go to myGroups
+      Actions.myGroupsMenu();
+      // Go to Edit Group Menu
+      Actions.editGroupMenu();
+      // Go to Member List
+      Actions.groupMembersListMenu();
+    } catch (err) {
+      console.log(err.response)
+    }
+  };
+};
+
+/*
+ *   BAN USER FROM GROUP
+ */
+export const banUserFromGroup = data => {
+  return async dispatch => {
+    try {
+      const res = await axios.post(API_URL + '/groups/' + data.groupId + '/ban/' + data.pendingUserId, {}, { headers: { 'authentication': data.token } });
+    } catch (err) {
+      console.log(err.response)
+    }
+  };
+};
+
+/*
+ *   UN-BAN USER FROM GROUP
+ */
+export const unBanUserFromGroup = data => {
+  return async dispatch => {
+    try {
+      const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/ban/' + data.userId, { headers: { 'authentication': data.token } });
+    } catch (err) {
+    }
   };
 };
 
@@ -777,7 +856,7 @@ export const leaveGroup = data => {
 
       const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/member' + deleteByMember, { headers: { 'authentication': data.token } });
       await dispatch(getUserGroups({ token: data.token }));
-      await dispatch(getGroups({ token: data.token }))
+      await dispatch(getGroups({ token: data.token }));
       dispatch(leaveGroupDataSuccess(res.data));
       dispatch(leaveGroupSuccess(true));
 
@@ -797,6 +876,15 @@ export const leaveGroup = data => {
       }
 
     } catch (err) {
+      // Clear active group data
+      dispatch(getActiveGroupSuccess(false));
+      dispatch(getActiveGroupDataSuccess(""));
+      dispatch(getActiveGroupError(""));
+
+      // Go to initial select group page if deleting active group
+      Actions.initial({ type: ActionConst.RESET });
+
+      console.log(err.response);
       dispatch(leaveGroupSuccess(false));
       dispatch(leaveGroupError(err.response.data));
     }

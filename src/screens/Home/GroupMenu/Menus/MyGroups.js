@@ -31,7 +31,8 @@ import {
     getUserGroupsSuccess,
     getUserGroups,
     getGroupsSuccess,
-    getGroups
+    getGroups,
+    getEditingGroupMember,
 } from '../../../../actions/groupActions';
 
 import {
@@ -140,6 +141,11 @@ class MyGroups extends Component {
     editGroup = async (group) => {
         this.props.currentEditingGroupStatus(false);
         this.props.setCurrentEditingGroup(group);
+        const data = {
+            token: this.props.token,
+            groupId: group._id,
+        }
+        this.props.getEditingGroupMember(data);
         Actions.editGroupMenu({ currentEditingGroup: group });
     }
 
@@ -216,6 +222,7 @@ const mapDispatchToProps = dispatch => {
         setCurrentEditingGroup: data => dispatch(setCurrentEditingGroup(data)),
         getGroupsSuccess: data => dispatch(getGroupsSuccess(data)),
         getGroups: data => dispatch(getGroups(data)),
+        getEditingGroupMember: data => dispatch(getEditingGroupMember(data)),
     };
 };
 

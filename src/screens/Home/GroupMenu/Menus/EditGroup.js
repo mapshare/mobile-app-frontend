@@ -10,6 +10,7 @@ import {
     Modal,
     FlatList,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -70,7 +71,6 @@ class EditGroup extends Component {
             groupImg: '',
             succesModalVisible: false,
             modalVisible: false,
-            permission: 0,
             // Requred to pervent button spam
             singleActivation: false,
         };
@@ -79,11 +79,6 @@ class EditGroup extends Component {
     componentDidMount() {
         // Rest list content to make sure old data is not displayed
         this.props.getAllGroupMemberDataSuccess([])
-        try {
-            this.setState({ permission: this.props.currentEditingGroup.groupRolePermisionLevel });
-        } catch (error) {
-
-        }
         const data = {
             token: this.props.token,
             groupId: this.props.getCurrentEditingGroupData._id,
@@ -101,11 +96,6 @@ class EditGroup extends Component {
                 this.props.getEditingGroupMemberSuccess(false);
                 this.props.getEditingGroupMember(data);
                 this.props.getAllGroupMember(data);
-                try {
-                    this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
-                } catch (error) {
-
-                }
             }, 5000)
         });
     }
@@ -195,6 +185,13 @@ class EditGroup extends Component {
     }
 
     render() {
+        let permission = 0;
+        let loading = false;
+        try {
+            permission = this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel;
+        } catch (error) {
+            loading = true;
+        }
         return (
             <View style={styles.modalStyle}>
 
@@ -243,105 +240,121 @@ class EditGroup extends Component {
                         <Icon style={styles.closeIcon} name="arrow-left-circle" size={30} />
                     </TouchableOpacity>
                 </View>
-                <ScrollView style={styles.content} >
-                    <Text style={styles.textBox}>Edit Group: {this.props.getCurrentEditingGroupData.groupName}</Text>
-                    <View>
-                        <View style={styles.flatListItemSeporator} />
-                        {(this.state.permission >= 3) &&
-                            <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupNameMenu()}>
-                                    <Text style={styles.textBox} >Change Group Name</Text>
-                                </TouchableOpacity>
+                {(!loading) ?
+                    <ScrollView style={styles.content} >
+                        <Text style={styles.textBox}>Edit Group: {this.props.getCurrentEditingGroupData.groupName}</Text>
+                        <View>
+                            <View style={styles.flatListItemSeporator} />
+                            {(permission >= 3) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupNameMenu()}>
+                                        <Text style={styles.textBox} >Change Group Name</Text>
+                                    </TouchableOpacity>
 
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
 
-                        {(this.state.permission >= 3) &&
-                            <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupDescriptionMenu()}>
-                                    <Text style={styles.textBox} >Change Group Description</Text>
-                                </TouchableOpacity>
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                            {(permission >= 3) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.changeGroupDescriptionMenu()}>
+                                        <Text style={styles.textBox} >Change Group Description</Text>
+                                    </TouchableOpacity>
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
 
-                        {(this.state.permission >= 3) &&
-                            <View>
+                            {(permission >= 3) &&
+                                <View>
 
-                                <TouchableOpacity style={styles.editGroupOptions}
-                                    disabled={this.state.singleActivation}
-                                    onPress={() => {
-                                        this.setState({ singleActivation: true }, () => {
-                                            this.choosePhoto();
-                                            setTimeout(() => {
-                                                this.setState({ singleActivation: false });
-                                            }, 1000)
-                                        });
-                                    }}>
-                                    <Text style={styles.textBox} >Change Group Picture</Text>
-                                </TouchableOpacity>
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                                    <TouchableOpacity style={styles.editGroupOptions}
+                                        disabled={this.state.singleActivation}
+                                        onPress={() => {
+                                            this.setState({ singleActivation: true }, () => {
+                                                this.choosePhoto();
+                                                setTimeout(() => {
+                                                    this.setState({ singleActivation: false });
+                                                }, 1000)
+                                            });
+                                        }}>
+                                        <Text style={styles.textBox} >Change Group Picture</Text>
+                                    </TouchableOpacity>
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
 
-                        <TouchableOpacity style={styles.editGroupOptions} onPress={() => { Actions.groupMembersListMenu() }}>
-                            <Text style={styles.textBox} >Group Members</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity style={styles.editGroupOptions} onPress={() => { Actions.groupMembersListMenu() }}>
+                                <Text style={styles.textBox} >Group Members</Text>
+                            </TouchableOpacity>
 
-                        <View style={styles.flatListItemSeporator} />
+                            <View style={styles.flatListItemSeporator} />
 
-                        {(this.state.permission >= 3 && !this.props.getCurrentEditingGroupData.groupIsPublic) &&
-                            <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.joinGroupRequestMenu()}>
-                                    <Text style={styles.textBox} >Review Join Requests</Text>
-                                </TouchableOpacity>
+                            {(permission >= 3 && !this.props.getCurrentEditingGroupData.groupIsPublic) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.joinGroupRequestMenu()}>
+                                        <Text style={styles.textBox} >Review Join Requests</Text>
+                                    </TouchableOpacity>
 
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
 
-                        {(this.state.permission >= 3 && !this.props.getCurrentEditingGroupData.groupIsPublic) &&
-                            <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.updateGroupPrivacy(true); }}>
-                                    <Text style={styles.textBox} >Make Group Public</Text>
-                                </TouchableOpacity>
+                            {(permission >= 3) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.banedUsersList()}>
+                                        <Text style={styles.textBox} >Banned Users</Text>
+                                    </TouchableOpacity>
 
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
 
-                        {(this.state.permission >= 3 && this.props.getCurrentEditingGroupData.groupIsPublic) &&
-                            <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.updateGroupPrivacy(false); }}>
-                                    <Text style={styles.textBox} >Make Group Private</Text>
-                                </TouchableOpacity>
+                            {(permission >= 3 && !this.props.getCurrentEditingGroupData.groupIsPublic) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.updateGroupPrivacy(true); }}>
+                                        <Text style={styles.textBox} >Make Group Public</Text>
+                                    </TouchableOpacity>
 
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
 
-                        {(this.state.permission <= 3) &&
-                            <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.leaveGroup()}>
-                                    <Text style={styles.textBox} >Leave Group</Text>
-                                </TouchableOpacity>
+                            {(permission >= 3 && this.props.getCurrentEditingGroupData.groupIsPublic) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.updateGroupPrivacy(false); }}>
+                                        <Text style={styles.textBox} >Make Group Private</Text>
+                                    </TouchableOpacity>
 
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
 
-                        {(this.state.permission == 4) &&
-                            <View>
-                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
-                                    <Text style={styles.textBox} >Delete Group</Text>
-                                </TouchableOpacity>
+                            {(permission <= 3) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.leaveGroup()}>
+                                        <Text style={styles.textBox} >Leave Group</Text>
+                                    </TouchableOpacity>
 
-                                <View style={styles.flatListItemSeporator} />
-                            </View>
-                        }
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
+
+                            {(permission == 4) &&
+                                <View>
+                                    <TouchableOpacity style={styles.editGroupOptions} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                                        <Text style={styles.textBox} >Delete Group</Text>
+                                    </TouchableOpacity>
+
+                                    <View style={styles.flatListItemSeporator} />
+                                </View>
+                            }
+                        </View>
+                    </ScrollView>
+                    :
+                    <View style={styles.centerSpinner}>
+                        <ActivityIndicator style={styles.spinnerStyle} size="large" color="#000" />
                     </View>
-                </ScrollView>
+                }
             </View>
         );
     }

@@ -114,7 +114,7 @@ class MyGroups extends Component {
                             <View style={styles.flatListColThree}>
                                 {(this.state.permission >= 3) &&
                                     (group.item.groupMemberRole.groupRolePermisionLevel <= 3) &&
-                                    <TouchableOpacity onPress={() => this.editGroupMember(group.item)}>
+                                    <TouchableOpacity style={[styles.editGroupIconPadding, {marginStart: -15}]} onPress={() => this.editGroupMember(group.item)}>
                                         <Icon style={styles.editGroupIcon} name="note" size={30} />
                                     </TouchableOpacity>}
                             </View>
