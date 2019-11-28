@@ -96,7 +96,7 @@ export default StyleSheet.create({
         textAlign: "center",
     },
     flatListItem: {
-        height: 56,
+        height: 80,
         paddingTop: 10,
         paddingBottom: 10,
         flex: 1,

@@ -147,6 +147,17 @@ class EditGroup extends Component {
         this.props.updateGroup(data);
     }
 
+    updateGroupPrivacy(privacySetting) {
+        const data = {
+            token: this.props.token,
+            groupIsPublic: privacySetting,
+            groupId: this.props.getCurrentEditingGroupData._id,
+            activeGroupId: this.props.getActiveGroupData._id,
+        }
+        this.props.updateGroupSuccess(false);
+        this.props.updateGroup(data);
+    }
+
     choosePhoto() {
         let options = {
             title: null,
@@ -280,10 +291,30 @@ class EditGroup extends Component {
 
                         <View style={styles.flatListItemSeporator} />
 
-                        {(this.state.permission >= 3) &&
+                        {(this.state.permission >= 3 && !this.props.getCurrentEditingGroupData.groupIsPublic) &&
                             <View>
                                 <TouchableOpacity style={styles.editGroupOptions} onPress={() => Actions.joinGroupRequestMenu()}>
-                                    <Text style={styles.textBox} >Group Join Requests</Text>
+                                    <Text style={styles.textBox} >Review Join Requests</Text>
+                                </TouchableOpacity>
+
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
+
+                        {(this.state.permission >= 3 && !this.props.getCurrentEditingGroupData.groupIsPublic) &&
+                            <View>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.updateGroupPrivacy(true); }}>
+                                    <Text style={styles.textBox} >Make Group Public</Text>
+                                </TouchableOpacity>
+
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+                        }
+
+                        {(this.state.permission >= 3 && this.props.getCurrentEditingGroupData.groupIsPublic) &&
+                            <View>
+                                <TouchableOpacity style={styles.editGroupOptions} onPress={() => { this.updateGroupPrivacy(false); }}>
+                                    <Text style={styles.textBox} >Make Group Private</Text>
                                 </TouchableOpacity>
 
                                 <View style={styles.flatListItemSeporator} />

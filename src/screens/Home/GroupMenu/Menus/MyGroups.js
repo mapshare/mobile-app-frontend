@@ -108,6 +108,9 @@ class MyGroups extends Component {
                                         {" #" + group.item.createdBy._id.slice(0, 6)}
                                     </Text>
                                 </Text>
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Status: {group.item.groupIsPublic ? "Public" : "Private"}
+                                </Text>
                             </View>
 
                             <View style={styles.flatListColThree}>

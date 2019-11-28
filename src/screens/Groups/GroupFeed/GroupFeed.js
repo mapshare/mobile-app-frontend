@@ -52,11 +52,11 @@ class GroupFeed extends Component {
         return (
             <SafeAreaView style={styles.groupPostContainer}>
                 <View style={styles.flatListItemSeporator} />
-                {this.props.getGroupFeedData.length <= 0 &&
+                {!Array.isArray(this.props.getGroupFeedData) &&
 
                     <ActivityIndicator style={styles.spinnerStyle} size="large" color="#000" />
                 }
-                {this.props.getGroupFeedData.length > 0 &&
+                {Array.isArray(this.props.getGroupFeedData) &&
                     <FlatList style={styles.list}
                         data={this.props.getGroupFeedData}
                         keyExtractor={(item) => { return item._id; }}
