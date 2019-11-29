@@ -3,6 +3,8 @@ import { API_URL } from 'react-native-dotenv';
 
 import { Actions, ActionConst } from "react-native-router-flux";
 
+import { AsyncStorage } from "react-native";
+
 import keys from '../data/key';
 
 /* Routes
@@ -261,6 +263,9 @@ export const getActiveGroup = data => {
 
         // Go to home after loading new group
         Actions.navTab({ type: ActionConst.RESET });
+
+        // Save Group Id to local Storage
+        AsyncStorage.setItem('lastActiveGroupId', data.groupId);
       })
       .catch(err => {
         //console.log(err.response.data)
@@ -281,7 +286,7 @@ export const getActiveGroupNoLoadingScreen = data => {
       }
 
       // clear groupFeed 
-      dispatch(setGroupFeedData([]));
+      dispatch(setGroupFeedData(undefined));
       // connect to the new group chat
       dispatch(connectToGroupChat(newData));
       // connect to the new group feed
@@ -294,6 +299,8 @@ export const getActiveGroupNoLoadingScreen = data => {
       dispatch(getActiveGroupDataSuccess(res.data));
       dispatch(getActiveGroupSuccess(true));
 
+      // Save Group Id to local Storage
+      AsyncStorage.setItem('lastActiveGroupId', data.groupId);
     } catch (err) {
       console.log(err)
       Actions.initial({ type: ActionConst.RESET });
@@ -313,6 +320,8 @@ export const getActiveGroupRefreshDataOnly = data => {
       dispatch(getActiveGroupDataSuccess(res.data));
       dispatch(getActiveGroupSuccess(true));
 
+      // Save Group Id to local Storage
+      AsyncStorage.setItem('lastActiveGroupId', data.groupId);
     } catch (err) {
       console.log(err.response.data)
       Actions.initial({ type: ActionConst.RESET });

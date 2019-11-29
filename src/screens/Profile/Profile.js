@@ -4,7 +4,8 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native';
 
 // Componenets Style
@@ -30,6 +31,8 @@ class Profile extends Component {
   }
 
   goLogin() {
+    AsyncStorage.setItem('token', "");
+    AsyncStorage.setItem('lastActiveGroupId', "");
     this.props.getActiveGroupSuccess(false);
     this.props.getActiveGroupDataSuccess("");
     this.props.getActiveGroupError("");
