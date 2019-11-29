@@ -4,11 +4,15 @@ import { Provider } from 'react-redux';
 import configureStore from './src/reduxStore/configureStore';
 import SplashScreen from 'react-native-splash-screen'
 
+import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
+
 import { API_URL, CHAT_URL } from 'react-native-dotenv'
 
 // Import Libraries
 
 import Routes from './src/navigation/Router/router';
+import crtPostbtn from './src/screens/Groups/GroupFeed/CreatePostButton'
+
 
 const store = configureStore();
 

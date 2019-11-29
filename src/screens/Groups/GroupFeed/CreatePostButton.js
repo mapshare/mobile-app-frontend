@@ -14,6 +14,7 @@ import {
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import { AppTourView } from 'react-native-app-tour';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -76,6 +77,22 @@ class CreatePostButton extends Component {
                     style={styles.CreatePost}
                     onPress={() => this.choosePhoto()}
                     disabled={this.state.isImagePickerActive}
+                    key={'crtfeed'}
+                    title={'Create Group Feed'}
+                    ref={ref => {
+                        if (!ref) return
+            
+                        let props = {
+                          order: 2,
+                          title: 'Camera Button',
+                          description: 'This is used to create new Group Feed to share amoung group members',
+                          outerCircleColor: '#3f52ae'
+                        }
+            
+                        this.props.addAppTourTarget &&
+                          this.props.addAppTourTarget(AppTourView.for(ref, { ...props }))
+                      }}
+                      
                 >
                     <Icon style={styles.cameraIcon} name="camera" size={30} />
                 </TouchableOpacity>
