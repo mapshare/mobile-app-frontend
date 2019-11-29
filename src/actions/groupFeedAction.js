@@ -44,6 +44,7 @@ export const connectToGroupFeed = data => {
     }
 
     return dispatch => {
+        console.log(CHAT_URL)
         try {
             console.log("Connecting to Group Feed")
             const socket = io.connect(CHAT_URL + '/groupFeed:' + newData.groupId);

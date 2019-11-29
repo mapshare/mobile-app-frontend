@@ -61,9 +61,11 @@ export const logInUser = data => {
 
       Actions.initial({ type: ActionConst.RESET });
     } catch (err) {
+
       dispatch(logInSuccess(false));
       dispatch(logInUserError(err.response.data));
     }
+
   };
 };
 

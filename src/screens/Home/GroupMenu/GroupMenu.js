@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import { AppTourView } from 'react-native-app-tour';
 
 import SearchGroupForm from '../../Forms/SearchGroup/SearchGroupForm';
 import AddGroupForm from '../../Forms/AddGroup/AddGroupFrom'
@@ -88,7 +89,22 @@ class GroupMenu extends Component {
                             }, 1000)
                         });
                     }}
-                    style={styles.menuButtonPadding}>
+                    style={styles.menuButtonPadding}
+                    key={'gpMenu'}
+                    title={'Group Menu'}
+                    ref={ref => {
+                        if (!ref) return
+            
+                        let props = {
+                          order: 1,
+                          title: 'Group Menu',
+                          description: 'This menu allows you to manage your groups, join or create groups',
+                          outerCircleColor: '#3f52ae'
+                        }
+            
+                        this.props.addAppTourTarget &&
+                          this.props.addAppTourTarget(AppTourView.for(ref, { ...props }))
+                      }}>
                     <Icon style={styles.menuButton} name="menu" size={30} />
                 </TouchableOpacity>
             </View>
