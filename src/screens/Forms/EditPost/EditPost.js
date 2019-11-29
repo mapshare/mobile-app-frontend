@@ -181,4 +181,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPost);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(EditPost);
