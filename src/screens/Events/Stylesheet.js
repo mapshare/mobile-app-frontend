@@ -49,4 +49,10 @@ export default StyleSheet.create({
       fontSize:16,
       color:"#151515",
     },
+    addButton: {
+      textAlign:"right",
+      //position: 'absolute',
+      marginRight: 5,
+      //top: 2,
+    },
   });

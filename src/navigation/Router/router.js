@@ -67,7 +67,7 @@ let backPressed = 0;
 //Create a dedicated class that will manage the tabBar icon
 class TabIcon extends Component {
   render() {
-    return (<Icon name={this.props.name} size={20} color={this.props.focused ? '#087bff' : '#000000'}/>);
+    return (<Icon name={this.props.name} size={25} color={this.props.focused ? '#087bff' : '#000000'}/>);
   }
 }
 

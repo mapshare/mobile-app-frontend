@@ -74,7 +74,7 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
-      }, 5000)
+      }, 25000)
     });
   }
 
