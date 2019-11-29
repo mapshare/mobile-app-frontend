@@ -12,7 +12,7 @@ import {
     Image
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import Icon from "react-native-vector-icons/SimpleLineIcons";
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -21,15 +21,14 @@ import {
     updatePostInGroupFeed
 } from '../../../actions/groupFeedAction';
 
-
 // Componenets Style
 import styles from '../Stylesheet';
 
-import validator from '../validate/validation_wrapper'
+import validator from '../validate/validation_wrapper';
 import ImagePicker from 'react-native-image-picker';
 
 // Creating Component
-class AddPostCaption extends Component {
+class EditPost extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -45,37 +44,36 @@ class AddPostCaption extends Component {
         try {
             this.setState({ postCaption: this.props.editingPost.postCaption });
             this.setState({ postImage: this.props.editingPost.postImage });
-        } catch (error) {
-
-        }
+        } catch (error) { }
     }
 
     editPost() {
-
         const editPostError = validator('postCaption', this.state.postCaption);
 
-        this.setState({ editPostError: editPostError },
-            () => {
-                if (!editPostError) {
-                    const trimedCaption = this.state.postCaption.slice(0, 100).trim();
-                    const data = {
-                        postId: this.props.editingPost._id,
-                        postImage: this.state.postImage,
-                        postCaption: trimedCaption,
-                        groupFeedSocket: this.props.groupFeedSocket,
-                    }
-                    this.props.updatePostInGroupFeed(data);
-                    Actions.pop();
-                }
+        this.setState({ editPostError: editPostError }, () => {
+            if (!editPostError) {
+                const data = {
+                    postId: this.props.editingPost._id,
+                    postImage: this.state.postImage,
+                    postCaption: this.state.postCaption,
+                    groupFeedSocket: this.props.groupFeedSocket
+                };
+                this.props.updatePostInGroupFeed(data);
+                Actions.pop();
             }
-        );
-
+        });
     }
 
     updatePostCaption(postCaption) {
         const editPostError = validator('postCaption', postCaption);
-        const trimedCaption = postCaption.slice(0, 100);
-        this.setState({ postCaption: trimedCaption, editPostError: editPostError ? editPostError : "" });
+        if (!editPostError) {
+            this.setState({ postCaption: postCaption, editPostError: '' });
+        } else {
+            this.setState({
+                postCaption: this.state.postCaption,
+                editPostError: editPostError
+            });
+        }
     }
 
     choosePhoto() {
@@ -83,11 +81,11 @@ class AddPostCaption extends Component {
             title: null,
             storageOptions: {
                 skipBackup: true,
-                path: 'images',
-            },
+                path: 'images'
+            }
         };
 
-        ImagePicker.showImagePicker(options, (response) => {
+        ImagePicker.showImagePicker(options, response => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -96,41 +94,50 @@ class AddPostCaption extends Component {
                 this.setState({ postImage: response.data });
             }
         });
-    };
+    }
 
     render() {
         return (
-            <View style={styles.body} >
+            <View style={styles.body}>
                 <View style={styles.cancelPost}>
-                    <TouchableOpacity style={styles.cancelPostButton} onPress={() => {
-                        Actions.pop();
-                        Keyboard.dismiss();
-                    }}>
-                        <Icon style={styles.cancelPostIcon} name="arrow-left-circle" size={30} />
+                    <TouchableOpacity
+                        style={styles.cancelPostButton}
+                        onPress={() => {
+                            Actions.pop();
+                            Keyboard.dismiss();
+                        }}
+                    >
+                        <Icon
+                            style={styles.cancelPostIcon}
+                            name="arrow-left-circle"
+                            size={30}
+                        />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.CreatePost}>
-                    <TouchableOpacity style={styles.CreatePostButton} onPress={() => {
-                        this.editPost();
-                    }}>
+                    <TouchableOpacity
+                        style={styles.CreatePostButton}
+                        onPress={() => {
+                            this.editPost();
+                        }}
+                    >
                         <Icon style={styles.CreatePostIcon} name="check" size={30} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.row}>
                     <View style={styles.postImagePreview}>
-                        <TouchableOpacity 
-                            disabled={this.state.singleActivation}
+                        <TouchableOpacity
+                            style={styles.CreatePostButton}
                             onPress={() => {
-                                this.setState({ singleActivation: true }, () => {
-                                    this.choosePhoto();
-                                    setTimeout(() => {
-                                        this.setState({ singleActivation: false });
-                                    }, 1000)
-                                });
-                            }}>
+                                this.choosePhoto();
+                            }}
+                        >
                             <Image
-                                source={{ uri: 'data:image/png;base64,' + this.state.postImage, width: 120, height: 120, scale: 1.1 }}
+                                style={styles.previewImage}
+                                source={{
+                                    uri: 'data:image/png;base64,' + this.state.postImage
+                                }}
                             />
                         </TouchableOpacity>
                     </View>
@@ -145,12 +152,13 @@ class AddPostCaption extends Component {
                             selectionColor="#fff"
                             autoCorrect={false}
                             multiline={true}
-                            maxLength={100}
                             returnKeyType="next"
                             autoCapitalize="none"
                             onSubmitEditing={() => { }}
                         />
-                        {this.state.editPostError ? <Text>{this.state.editPostError}</Text> : null}
+                        {this.state.editPostError ? (
+                            <Text>{this.state.editPostError}</Text>
+                        ) : null}
                     </View>
                 </View>
             </View>
@@ -164,18 +172,18 @@ const mapStateToProps = state => {
         token: state.logInReducer.token,
         imageData: state.addPostReducer.imageData,
         captionData: state.addPostReducer.captionData,
-        groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
+        groupFeedSocket: state.groupFeedReducer.groupFeedSocket
     };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
     return {
-        updatePostInGroupFeed: data => dispatch(updatePostInGroupFeed(data)),
+        updatePostInGroupFeed: data => dispatch(updatePostInGroupFeed(data))
     };
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(AddPostCaption);
+)(EditPost);

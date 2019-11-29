@@ -54,26 +54,25 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+
+        this.props.getGroupAllMarks({
+          groupMarkId: this.props.getActiveGroupData.groupMarks,
+          token: this.props.token
+        });
+
         this.props.getGroupMember({
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
       }, 5000)
     });
-
-    const data = {
-      groupMarkId: this.props.getActiveGroupData.groupMarks,
-      token: this.props.token
-    };
-
-    this.props.getGroupAllMarks(data);
   }
 
   componentWillUnmount() {
     clearInterval(this.state.interval);
   }
 
-  loadingScreen() { }
+  loadingScreen() {}
 
   componentDidUpdate(prevProps) {
     // Checks if Active Group Still Exists.
@@ -149,7 +148,8 @@ const mapStateToProps = state => {
     groupExistsStatus: state.groupReducer.groupExistsStatus,
     updateGroupStatus: state.groupReducer.updateGroupStatus,
     updateGroupData: state.groupReducer.updateGroupStatus,
-    loadingData: state.groupReducer.loadingData
+    loadingData: state.groupReducer.loadingData,
+    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData
   };
 };
 

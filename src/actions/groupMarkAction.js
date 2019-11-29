@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from 'react-native-dotenv';
+import { API_URL, MAPBOX } from 'react-native-dotenv';
 
 import keys from '../data/key';
 
@@ -17,6 +17,13 @@ import keys from '../data/key';
 /*
  *   ADD GROUP MARK
  */
+export const newMarkAdded = bool => {
+  return {
+    type: keys.NEW_MARK_ADDED,
+    newMarkAddedFlag: bool
+  };
+};
+
 export const addGroupMarkSuccess = bool => {
   return {
     type: keys.ADD_GROUP_MARK_SUCCESS,
@@ -52,6 +59,38 @@ export const setCoordinates = data => {
   };
 };
 
+export const getGeocodingLocation = data => {
+  return {
+    type: keys.GET_GEOCODING_LOCATION,
+    getGeocodingLocation: data
+  };
+};
+
+export const geocodingLocation = data => {
+  let url =
+    'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
+    data[0] +
+    '%2C' +
+    data[1] +
+    '.json?access_token=' +
+    MAPBOX;
+
+  return async dispatch => {
+    dispatch(setCoordinates(data));
+
+    try {
+      const res = await axios.get(url);
+      let saveAddress = res.data.features[0].place_name.split(',');
+      let parsedAddress =
+        saveAddress[0] + ',' + saveAddress[1] + ',' + saveAddress[2];
+
+      dispatch(getGeocodingLocation(parsedAddress));
+    } catch (err) {
+      console.log('geocoding error: ', err);
+    }
+  };
+};
+
 export const addGroupMark = data => {
   let markData = {
     markName: data.markName,
@@ -59,8 +98,6 @@ export const addGroupMark = data => {
     geometry: data.geometry,
     groupMarkCreatedBy: data.groupMarkCreatedBy
   };
-
-  console.log('call add action!');
 
   return dispatch => {
     axios
@@ -124,11 +161,15 @@ export const getGroupAllMarks = data => {
         headers: { 'authentication': data.token }
       })
       .then(res => {
-        // console.log('get all marks', res.data);
+        // console.log(
+        //   'get all marks',
+        //   res.data.groupMarks[res.data.groupMarks.length - 1]
+        // );
         dispatch(getGroupAllMarksData(res.data.groupMarks));
         dispatch(getGroupMarkSuccess(true));
       })
       .catch(err => {
+        console.log('get all marks error: ', err);
         dispatch(getGroupMarkSuccess(false));
         dispatch(getGroupMarkError(err.response.data));
       });

@@ -55,8 +55,8 @@ const validation = {
       allowEmpty: false
     },
     format: {
-      pattern: '^[0-9]+ .+$',
-      message: '^Please enter a valid address'
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
     }
   },
 
@@ -67,14 +67,14 @@ const validation = {
     }
   },
 
-  locationReview: {
+  additionalInformation: {
     presence: {
-      message: '^Review is required',
+      message: '^Description is required',
       allowEmpty: false
     },
     length: {
       maximum: 150,
-      message: '^Maximum of 200 characters'
+      message: '^Maximum of 150 characters'
     },
     format: {
       pattern: '.*[^ ].*',
@@ -138,7 +138,6 @@ const validation = {
       message: '^Group Description must be less than 50 characters',
     }
   },
-
 };
 
 export default validation;

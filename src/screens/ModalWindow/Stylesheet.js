@@ -25,8 +25,7 @@ const containerStyles = StyleSheet.create({
   },
 
   contentContainer: {
-    width: reponsiveStyle.wp('95%'),
-    height: reponsiveStyle.hp('92%')
+    width: reponsiveStyle.wp('95%')
   }
 });
 
