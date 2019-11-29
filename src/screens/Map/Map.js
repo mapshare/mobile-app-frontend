@@ -9,7 +9,10 @@ import { MAPBOX } from 'react-native-dotenv';
 
 //Redux actions
 import { addMarkModalWindow } from '../../actions/modalWindowAction';
-import { setCoordinates } from '../../actions/groupMarkAction';
+import {
+  getGroupAllMarks,
+  geocodingLocation
+} from '../../actions/groupMarkAction';
 import { getGroupById } from '../../actions/groupActions';
 
 // Componenets Style
@@ -30,11 +33,29 @@ class Map extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      newMarkAdded: false
+    };
+
     this.data = null;
     this.location = {
       latitude: 0.0,
       longitude: 0.0
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.newMarkAddedFlag !== prevProps.newMarkAddedFlag) {
+      const data = {
+        groupMarkId: this.props.getActiveGroup.groupMarks,
+        token: this.props.token
+      };
+      this.props.getGroupAllMarks(data);
+
+      this.setState({
+        newMarkAdded: !this.state.newMarkAdded
+      });
+    }
   }
 
   getCoordsFromName(loc) {
@@ -79,7 +100,7 @@ class Map extends Component {
   mapOnClick = data => {
     if (this.props.addGroupMarkOnClickStatus) {
       this.props.addMarkModalWindow(true);
-      this.props.setCoordinates(data.geometry.coordinates);
+      this.props.geocodingLocation(data.geometry.coordinates);
     }
   };
 
@@ -130,7 +151,7 @@ class Map extends Component {
               style={mapStyles.container}
               onDidFinishLoadingMap={this.findCoordinates}
             >
-              <Marks />
+              <Marks newMarkAdded={this.state.newMarkAdded} />
               <Mapbox.Camera
                 ref={Component => (this._mapcoord = Component)}
                 centerCoordinate={[
@@ -165,9 +186,11 @@ const mapStateToProps = state => {
     addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
     addMarkStatus: state.modalWindowReducer.addMarkStatus,
     onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
-    logInToken: state.logInReducer.token,
     categoriesOptionOnClickStatus:
-      state.groupDefaultMarkCategoryReducer.categoriesOptionOnClickStatus
+      state.groupDefaultMarkCategoryReducer.categoriesOptionOnClickStatus,
+    token: state.logInReducer.token,
+    getActiveGroup: state.groupReducer.getActiveGroupData,
+    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag
   };
 };
 
@@ -175,8 +198,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
-    setCoordinates: data => dispatch(setCoordinates(data)),
-    getGroupById: data => dispatch(getGroupById(data))
+    getGroupById: data => dispatch(getGroupById(data)),
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
+    geocodingLocation: data => dispatch(geocodingLocation(data))
   };
 };
 

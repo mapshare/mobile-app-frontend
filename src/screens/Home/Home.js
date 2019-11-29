@@ -56,6 +56,12 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+
+        this.props.getGroupAllMarks({
+          groupMarkId: this.props.getActiveGroupData.groupMarks,
+          token: this.props.token
+        });
+
         this.props.getGroupMember({
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
@@ -69,7 +75,6 @@ class Home extends Component {
       token: this.props.token
     };
 
-    this.props.getGroupAllMarks(data);
     this.props.getGroupDefaultMarkCategory(data);
     this.props.getGroupAllCustomMarkCategory(data);
   }
@@ -86,17 +91,6 @@ class Home extends Component {
     if (prevProps.groupExistsStatus !== this.props.groupExistsStatus) {
       if (!this.props.groupExistsStatus) {
         this.clearActiveGroup();
-      }
-    }
-
-    if (prevProps.updateGroupStatus !== this.props.updateGroupStatus) {
-      if (this.props.updateGroupStatus) {
-        const data = {
-          token: this.props.token,
-          groupId: this.props.getActiveGroupData._id
-        };
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroup(data);
       }
     }
   }
@@ -165,7 +159,8 @@ const mapStateToProps = state => {
     groupExistsStatus: state.groupReducer.groupExistsStatus,
     updateGroupStatus: state.groupReducer.updateGroupStatus,
     updateGroupData: state.groupReducer.updateGroupStatus,
-    loadingData: state.groupReducer.loadingData
+    loadingData: state.groupReducer.loadingData,
+    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData
   };
 };
 

@@ -51,11 +51,17 @@ class AddGroupForm extends Component {
     }
 
     createGroup = async () => {
-        if (!this.state.currentlyCreatingGroup) {
+        let createGroupError = "";
+        createGroupError = validator('groupNamePresent', this.state.groupName);
+        !createGroupError ? createGroupError = validator('groupNameMinLength', this.state.groupName) : false;
+        !createGroupError ? createGroupError = validator('groupNameMaxLength', this.state.groupName) : false;
+        this.setState({ createGroupError: createGroupError });
+
+        if (!this.state.currentlyCreatingGroup && !createGroupError) {
             this.setState({ currentlyCreatingGroup: true });
             const data = {
                 token: this.props.token,
-                groupName: this.state.groupName,
+                groupName: this.state.groupName.trim(),
             }
             this.props.createGroupSuccess(false);
             this.props.createGroup(data);
@@ -94,6 +100,7 @@ class AddGroupForm extends Component {
                     placeholderTextColor="#B8B8B8"
                     selectionColor="#fff"
                     autoCorrect={false}
+                    maxLength={15}
                     returnKeyType="next"
                     autoCapitalize="none"
                     onSubmitEditing={() => this.createGroup()}

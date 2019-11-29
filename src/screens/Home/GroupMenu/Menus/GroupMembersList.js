@@ -47,11 +47,19 @@ class MyGroups extends Component {
 
 
     componentDidMount() {
+        
+        const data = {
+            token: this.props.token,
+            groupId: this.props.getCurrentEditingGroupData._id,
+        }
+        this.props.getEditingGroupMember(data);
+
         try {
             this.setState({ permission: this.props.getEditingGroupMemberData.memberRole.groupRolePermisionLevel });
         } catch (error) {
             
         }
+
         // update every 5 seconds
         this.setState({
             interval: setInterval(() => {
@@ -106,7 +114,7 @@ class MyGroups extends Component {
                             <View style={styles.flatListColThree}>
                                 {(this.state.permission >= 3) &&
                                     (group.item.groupMemberRole.groupRolePermisionLevel <= 3) &&
-                                    <TouchableOpacity onPress={() => this.editGroupMember(group.item)}>
+                                    <TouchableOpacity style={[styles.editGroupIconPadding, {marginStart: -15}]} onPress={() => this.editGroupMember(group.item)}>
                                         <Icon style={styles.editGroupIcon} name="note" size={30} />
                                     </TouchableOpacity>}
                             </View>

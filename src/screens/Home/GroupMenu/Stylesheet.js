@@ -7,8 +7,6 @@ export default StyleSheet.create({
     container: {
         zIndex: 1000,
         position: 'absolute',
-        top: 20,
-        left: 20,
     },
     GroupName: {
         color: "#FFF",
@@ -16,6 +14,9 @@ export default StyleSheet.create({
     },
     menuButton: {
         color: "#FFF",
+    },
+    menuButtonPadding: {
+        padding: 20,
     },
     modalStyle: {
         backgroundColor: "rgba(110,110,110,0.9)",
@@ -30,14 +31,14 @@ export default StyleSheet.create({
     closeButton: {
         zIndex: 1,
         position: 'absolute',
-        top: 20,
-        left: 20,
+        padding: 20,
     },
     addGroup: {
         zIndex: 1,
         position: 'absolute',
-        top: 20,
-        right: 20,
+        top: 0,
+        right: 0,
+        padding: 20,
     },
     closeIcon: {
         color: "#FFF",
@@ -49,6 +50,9 @@ export default StyleSheet.create({
         paddingStart: 40,
         color: "#FFF",
     },
+    editGroupIconPadding: {
+        paddingVertical: 25,
+    },
     activeGroupIcon: {
         color: "#000",
     },
@@ -59,6 +63,14 @@ export default StyleSheet.create({
     declineIcon: {
         color: "#F00",
         width: '60%'
+    },
+    bannedIconButton: {
+        paddingVertical: 25,
+        paddingHorizontal: 20,
+        alignSelf: "center",
+    },
+    bannedIcon: {
+        color: "#FFF",
     },
     flatListColOne: {
         width: '10%'
@@ -86,7 +98,7 @@ export default StyleSheet.create({
     },
     content: {
         zIndex: 1,
-        marginTop: 50,
+        marginTop: 80,
     },
     addGroupText: {
         color: "rgba(255,255,255,1)",
@@ -96,7 +108,7 @@ export default StyleSheet.create({
         textAlign: "center",
     },
     flatListItem: {
-        height: 55,
+        height: 80,
         paddingTop: 10,
         paddingBottom: 10,
         flex: 1,
@@ -139,6 +151,11 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    idTextBox: {
+        color: "rgba(240,240,240,1)",
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
     textBoxRoles: {
         color: "rgba(255,255,255,1)",
         fontSize: 16,
@@ -146,7 +163,9 @@ export default StyleSheet.create({
         paddingStart: 20
     },
     editGroupOptions: {
-        paddingStart: 50
+        paddingStart: 50,
+        height: 80,
+        justifyContent: 'center',
     },
     groupRolePicker: {
         height: 55,
@@ -189,5 +208,26 @@ export default StyleSheet.create({
         borderRadius: 10,
         width: '50%',
         bottom: 100
+    },
+    centerSpinner: {
+        flex: 1,
+        width: '100%',
+        height:'100%',
+        position: 'absolute',
+        justifyContent: "center",
+    },
+    joinRequestModalContainer:{
+        alignItems: "center",
+        zIndex: 100000,
+        backgroundColor: "rgba(50,50,50,.8)",
+    },
+    joinRequestModalPopUp: {
+        flex: 1,
+        justifyContent: "flex-end",
+    },
+    joinRequestModalItem:{
+        height: 55,
+        width: '100%',
+        alignItems: 'center',
     }
 });

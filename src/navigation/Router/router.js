@@ -32,6 +32,7 @@ import CreatePostModal from '../../screens/Forms/CreatePost/CreatePost';
 import EditPostModal from '../../screens/Groups/GroupFeed/EditPostModal';
 import EditPostForm from '../../screens/Forms/EditPost/EditPost';
 import LoadingScreen from '../../screens/Loading/Loading';
+import ModalWindow from '../../screens/ModalWindow/ModalWindow';
 import AddCustomMark from '../../screens/AddCustomMark/AddCustomMark';
 
 // InitialGroupMenu
@@ -49,6 +50,7 @@ import GroupMembersListMenu from '../../screens/Home/GroupMenu/Menus/GroupMember
 import JoinGroupRequestMenu from '../../screens/Home/GroupMenu/Menus/JoinGroupRequest';
 import ChangeGroupNameMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupName';
 import ChangeGroupDescriptionMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupDescription';
+import BanedUsersList from '../../screens/Home/GroupMenu/Menus/BanedUsersList';
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
@@ -250,11 +252,18 @@ class App extends Component {
             hideTabBar
             component={ChangeGroupDescriptionMenu}
           />
+          <Scene
+            key="banedUsersList"
+            hideNavBar
+            hideTabBar
+            component={BanedUsersList}
+          />
 
           {/* MODALS */}
           <Scene key="loadingScreen" component={LoadingScreen} />
           <Scene key="createPostModal" component={CreatePostModal} />
           <Scene key="editPostModal" component={EditPostModal} />
+          <Scene key="modalWindow" component={ModalWindow} />
           <Scene key="editPostForm" component={EditPostForm} />
           <Scene key="addCustomMark" component={AddCustomMark} />
         </Lightbox>

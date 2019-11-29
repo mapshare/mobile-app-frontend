@@ -7,8 +7,11 @@ export default StyleSheet.create({
     container: {
         zIndex: 1000,
         position: 'absolute',
-        top: 20,
-        right: 20,
+        top: 0,
+        right: 0,
+    },
+    spinnerStyle: {
+        paddingTop: 60
     },
     cameraIcon: {
         color: "#FFF",
@@ -40,9 +43,7 @@ export default StyleSheet.create({
         color: "#F00",
     },
     CreatePost: {
-        top: 20,
-        right: 20,
-        position: 'absolute',
+        padding: 20,
     },
     CreatePostButton: {
 
@@ -160,5 +161,8 @@ export default StyleSheet.create({
     editGroupPopupText: {
         fontSize: 20,
         color: "#FFF",
+    },
+    optionsIconPadding: {
+        padding: 15
     }
 });
