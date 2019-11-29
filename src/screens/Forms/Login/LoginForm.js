@@ -42,20 +42,6 @@ class LogInForm extends Component {
   componentDidMount() {}
 
   componentDidUpdate(prevProps) {
-    if (prevProps.logInStatus !== this.props.logInStatus) {
-      if (this.props.logInStatus) {
-        Keyboard.dismiss();
-        // Actions.tester();
-        // When we setup local storage we would want to load active group before checking if we have one selected
-        if (this.props.getActiveGroupStatus) {
-          Actions.navTab({ type: ActionConst.RESET });
-        } else {
-          console.log('initialMyGroups');
-          Actions.initial({ type: ActionConst.RESET });
-        }
-      }
-    }
-
     if (this.props.getLogInError) {
       //alert(this.props.getLogInError);
       this.state.incorrectError = "Wrong Email or Password. Please Try Again"
@@ -82,6 +68,7 @@ class LogInForm extends Component {
         }
       }
     );
+    Keyboard.dismiss();
   };
 
   showData = async () => {

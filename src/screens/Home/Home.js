@@ -56,6 +56,17 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+
+        this.props.getGroupAllMarks({
+          groupMarkId: this.props.getActiveGroupData.groupMarks,
+          token: this.props.token
+        });
+
+        this.props.getGroupMember({
+          groupId: this.props.getActiveGroupData._id,
+          token: this.props.token
+        });
+
         this.props.getUser({token: this.props.token})
       }, 5000)
     });

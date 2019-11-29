@@ -28,6 +28,7 @@ class changeGroupDiscriptionForm extends Component {
         this.state = {
             groupDescription: '',
             succesModalVisible: false,
+            changeGroupDescriptionError: "",
         };
     }
 
@@ -39,22 +40,29 @@ class changeGroupDiscriptionForm extends Component {
         }
     }
 
-    changeGroupName = async () => {
-        const data = {
-            token: this.props.token,
-            groupDescription: this.state.groupDescription,
-            groupId: this.props.currentEditingGroupData._id,
-            activeGroupId: this.props.getActiveGroupData._id,
+    changeGroupDescription = async () => {
+        let changeGroupDescriptionError = "";
+        changeGroupDescriptionError = validator('groupDescriptionPresent', this.state.groupDescription);
+        !changeGroupDescriptionError ? changeGroupDescriptionError = validator('groupDescriptionMaxLength', this.state.groupDescription) : false;
+        this.setState({ changeGroupDescriptionError: changeGroupDescriptionError });
+
+        if (!changeGroupDescriptionError) {
+            const data = {
+                token: this.props.token,
+                groupDescription: this.state.groupDescription.trim(),
+                groupId: this.props.currentEditingGroupData._id,
+                activeGroupId: this.props.getActiveGroupData._id,
+            }
+            this.props.updateGroupSuccess(false);
+            this.props.updateGroup(data);
+            this.setSuccesModalVisible(!this.state.succesModalVisible);
+            Actions.pop();
         }
-        this.props.updateGroupSuccess(false);
-        this.props.updateGroup(data);
-        this.setSuccesModalVisible(!this.state.succesModalVisible);
-        Actions.pop();
     };
-    
+
     setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible },()=>{
-            setTimeout(()=>{
+        this.setState({ succesModalVisible: visible }, () => {
+            setTimeout(() => {
                 this.setState({ succesModalVisible: !visible });
             }, 3000);
         });
@@ -84,13 +92,16 @@ class changeGroupDiscriptionForm extends Component {
                     placeholderTextColor="#B8B8B8"
                     selectionColor="#fff"
                     autoCorrect={false}
+                    multiline={true}
+                    maxLength={50}
                     returnKeyType="next"
                     autoCapitalize="none"
-                    onSubmitEditing={() => this.changeGroupName()}
+                    onSubmitEditing={() => this.changeGroupDescription()}
                 />
+                {this.state.changeGroupDescriptionError ? <Text>{this.state.changeGroupDescriptionError}</Text> : null}
 
                 <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={() => this.changeGroupName()}>
+                    <Text style={styles.buttonText} onPress={() => this.changeGroupDescription()}>
                         {this.props.type}
                     </Text>
                 </TouchableOpacity>

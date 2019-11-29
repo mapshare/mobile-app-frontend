@@ -32,46 +32,40 @@ class AddPostCaption extends Component {
         super(props);
         this.state = {
             postCaption: '',
-            succesModalVisible: false
+            addPostError: ''
         };
     }
 
-    componentDidUpdate(prevProps) {
-    }
-
     createPost() {
-        const data = {
-            postImage: this.props.imageData,
-            postCaption: this.state.postCaption,
-            groupFeedSocket: this.props.groupFeedSocket,
-        }
-        this.props.sendPostToGroupFeed(data);
-        Actions.pop();
+
+        const addPostError = validator('postCaption', this.state.postCaption);
+
+        this.setState({ addPostError: addPostError },
+            () => {
+                if (!addPostError) {
+                    const trimedCaption = this.state.postCaption.slice(0, 100).trim();
+                    const data = {
+                        postImage: this.props.imageData,
+                        postCaption: trimedCaption,
+                        groupFeedSocket: this.props.groupFeedSocket,
+                    }
+                    this.props.sendPostToGroupFeed(data);
+                    Actions.pop();
+                }
+            }
+        );
+
     }
 
-    setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible }, () => {
-            setTimeout(() => {
-                this.setState({ succesModalVisible: !visible });
-            }, 3000);
-        });
+    updatePostCaption(postCaption) {
+        const addPostError = validator('postCaption', postCaption);
+        const trimedCaption = postCaption.slice(0, 100);
+        this.setState({ postCaption: trimedCaption, addPostError: addPostError ? addPostError : "" });
     }
 
     render() {
         return (
             <View style={styles.body} >
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={this.state.succesModalVisible}
-                    onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
-                    }}>
-                    <View style={styles.SuccesModal}>
-                        <Text style={styles.textBox}>Success</Text>
-                    </View>
-                </Modal>
-
                 <View style={styles.cancelPost}>
                     <TouchableOpacity style={styles.cancelPostButton} onPress={() => {
                         Actions.pop();
@@ -90,24 +84,25 @@ class AddPostCaption extends Component {
                 <View style={styles.row}>
                     <View style={styles.postImagePreview}>
                         <Image
-                            style={styles.previewImage}
-                            source={{ uri: 'data:image/png;base64,' + this.props.imageData }}
+                            source={{ uri: 'data:image/png;base64,' + this.props.imageData, width: 120, height: 120, scale: 1.1}}
                         />
                     </View>
                     <View style={styles.postCaptionForm}>
                         <TextInput
                             autoFocus={true}
                             style={styles.addPostInputBox}
-                            onChangeText={Caption => this.setState({ postCaption: Caption })}
+                            onChangeText={Caption => this.updatePostCaption(Caption)}
                             placeholder="Enter Caption"
                             placeholderTextColor="#B8B8B8"
                             selectionColor="#fff"
                             autoCorrect={false}
                             multiline={true}
+                            maxLength={100}
                             returnKeyType="next"
                             autoCapitalize="none"
                             onSubmitEditing={() => { }}
                         />
+                        {this.state.addPostError ? <Text>{this.state.addPostError}</Text> : null}
                     </View>
                 </View>
             </View>

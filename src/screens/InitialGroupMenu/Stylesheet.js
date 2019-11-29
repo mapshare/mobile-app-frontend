@@ -14,11 +14,11 @@ export default StyleSheet.create({
     },
     container: {
         zIndex: 1000,
-        top: 20,
+        top: 0,
         flex: 1,
     },
     content: {
-        flex: .95,
+        flex: 1,
         zIndex: 1,
     },
     searchBox: {
@@ -40,16 +40,17 @@ export default StyleSheet.create({
     },
     closeButton: {
         zIndex: 1,
-        top: 20,
-        left: 20,
-        paddingBottom: 20
+        alignSelf: "flex-start",
+        top: 0,
+        left: 0,
+        padding: 20,
     },
     addGroup: {
         zIndex: 1,
         position: 'absolute',
-        top: 20,
-        right: 20,
-        paddingBottom: 20
+        top: 0,
+        right: 0,
+        padding: 20,
     },
     closeIcon: {
         color: "#FFF",
@@ -96,7 +97,7 @@ export default StyleSheet.create({
         textAlign: "center",
     },
     flatListItem: {
-        height: 56,
+        height: 80,
         paddingTop: 10,
         paddingBottom: 10,
         flex: 1,
@@ -139,8 +140,8 @@ export default StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         alignSelf: 'center',
-        top: 20, 
-        paddingBottom: 20
+        top: 20,
+        paddingBottom: 50
     },
     textBoxSmall: {
         color: "rgba(255,255,255,1)",
@@ -155,5 +156,10 @@ export default StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    idTextBox: {
+        color: "rgba(240,240,240,1)",
+        fontSize: 12,
+        fontWeight: 'bold',
     },
 });

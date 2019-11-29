@@ -28,10 +28,11 @@ import { Actions } from "react-native-router-flux";
 import ImagePicker from 'react-native-image-picker';
 
 // Group Menu
-class EditGroup extends Component {
+class CreatePostButton extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isImagePickerActive: false
         };
     }
 
@@ -42,32 +43,40 @@ class EditGroup extends Component {
     }
 
     choosePhoto() {
-        let options = {
-            title: null,
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
+        this.setState({ isImagePickerActive: true }, () => {
 
-        ImagePicker.showImagePicker(options, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else {
+            let options = {
+                title: null,
+                storageOptions: {
+                    skipBackup: true,
+                    path: 'images',
+                },
+            };
 
-                this.props.setImage(response.data);
-                this.props.imageStatus(false);
-                Actions.createPostModal();
-            }
+            ImagePicker.showImagePicker(options, (response) => {
+                if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                } else if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                } else {
+
+                    this.props.setImage(response.data);
+                    this.props.imageStatus(false);
+                    Actions.createPostModal();
+                }
+            });
+            setTimeout(() => { this.setState({ isImagePickerActive: false }); }, 1000)
         });
     };
 
     render() {
         return (
             <View style={styles.container} >
-                <TouchableOpacity onPress={() => this.choosePhoto()}>
+                <TouchableOpacity
+                    style={styles.CreatePost}
+                    onPress={() => this.choosePhoto()}
+                    disabled={this.state.isImagePickerActive}
+                >
                     <Icon style={styles.cameraIcon} name="camera" size={30} />
                 </TouchableOpacity>
             </View>
@@ -92,4 +101,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(EditGroup);
+)(CreatePostButton);

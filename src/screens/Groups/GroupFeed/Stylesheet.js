@@ -7,8 +7,11 @@ export default StyleSheet.create({
     container: {
         zIndex: 1000,
         position: 'absolute',
-        top: 20,
-        right: 20,
+        top: 0,
+        right: 0,
+    },
+    spinnerStyle: {
+        paddingTop: 60
     },
     cameraIcon: {
         color: "#FFF",
@@ -40,9 +43,7 @@ export default StyleSheet.create({
         color: "#F00",
     },
     CreatePost: {
-        top: 20,
-        right: 20,
-        position: 'absolute',
+        padding: 20,
     },
     CreatePostButton: {
 
@@ -129,20 +130,20 @@ export default StyleSheet.create({
         alignSelf: 'center',
     },
     footerPartOne: {
-        height: 20,
+        flex: .2,
     },
     footerPartTwo: {
-        height: 40,
+        flex: .4,
     },
     footerPartThree: {
-        height: 40,
+        flex: .4,
     },
     editGroupPost: {
         flex: 1,
         justifyContent: "flex-end",
     },
     editGroupPostPopup: {
-        flex: .4,
+        flex: .3,
         alignItems: "center",
         justifyContent: "flex-end",
         zIndex: 100000,
@@ -152,13 +153,16 @@ export default StyleSheet.create({
         borderRadius: 10
     },
     editGroupPopupRow: {
-        flex: .3,
+        flex: .4,
         alignSelf: "stretch",
         alignItems: "center",
         justifyContent: "center",
     },
     editGroupPopupText: {
         fontSize: 20,
-        color: "#FFF"
+        color: "#FFF",
+    },
+    optionsIconPadding: {
+        padding: 15
     }
 });

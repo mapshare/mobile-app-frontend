@@ -22,7 +22,7 @@ export const groupFeedSocket = data => {
     };
 };
 
-export const groupFeedData = data => {
+export const setGroupFeedData = data => {
     return {
         type: keys.GROUP_FEED_DATA,
         groupFeedData: data,
@@ -54,22 +54,22 @@ export const connectToGroupFeed = data => {
             socket.on('connect', () => {
                 socket.emit('authenticate', newData)
                     .on('authenticated', (data) => {
-                        dispatch(groupFeedData(data));
+                        dispatch(setGroupFeedData(data));
                         dispatch(groupFeedStatus(true));
                     })
                     .on('unauthorized', (msg) => {
                         throw ("Unauthorized to connect to server: " + JSON.stringify(msg));
                     })
                     .on('new post', (data) => {
-                        dispatch(groupFeedData(data));
+                        dispatch(setGroupFeedData(data));
                         dispatch(groupFeedStatus(true));
                     })
                     .on('update post', (data) => {
-                        dispatch(groupFeedData(data));
+                        dispatch(setGroupFeedData(data));
                         dispatch(groupFeedStatus(true));
                     })
-                    .on('delete message', (data) => {
-                        dispatch(groupFeedData(data));
+                    .on('delete post', (data) => {
+                        dispatch(setGroupFeedData(data));
                         dispatch(groupFeedStatus(true));
                     });
             });
@@ -163,7 +163,8 @@ export const updatePostInGroupFeedError = data => {
 
 export const updatePostInGroupFeed = data => {
     const newPostData = {
-        postContent: data.postContent
+        postImage: data.postImage,
+        postCaption: data.postCaption,
     }
 
     return dispatch => {
@@ -195,11 +196,12 @@ export const deletePostGroupFeedError = data => {
 };
 
 export const deletePostGroupFeed = data => {
-    return dispatch => {
+    return (dispatch, getState) => {
         try {
-            data.groupFeedSocket.emit('delete message', data.postId);
+            data.groupFeedSocket.emit('delete post', data.postId);
             dispatch(deletePostGroupFeedStatus(true));
         } catch (error) {
+            console.log(error)
             dispatch(deletePostGroupFeedStatus(false));
             dispatch(deletePostGroupFeedError(error));
         }

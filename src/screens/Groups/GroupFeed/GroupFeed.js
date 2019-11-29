@@ -9,13 +9,15 @@ import {
     TextInput,
     FlatList,
     Button,
-    SafeAreaView
+    SafeAreaView,
+    ActivityIndicator,
 } from "react-native";
 
 // Componenets Style
 import styles from "./Stylesheet";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import Moment from 'moment';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -29,21 +31,33 @@ class GroupFeed extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // Requred to pervent button spam
+            singleActivation: false,
         };
     }
 
     separator = () => <View style={styles.flatListItemSeporator} />
 
-    editPost() {
-        Actions.editPostModal();
+    editPost(post) {
+        Actions.editPostModal({ editingPost: post });
     }
 
     render() {
+        let permission = 0;
+        try {
+            permission = this.props.getGroupMemberData.memberRole.groupRolePermisionLevel;
+        } catch (error) {
+            permission = 0;
+        }
         return (
-                <SafeAreaView style={styles.groupPostContainer}>
-                    <View style={styles.flatListItemSeporator} />
+            <SafeAreaView style={styles.groupPostContainer}>
+                <View style={styles.flatListItemSeporator} />
+                {!Array.isArray(this.props.getGroupFeedData) &&
+
+                    <ActivityIndicator style={styles.spinnerStyle} size="large" color="#000" />
+                }
+                {Array.isArray(this.props.getGroupFeedData) &&
                     <FlatList style={styles.list}
-                        ItemSeparatorComponent={this.separator}
                         data={this.props.getGroupFeedData}
                         keyExtractor={(item) => { return item._id; }}
                         renderItem={({ item }) => {
@@ -62,9 +76,25 @@ class GroupFeed extends Component {
                                             <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>
                                         </View>
                                         <View style={styles.headerColThree}>
-                                            <TouchableOpacity onPress={() => this.editPost()}>
-                                                <Icon style={styles.optionsIcon} name="options" size={20} />
-                                            </TouchableOpacity>
+
+                                            {/* If creator of the post or Admin/Owner show option menu for edit and delete */}
+                                            {(item.postCreatedBy == this.props.getGroupMemberData._id ||
+                                                permission >= 3) &&
+
+                                                <TouchableOpacity
+                                                    style={styles.optionsIconPadding}
+                                                    disabled={this.state.singleActivation}
+                                                    onPress={() => {
+                                                        this.setState({ singleActivation: true }, () => {
+                                                            this.editPost(item);
+                                                            setTimeout(() => {
+                                                                this.setState({ singleActivation: false });
+                                                            }, 1000)
+                                                        });
+                                                    }}>
+                                                    <Icon style={styles.optionsIcon} name="options" size={20} />
+                                                </TouchableOpacity>
+                                            }
                                         </View>
                                     </View>
                                     <View style={styles.groupPostBody}>
@@ -77,15 +107,19 @@ class GroupFeed extends Component {
                                         <View style={styles.footerPartOne}></View>
                                         <View style={styles.footerPartTwo}>
                                             <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName} {item.postCaption}</Text>
+
                                         </View>
-                                        <View style={styles.footerPartThree}></View>
+                                        <View style={styles.footerPartThree}>
+                                            <Text style={styles.time}>
+                                                {"\n" + Moment(item.postCreatedAt).calendar() + "\n"}
+                                            </Text>
+                                        </View>
                                     </View>
                                 </View>
                             );
                         }} />
-
-                    <View style={styles.flatListItemSeporator} />
-                </SafeAreaView>
+                }
+            </SafeAreaView>
         );
     }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
@@ -16,6 +16,10 @@ import AddMarkForm from '../Forms/AddMark/AddMarkForm';
 import LocationDetailWindow from '../LocationDetailWindow/LocationDetailWindow';
 
 class ModalWindow extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   content = type => {
     switch (type) {
       case 'addMark':
@@ -44,9 +48,9 @@ class ModalWindow extends Component {
         >
           <Icon name="close" size={30} />
         </TouchableOpacity>
-        <View style={containerStyles.contentContainer}>
+        <ScrollView style={containerStyles.contentContainer}>
           {this.content(this.props.modalContent)}
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -67,7 +71,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModalWindow);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalWindow);

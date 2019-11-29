@@ -55,8 +55,8 @@ const validation = {
       allowEmpty: false
     },
     format: {
-      pattern: '^[0-9]+ .+$',
-      message: '^Please enter a valid address'
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
     }
   },
 
@@ -67,20 +67,77 @@ const validation = {
     }
   },
 
-  locationReview: {
+  additionalInformation: {
     presence: {
-      message: '^Review is required',
+      message: '^Description is required',
       allowEmpty: false
     },
     length: {
       maximum: 150,
-      message: '^Maximum of 200 characters'
+      message: '^Maximum of 150 characters'
     },
     format: {
       pattern: '.*[^ ].*',
       message: '^only white space is not allowed'
     }
-  }
+  },
+
+  postCaption: {
+    presence: {
+      message: '^Caption is required',
+      allowEmpty: false
+    },
+    length: {
+      maximum: 100,
+      message: '^Maximum of 100 characters'
+    },
+  },
+
+  chatMessage: {
+    presence: {
+      message: '^A Message is required',
+      allowEmpty: false
+    },
+    length: {
+      maximum: 100,
+      message: '^Maximum of 100 characters'
+    },
+  },
+
+  groupNamePresent: {
+    presence: {
+      message: '^A Group Name is required',
+      allowEmpty: false
+    },
+  },
+
+  groupNameMinLength: {
+    length: {
+      minimum: 3,
+      message: '^Group Name must be at least 3 characters',
+    }
+  },
+
+  groupNameMaxLength: {
+    length: {
+      maximum: 15,
+      message: '^Group Name must be less than 15 characters',
+    }
+  },
+
+  groupDescriptionPresent:{
+    presence: {
+      message: '^A Group Description is required',
+      allowEmpty: false
+    },
+  },
+
+  groupDescriptionMaxLength:{
+    length: {
+      maximum: 50,
+      message: '^Group Description must be less than 50 characters',
+    }
+  },
 };
 
 export default validation;

@@ -15,7 +15,6 @@ const store = configureStore();
 export default class signIn extends Component {
 
   componentDidMount() {
-    SplashScreen.hide();
   }
 
   render() {

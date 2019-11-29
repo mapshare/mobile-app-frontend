@@ -35,6 +35,8 @@ import {
   getGroupMemberSuccess
 } from '../../../actions/groupActions';
 
+import validator from '../../Forms/validate/validation_wrapper'
+
 class GroupChat extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +44,8 @@ class GroupChat extends Component {
       data: [],
       groupMember: "",
       newMessage: "",
-      chatRoomId: ""
+      chatRoomId: "",
+      newMessageError: ""
     };
   }
 
@@ -53,13 +56,19 @@ class GroupChat extends Component {
   }
 
   sendMessage() {
-    const messageData = {
-      socket: this.props.socket,
-      messageBody: this.state.newMessage,
+    const newMessageError = validator('chatMessage', this.state.newMessage);
+
+    this.setState({ newMessageError: newMessageError });
+    if (!newMessageError) {
+      const trimedMessage = this.state.newMessage.slice(0, 100).trim();
+      const messageData = {
+        socket: this.props.socket,
+        messageBody: trimedMessage,
+      }
+      this.setState({ newMessage: "" })
+      this.props.sendMessageToGroupChatRoomSuccess(false)
+      this.props.sendMessageToGroupChatRoom(messageData)
     }
-    this.setState({ newMessage: "" })
-    this.props.sendMessageToGroupChatRoomSuccess(false)
-    this.props.sendMessageToGroupChatRoom(messageData)
   }
 
   renderDate = (utcdate) => {
@@ -96,11 +105,12 @@ class GroupChat extends Component {
               underlineColorAndroid='transparent'
               onChangeText={(newMessage) => this.setState({ newMessage })}
               value={this.state.newMessage}
+              maxLength={100}
               onSubmitEditing={() => this.sendMessage()}
             />
           </View>
 
-          <TouchableOpacity style={styles.btnSend} onPress={this.sendMessage.bind(this)}>
+          <TouchableOpacity style={styles.btnSend} onPress={() => this.sendMessage()}>
             <Image source={{ uri: "https://png.icons8.com/small/75/ffffff/filled-sent.png" }} style={styles.iconSend} />
           </TouchableOpacity>
         </View>

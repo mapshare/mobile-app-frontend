@@ -46,7 +46,7 @@ export default StyleSheet.create({
         backgroundColor: '#F5F5F5',
         paddingHorizontal: 10,
         borderRadius: 10,
-        marginBottom:10,
+        marginBottom: 10,
     },
     addPostInputBox: {
         justifyContent: 'center',
@@ -54,14 +54,14 @@ export default StyleSheet.create({
         paddingHorizontal: 10,
         top: 10,
         borderRadius: 10,
-        marginBottom:10,
+        marginBottom: 10,
     },
     SuccesModal: {
         backgroundColor: "rgba(50,50,50,.8)",
         position: 'absolute',
-        alignItems:'center',
+        alignItems: 'center',
         alignSelf: 'center',
-        borderRadius:10,
+        borderRadius: 10,
         width: '50%',
         bottom: 100
     },
@@ -70,7 +70,7 @@ export default StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         padding: 10
-    },body: {
+    }, body: {
         backgroundColor: "rgba(110,110,110,0.9)",
         flex: 1,
         alignSelf: 'stretch',
@@ -81,43 +81,43 @@ export default StyleSheet.create({
         height: '100%',
     },
     cancelPost: {
-        top: 20,
-        left: 20,
+        top: 0,
+        left: 0,
         position: 'absolute',
     },
     cancelPostButton: {
-
+        padding: 20
     },
     cancelPostIcon: {
         color: "#F00",
     },
     CreatePost: {
-        top: 20,
-        right: 20,
+        top: 0,
+        right: 0,
         position: 'absolute',
     },
     CreatePostButton: {
-
+        padding:20
     },
     CreatePostIcon: {
         color: "#0F0",
     },
     postImagePreview: {
-        width: '20%',
-        height: '20%',
+        paddingTop: 20
     },
     previewImage: {
         backgroundColor: "rgba(0,0,0,0.9)",
-        resizeMode: "cover" ,
-        aspectRatio: 1.1, 
+        resizeMode: "cover",
+        aspectRatio: 1.1,
     },
-    postCaptionForm:{
+    postCaptionForm: {
         width: '60%',
+        paddingTop: 50
     },
     row: {
         flex: 1,
         flexDirection: "row",
-        top:"20%",
+        top: "20%",
         justifyContent: 'space-evenly',
         alignContent: 'space-around'
     },

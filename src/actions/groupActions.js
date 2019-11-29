@@ -3,6 +3,8 @@ import { API_URL } from 'react-native-dotenv';
 
 import { Actions, ActionConst } from "react-native-router-flux";
 
+import { AsyncStorage } from "react-native";
+
 import keys from '../data/key';
 
 /* Routes
@@ -35,16 +37,16 @@ export const getGroupById = data => {
 
 
 export const loadingData = bool => {
-    return {
-        type: keys.LOADING_DATA,
-        loadingData: bool,
-    };
+  return {
+    type: keys.LOADING_DATA,
+    loadingData: bool,
+  };
 };
 
 export const loadingScreen = data => {
-    return (dispatch, getState) => {
-        Actions.loadingScreen();
-    };
+  return (dispatch, getState) => {
+    Actions.loadingScreen();
+  };
 };
 
 /*
@@ -72,31 +74,31 @@ export const createGroupError = data => {
 };
 
 export const createGroup = data => {
-    let groupData = {
-        groupName: data.groupName,
-    };
+  let groupData = {
+    groupName: data.groupName,
+  };
 
-    return async dispatch => {
-        try {
+  return async dispatch => {
+    try {
 
-            // Display Loading Screen
-            Actions.loadingScreen({ type: ActionConst.RESET });
+      // Display Loading Screen
+      Actions.loadingScreen({ type: ActionConst.RESET });
 
-            const res = await axios.post(API_URL + '/groups', groupData, { headers: { 'authentication': data.token } });
-            const newGroupData = {
-                groupId: res.data._id,
-                token: data.token
-            }
-            await dispatch(getUserGroups({ token: data.token }));
-            dispatch(getActiveGroup(newGroupData));
-            dispatch(createGroupDataSuccess(res.data));
-            dispatch(createGroupSuccess(true));
+      const res = await axios.post(API_URL + '/groups', groupData, { headers: { 'authentication': data.token } });
+      const newGroupData = {
+        groupId: res.data._id,
+        token: data.token
+      }
+      await dispatch(getUserGroups({ token: data.token }));
+      dispatch(getActiveGroup(newGroupData));
+      dispatch(createGroupDataSuccess(res.data));
+      dispatch(createGroupSuccess(true));
 
-        } catch (error) {
-            dispatch(createGroupSuccess(false));
-            dispatch(createGroupError(err.response.data));
-        }
-    };
+    } catch (error) {
+      dispatch(createGroupSuccess(false));
+      dispatch(createGroupError(err.response.data));
+    }
+  };
 };
 
 /*
@@ -124,10 +126,10 @@ export const searchGroupError = data => {
 };
 
 export const searchGroup = data => {
-    return dispatch => {
-        dispatch(searchGroupDataSuccess(data));
-        dispatch(searchGroupSuccess(true));
-    };
+  return dispatch => {
+    dispatch(searchGroupDataSuccess(data));
+    dispatch(searchGroupSuccess(true));
+  };
 };
 
 
@@ -135,37 +137,37 @@ export const searchGroup = data => {
 *   GET ALL GROUPS FOR LOCAL SEARCH
 */
 export const getGroupsSuccess = bool => {
-    return {
-        type: keys.GET_GROUPS_SUCCESS,
-        getGroupsSuccess: bool,
-    };
+  return {
+    type: keys.GET_GROUPS_SUCCESS,
+    getGroupsSuccess: bool,
+  };
 };
 
 export const getGroupsData = data => {
-    return {
-        type: keys.GET_GROUPS_DATA_SUCCESS,
-        getGroupsData: data,
-    };
+  return {
+    type: keys.GET_GROUPS_DATA_SUCCESS,
+    getGroupsData: data,
+  };
 };
 
 export const getGroupsError = data => {
-    return {
-        type: keys.GET_GROUPS_ERROR,
-        getGroupsError: data,
-    };
+  return {
+    type: keys.GET_GROUPS_ERROR,
+    getGroupsError: data,
+  };
 };
 
 export const getGroups = data => {
-    return async dispatch => {
-        try {
-            const res = await axios.get(API_URL + '/groups', { headers: { 'authentication': data.token } });
-            dispatch(getGroupsData(res.data));
-            dispatch(getGroupsSuccess(true));
-        } catch (err) {
-            dispatch(getGroupsSuccess(false));
-            dispatch(getGroupsError(err.response));
-        }
-    };
+  return async dispatch => {
+    try {
+      const res = await axios.get(API_URL + '/groups', { headers: { 'authentication': data.token } });
+      dispatch(getGroupsData(res.data));
+      dispatch(getGroupsSuccess(true));
+    } catch (err) {
+      dispatch(getGroupsSuccess(false));
+      dispatch(getGroupsError(err.response));
+    }
+  };
 };
 
 /*
@@ -193,23 +195,23 @@ export const getUserGroupsError = data => {
 };
 
 export const getUserGroups = data => {
-    return async dispatch => {
-        try {
-            const res = await axios.get(API_URL + '/groups/user', { headers: { 'authentication': data.token } });
-            dispatch(getUserGroupsDataSuccess(res.data));
-            dispatch(getUserGroupsSuccess(true));
-        } catch (error) {
-            dispatch(getUserGroupsSuccess(false));
-            dispatch(getUserGroupsError(err.response));
-        }
-    };
+  return async dispatch => {
+    try {
+      const res = await axios.get(API_URL + '/groups/user', { headers: { 'authentication': data.token } });
+      dispatch(getUserGroupsDataSuccess(res.data));
+      dispatch(getUserGroupsSuccess(true));
+    } catch (err) {
+      dispatch(getUserGroupsSuccess(false));
+      dispatch(getUserGroupsError(err.response));
+    }
+  };
 };
 
 /*
 *   GET ACTIVE GROUP
 */
 import { connectToGroupChat } from "./groupChatRoomAction"
-import { connectToGroupFeed, groupFeedData } from "./groupFeedAction"
+import { connectToGroupFeed, setGroupFeedData } from "./groupFeedAction"
 
 export const getActiveGroupSuccess = bool => {
   return {
@@ -233,90 +235,100 @@ export const getActiveGroupError = data => {
 };
 
 export const getActiveGroup = data => {
-    // Reset all states that relate to the old group and load new group
+  // Reset all states that relate to the old group and load new group
 
-    return (dispatch, getState) => {
-        const newData = {
-            token: data.token,
-            groupId: data.groupId,
-        }
+  return (dispatch, getState) => {
+    const newData = {
+      token: data.token,
+      groupId: data.groupId,
+    }
 
-        // Display Loading Screen
-        Actions.loadingScreen({ type: ActionConst.RESET });
-        // clear groupFeed 
-        dispatch(groupFeedData([]));
-        // connect to the new group chat
-        dispatch(connectToGroupChat(newData));
-        // connect to the new group feed
-        dispatch(connectToGroupFeed(newData));
-        // Get group member
-        dispatch(getGroupMember(newData));
+    // Display Loading Screen
+    Actions.loadingScreen({ type: ActionConst.RESET });
+    // clear groupFeed 
+    dispatch(setGroupFeedData(undefined));
+    // connect to the new group chat
+    dispatch(connectToGroupChat(newData));
+    // connect to the new group feed
+    dispatch(connectToGroupFeed(newData));
+    // Get group member
+    dispatch(getGroupMember(newData));
 
 
-        axios
-            .get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(getActiveGroupDataSuccess(res.data));
-                dispatch(getActiveGroupSuccess(true));
+    axios
+      .get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } })
+      .then(res => {
+        dispatch(getActiveGroupDataSuccess(res.data));
+        dispatch(getActiveGroupSuccess(true));
 
-                // Go to home after loading new group
-                Actions.navTab({ type: ActionConst.RESET });
-            })
-            .catch(err => {
-                //console.log(err.response.data)
-                dispatch(getActiveGroupSuccess(false));
-                dispatch(getActiveGroupError(err.response));
-            });
-    };
+        // Go to home after loading new group
+        Actions.navTab({ type: ActionConst.RESET });
+
+        // Save Group Id to local Storage
+        AsyncStorage.setItem('lastActiveGroupId', data.groupId);
+      })
+      .catch(err => {
+        //console.log(err.response.data)
+        Actions.initial({ type: ActionConst.RESET });
+        dispatch(getActiveGroupSuccess(false));
+        dispatch(getActiveGroupError(err.response));
+      });
+  };
 };
 
 export const getActiveGroupNoLoadingScreen = data => {
-    // Reset all states that relate to the old group and load new group
-    return async (dispatch, getState) => {
-        try {
-            const newData = {
-                token: data.token,
-                groupId: data.groupId,
-            }
+  // Reset all states that relate to the old group and load new group
+  return async (dispatch, getState) => {
+    try {
+      const newData = {
+        token: data.token,
+        groupId: data.groupId,
+      }
 
-            // clear groupFeed 
-            dispatch(groupFeedData([]));
-            // connect to the new group chat
-            dispatch(connectToGroupChat(newData));
-            // connect to the new group feed
-            dispatch(connectToGroupFeed(newData));
-            // Get group member
-            dispatch(getGroupMember(newData));
+      // clear groupFeed 
+      dispatch(setGroupFeedData(undefined));
+      // connect to the new group chat
+      dispatch(connectToGroupChat(newData));
+      // connect to the new group feed
+      dispatch(connectToGroupFeed(newData));
+      // Get group member
+      dispatch(getGroupMember(newData));
 
-            const res = await axios.get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } });
+      const res = await axios.get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } });
 
-            dispatch(getActiveGroupDataSuccess(res.data));
-            dispatch(getActiveGroupSuccess(true));
+      dispatch(getActiveGroupDataSuccess(res.data));
+      dispatch(getActiveGroupSuccess(true));
 
-        } catch (err) {
-            console.log(err)
-            dispatch(getActiveGroupSuccess(false));
-            dispatch(getActiveGroupError(err.response));
-        }
-    };
+      // Save Group Id to local Storage
+      AsyncStorage.setItem('lastActiveGroupId', data.groupId);
+    } catch (err) {
+      console.log(err)
+      Actions.initial({ type: ActionConst.RESET });
+      dispatch(getActiveGroupSuccess(false));
+      dispatch(getActiveGroupError(err.response));
+    }
+  };
 };
 
 
 export const getActiveGroupRefreshDataOnly = data => {
-    // Reset all states that relate to the old group and load new group
-    return async (dispatch, getState) => {
-        try {
-            const res = await axios.get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } });
+  // Reset all states that relate to the old group and load new group
+  return async (dispatch, getState) => {
+    try {
+      const res = await axios.get(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } });
 
-            dispatch(getActiveGroupDataSuccess(res.data));
-            dispatch(getActiveGroupSuccess(true));
+      dispatch(getActiveGroupDataSuccess(res.data));
+      dispatch(getActiveGroupSuccess(true));
 
-        } catch (err) {
-            console.log(err.response.data)
-            dispatch(getActiveGroupSuccess(false));
-            dispatch(getActiveGroupError(err.response));
-        }
-    };
+      // Save Group Id to local Storage
+      AsyncStorage.setItem('lastActiveGroupId', data.groupId);
+    } catch (err) {
+      console.log(err.response.data)
+      Actions.initial({ type: ActionConst.RESET });
+      dispatch(getActiveGroupSuccess(false));
+      dispatch(getActiveGroupError(err.response));
+    }
+  };
 };
 
 
@@ -433,38 +445,38 @@ export const getGroupMember = data => {
 *   GET EDITING GROUP MEMBER
 */
 export const getEditingGroupMemberSuccess = bool => {
-    return {
-        type: keys.GET_EDITING_GROUP_MEMBER_SUCCESS,
-        getEditingGroupMemberStatus: bool,
-    };
+  return {
+    type: keys.GET_EDITING_GROUP_MEMBER_SUCCESS,
+    getEditingGroupMemberStatus: bool,
+  };
 };
 
 export const getEditingGroupMemberDataSuccess = data => {
-    return {
-        type: keys.GET_EDITING_GROUP_MEMBER_DATA,
-        getEditingGroupMemberData: data,
-    };
+  return {
+    type: keys.GET_EDITING_GROUP_MEMBER_DATA,
+    getEditingGroupMemberData: data,
+  };
 };
 
 export const getEditingGroupMemberError = data => {
-    return {
-        type: keys.GET_EDITING_GROUP_MEMBER_ERROR,
-        getEditingGroupMemberError: data,
-    };
+  return {
+    type: keys.GET_EDITING_GROUP_MEMBER_ERROR,
+    getEditingGroupMemberError: data,
+  };
 };
 
 export const getEditingGroupMember = data => {
-    return async dispatch => {
-        try {
-            const res = await axios.get(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } });
-            dispatch(getEditingGroupMemberDataSuccess(res.data));
-            dispatch(getEditingGroupMemberSuccess(true));
-        } catch (err) {
-            console.log(err.response.data)
-            dispatch(getEditingGroupMemberSuccess(false));
-            dispatch(getEditingGroupMemberError(err.response.data));
-        }
-    };
+  return async dispatch => {
+    try {
+      const res = await axios.get(API_URL + '/groups/' + data.groupId + '/member', { headers: { 'authentication': data.token } });
+      dispatch(getEditingGroupMemberDataSuccess(res.data));
+      dispatch(getEditingGroupMemberSuccess(true));
+    } catch (err) {
+      console.log(err.response.data)
+      dispatch(getEditingGroupMemberSuccess(false));
+      dispatch(getEditingGroupMemberError(err.response.data));
+    }
+  };
 };
 
 /*
@@ -578,19 +590,20 @@ export const requestToJoinGroupError = data => {
 };
 
 export const requestToJoinGroup = data => {
-    return dispatch => {
-        axios
-            .post(API_URL + '/groups/' + data.groupId + '/join', {}, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(getUserGroups({ token: data.token }))
-                dispatch(requestToJoinGroupDataSuccess(res.data));
-                dispatch(requestToJoinGroupSuccess(true));
-            })
-            .catch(err => {
-                dispatch(requestToJoinGroupSuccess(false));
-                dispatch(requestToJoinGroupError(err.response.data));
-            });
-    };
+  return async (dispatch) => {
+    try {
+      const res = await axios.post(API_URL + '/groups/' + data.groupId + '/join', {}, { headers: { 'authentication': data.token } });
+
+      await dispatch(getUserGroups({ token: data.token }));
+      await dispatch(getGroups({ token: data.token }));
+
+      dispatch(requestToJoinGroupDataSuccess(res.data));
+      dispatch(requestToJoinGroupSuccess(true));
+    } catch (err) {
+      dispatch(requestToJoinGroupSuccess(false));
+      dispatch(requestToJoinGroupError(err.response.data));
+    }
+  }
 };
 
 /*
@@ -618,24 +631,24 @@ export const reviewJoinGroupRequestsError = data => {
 };
 
 export const reviewJoinGroupRequests = data => {
-    let accepted = {
-        status: data.status,
-        pendingUserId: data.pendingUserId,
-    }
-    return dispatch => {
-        axios
-            .post(API_URL + '/groups/' + data.groupId + '/reviewPending', accepted, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(allJoinGroupRequestsSuccess(false));
-                dispatch(reviewJoinGroupRequestsDataSuccess(res.data));
-                dispatch(reviewJoinGroupRequestsSuccess(true));
-            })
-            .catch(err => {
-                console.log(err.response.data)
-                dispatch(reviewJoinGroupRequestsSuccess(false));
-                dispatch(reviewJoinGroupRequestsError(err.response.data));
-            });
-    };
+  let accepted = {
+    status: data.status,
+    pendingUserId: data.pendingUserId,
+  }
+  return dispatch => {
+    axios
+      .post(API_URL + '/groups/' + data.groupId + '/reviewPending', accepted, { headers: { 'authentication': data.token } })
+      .then(res => {
+        dispatch(allJoinGroupRequestsSuccess(false));
+        dispatch(reviewJoinGroupRequestsDataSuccess(res.data));
+        dispatch(reviewJoinGroupRequestsSuccess(true));
+      })
+      .catch(err => {
+        console.log(err.response.data)
+        dispatch(reviewJoinGroupRequestsSuccess(false));
+        dispatch(reviewJoinGroupRequestsError(err.response.data));
+      });
+  };
 };
 
 /*
@@ -680,6 +693,82 @@ export const getAllJoinGroupRequests = data => {
 };
 
 /*
+ *   GET BANED USER FROM GROUP
+ */
+
+export const bannedUserData = data => {
+  return {
+    type: keys.BANNED_USER_DATA,
+    bannedUserData: data
+  };
+};
+
+export const getBannedUsers = data => {
+  return async dispatch => {
+    try {
+      const res = await axios.get(API_URL + '/groups/' + data.groupId + '/ban', { headers: { 'authentication': data.token } });
+      dispatch(bannedUserData(res.data));
+    } catch (err) {
+      console.log(err.response)
+    }
+  };
+};
+
+/*
+ *   BAN MEMBER FROM GROUP
+ */
+export const banMemberFromGroup = data => {
+  return async dispatch => {
+    try {
+      // Display Loading Screen
+      Actions.loadingScreen({ type: ActionConst.RESET });
+
+      const res = await axios.post(API_URL + '/groups/' + data.groupId + '/banMember/' + data.memberId, {}, { headers: { 'authentication': data.token } });
+      await dispatch(getEditingGroupMember({
+        token: data.token,
+        groupId: data.groupId,
+      }));
+
+      // Go to home after loading new group
+      Actions.navTab({ type: ActionConst.RESET });
+      // Go to myGroups
+      Actions.myGroupsMenu();
+      // Go to Edit Group Menu
+      Actions.editGroupMenu();
+      // Go to Member List
+      Actions.groupMembersListMenu();
+    } catch (err) {
+      console.log(err.response)
+    }
+  };
+};
+
+/*
+ *   BAN USER FROM GROUP
+ */
+export const banUserFromGroup = data => {
+  return async dispatch => {
+    try {
+      const res = await axios.post(API_URL + '/groups/' + data.groupId + '/ban/' + data.pendingUserId, {}, { headers: { 'authentication': data.token } });
+    } catch (err) {
+      console.log(err.response)
+    }
+  };
+};
+
+/*
+ *   UN-BAN USER FROM GROUP
+ */
+export const unBanUserFromGroup = data => {
+  return async dispatch => {
+    try {
+      const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/ban/' + data.userId, { headers: { 'authentication': data.token } });
+    } catch (err) {
+    }
+  };
+};
+
+/*
  * UPDATE GROUP
  */
 export const updateGroupSuccess = bool => {
@@ -704,38 +793,40 @@ export const updateGroupError = data => {
 };
 
 export const updateGroup = data => {
-    let groupData = {
-        groupName: data.groupName,
-        groupDescription: data.groupDescription,
-        groupImg: data.groupImg
-    };
+  let groupData = {
+    groupName: data.groupName,
+    groupDescription: data.groupDescription,
+    groupImg: data.groupImg,
+    groupIsPublic: data.groupIsPublic,
+  };
 
-    return async dispatch => {
-        try {
-            // Display Loading Screen
-            Actions.loadingScreen({ type: ActionConst.RESET });
+  return async dispatch => {
+    try {
+      // Display Loading Screen
+      Actions.loadingScreen({ type: ActionConst.RESET });
 
-            const res = await axios.put(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } });
+      const res = await axios.put(API_URL + '/groups/' + data.groupId, groupData, { headers: { 'authentication': data.token } });
 
-            dispatch(updateGroupDataSuccess(res.data));
-            dispatch(updateGroupSuccess(true));
+      dispatch(updateGroupDataSuccess(res.data));
+      dispatch(updateGroupSuccess(true));
 
-            await dispatch(getUserGroups({ token: data.token }));
-            // Refresh active group if active group is the updated group
-            if (data.activeGroupId == data.groupId) {
-                await dispatch(getActiveGroupRefreshDataOnly({ groupId: data.activeGroupId, token: data.token }));
-            }
+      await dispatch(getGroups({ token: data.token }))
+      await dispatch(getUserGroups({ token: data.token }));
+      // Refresh active group if active group is the updated group
+      if (data.activeGroupId == data.groupId) {
+        await dispatch(getActiveGroupRefreshDataOnly({ groupId: data.activeGroupId, token: data.token }));
+      }
 
-            // Go to home after loading new group
-            Actions.navTab({ type: ActionConst.RESET });
-            // Go to myGroups
-            Actions.myGroupsMenu();
+      // Go to home after loading new group
+      Actions.navTab({ type: ActionConst.RESET });
+      // Go to myGroups
+      Actions.myGroupsMenu();
 
-        } catch (err) {
-            dispatch(updateGroupSuccess(false));
-            dispatch(updateGroupError(err.response.data));
-        }
-    };
+    } catch (err) {
+      dispatch(updateGroupSuccess(false));
+      dispatch(updateGroupError(err.response.data));
+    }
+  };
 };
 
 /*
@@ -763,41 +854,50 @@ export const leaveGroupError = data => {
 };
 
 export const leaveGroup = data => {
-    let deleteByMember = "";
-    if (data.memberId) {
-        deleteByMember = "/" + data.memberId;
+  let deleteByMember = "";
+  if (data.memberId) {
+    deleteByMember = "/" + data.memberId;
+  }
+  return async dispatch => {
+    try {
+      // Display Loading Screen
+      Actions.loadingScreen({ type: ActionConst.RESET });
+
+      const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/member' + deleteByMember, { headers: { 'authentication': data.token } });
+      await dispatch(getUserGroups({ token: data.token }));
+      await dispatch(getGroups({ token: data.token }));
+      dispatch(leaveGroupDataSuccess(res.data));
+      dispatch(leaveGroupSuccess(true));
+
+      if (data.activeGroupId == data.groupId) {
+        // Clear active group data
+        dispatch(getActiveGroupSuccess(false));
+        dispatch(getActiveGroupDataSuccess(""));
+        dispatch(getActiveGroupError(""));
+
+        // Go to initial select group page if deleting active group
+        Actions.initial({ type: ActionConst.RESET });
+      } else {
+        // Go to home after loading new group
+        Actions.navTab({ type: ActionConst.RESET });
+        // Go to myGroups
+        Actions.myGroupsMenu();
+      }
+
+    } catch (err) {
+      // Clear active group data
+      dispatch(getActiveGroupSuccess(false));
+      dispatch(getActiveGroupDataSuccess(""));
+      dispatch(getActiveGroupError(""));
+
+      // Go to initial select group page if deleting active group
+      Actions.initial({ type: ActionConst.RESET });
+
+      console.log(err.response);
+      dispatch(leaveGroupSuccess(false));
+      dispatch(leaveGroupError(err.response.data));
     }
-    return async dispatch => {
-        try {
-            // Display Loading Screen
-            Actions.loadingScreen({ type: ActionConst.RESET });
-
-            const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/member' + deleteByMember, { headers: { 'authentication': data.token } });
-            await dispatch(getUserGroups({ token: data.token }));
-            await dispatch(getGroups({ token: data.token }))
-            dispatch(leaveGroupDataSuccess(res.data));
-            dispatch(leaveGroupSuccess(true));
-            
-            if (data.activeGroupId == data.groupId) {
-                // Clear active group data
-                dispatch(getActiveGroupSuccess(false));
-                dispatch(getActiveGroupDataSuccess(""));
-                dispatch(getActiveGroupError(""));
-
-                // Go to initial select group page if deleting active group
-                Actions.initial({ type: ActionConst.RESET });
-            } else {
-                // Go to home after loading new group
-                Actions.navTab({ type: ActionConst.RESET });
-                // Go to myGroups
-                Actions.myGroupsMenu();
-            }
-
-        } catch (err) {
-            dispatch(leaveGroupSuccess(false));
-            dispatch(leaveGroupError(err.response.data));
-        }
-    };
+  };
 };
 
 /*
@@ -825,38 +925,38 @@ export const deleteGroupError = data => {
 };
 
 export const deleteGroup = data => {
-    return async dispatch => {
-        try {
-            // Display Loading Screen
-            Actions.loadingScreen({ type: ActionConst.RESET });
+  return async dispatch => {
+    try {
+      // Display Loading Screen
+      Actions.loadingScreen({ type: ActionConst.RESET });
 
-            const res = await axios.delete(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } });
+      const res = await axios.delete(API_URL + '/groups/' + data.groupId, { headers: { 'authentication': data.token } });
 
-            // Refresh user groups after deleting group
-            await dispatch(getUserGroups({ token: data.token }));
-            await dispatch(getGroups({ token: data.token }))
-            dispatch(deleteGroupDataSuccess(res.data));
-            dispatch(deleteGroupSuccess(true));
+      // Refresh user groups after deleting group
+      await dispatch(getUserGroups({ token: data.token }));
+      await dispatch(getGroups({ token: data.token }))
+      dispatch(deleteGroupDataSuccess(res.data));
+      dispatch(deleteGroupSuccess(true));
 
-            if (data.activeGroupId == data.groupId) {
-                // Clear active group data
-                dispatch(getActiveGroupSuccess(false));
-                dispatch(getActiveGroupDataSuccess(""));
-                dispatch(getActiveGroupError(""));
+      if (data.activeGroupId == data.groupId) {
+        // Clear active group data
+        dispatch(getActiveGroupSuccess(false));
+        dispatch(getActiveGroupDataSuccess(""));
+        dispatch(getActiveGroupError(""));
 
-                // Go to initial select group page if deleting active group
-                Actions.initial({ type: ActionConst.RESET });
-            } else {
-                // Go to home after loading new group
-                Actions.navTab({ type: ActionConst.RESET });
-                // Go to myGroups
-                Actions.myGroupsMenu();
-            }
-        } catch (err) {
-            // If error send to initial select group page
-            Actions.initial({ type: ActionConst.RESET });
-            dispatch(deleteGroupSuccess(false));
-            dispatch(deleteGroupError(err.response.data));
-        }
-    };
+        // Go to initial select group page if deleting active group
+        Actions.initial({ type: ActionConst.RESET });
+      } else {
+        // Go to home after loading new group
+        Actions.navTab({ type: ActionConst.RESET });
+        // Go to myGroups
+        Actions.myGroupsMenu();
+      }
+    } catch (err) {
+      // If error send to initial select group page
+      Actions.initial({ type: ActionConst.RESET });
+      dispatch(deleteGroupSuccess(false));
+      dispatch(deleteGroupError(err.response.data));
+    }
+  };
 };

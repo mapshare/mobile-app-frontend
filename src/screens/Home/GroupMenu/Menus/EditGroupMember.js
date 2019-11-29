@@ -22,6 +22,7 @@ import {
     updateGroupMemberSuccess,
     leaveGroup,
     leaveGroupSuccess,
+    banMemberFromGroup,
 } from '../../../../actions/groupActions';
 
 // Componenets Style
@@ -36,14 +37,19 @@ class MyGroups extends Component {
             data: "",
             groupName: '',
             interval: '',
-            permisionLevel: '',
+            permisionLevel: 0,
             modalVisible: false,
             succesModalVisible: false,
+            modalVisibleRemoveAndBan: false,
         };
     }
 
     componentDidMount() {
-        this.setState({ permisionLevel: this.props.currentEditingGroupMemberData.groupMemberRole.groupRolePermisionLevel })
+        try {
+            this.setState({ permisionLevel: this.props.currentEditingGroupMemberData.groupMemberRole.groupRolePermisionLevel })
+        } catch (error) {
+            
+        }
     }
 
     deleteGroupMember() {
@@ -54,6 +60,16 @@ class MyGroups extends Component {
         }
         this.props.leaveGroupSuccess(false);
         this.props.leaveGroup(data);
+        Actions.pop();
+    }
+    
+    deleteAndBanGroupMember() {
+        const data = {
+            token: this.props.token,
+            memberId: this.props.currentEditingGroupMemberData._id,
+            groupId: this.props.getCurrentEditingGroupData._id,
+        }
+        this.props.banMemberFromGroup(data);
         Actions.pop();
     }
 
@@ -81,9 +97,13 @@ class MyGroups extends Component {
         this.setState({ modalVisible: visible });
     }
 
+    setModalVisibleRemoveAndBan(visible) {
+        this.setState({ modalVisibleRemoveAndBan: visible });
+    }
+
     setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible },()=>{
-            setTimeout(()=>{
+        this.setState({ succesModalVisible: visible }, () => {
+            setTimeout(() => {
                 this.setState({ succesModalVisible: !visible });
             }, 3000);
         });
@@ -121,6 +141,34 @@ class MyGroups extends Component {
                                 </TouchableOpacity>
                                 <View style={styles.flatListItemSeporator} />
                                 <TouchableOpacity style={styles.groupRolePicker} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                                    <Text style={styles.textBox} >NO</Text>
+                                </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                            </View>
+
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.modalVisibleRemoveAndBan}
+                    onRequestClose={() => {
+                        Actions.pop();
+                    }}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={styles.modalStyle}>
+
+                            <View style={styles.content} >
+                                <Text style={styles.textBox}>Are you sure you want to remove and Ban this member?</Text>
+
+                                <View style={styles.flatListItemSeporator} />
+                                <TouchableOpacity style={styles.groupRolePicker} onPress={() => this.deleteAndBanGroupMember()}>
+                                    <Text style={styles.textBox} >YES</Text>
+                                </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                                <TouchableOpacity style={styles.groupRolePicker} onPress={() => this.setModalVisibleRemoveAndBan(!this.state.modalVisibleRemoveAndBan)}>
                                     <Text style={styles.textBox} >NO</Text>
                                 </TouchableOpacity>
                                 <View style={styles.flatListItemSeporator} />
@@ -168,6 +216,10 @@ class MyGroups extends Component {
                         <Text style={styles.textBox} >Remove Member</Text>
                     </TouchableOpacity>
                     <View style={styles.flatListItemSeporator} />
+                    <TouchableOpacity style={styles.groupRolePicker} onPress={() => this.setModalVisibleRemoveAndBan(!this.state.modalVisibleRemoveAndBan)}>
+                        <Text style={styles.textBox} >Ban Member</Text>
+                    </TouchableOpacity>
+                    <View style={styles.flatListItemSeporator} />
                 </View>
             </View>
         );
@@ -193,6 +245,7 @@ const mapDispatchToProps = dispatch => {
         updateGroupMemberSuccess: data => dispatch(updateGroupMemberSuccess(data)),
         leaveGroup: data => dispatch(leaveGroup(data)),
         leaveGroupSuccess: data => dispatch(leaveGroupSuccess(data)),
+        banMemberFromGroup: data => dispatch(banMemberFromGroup(data)),
     };
 };
 
