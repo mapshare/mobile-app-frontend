@@ -53,4 +53,31 @@ const containerStyles = StyleSheet.create({
   }
 });
 
-export { containerStyles };
+const customCategoryStyles = StyleSheet.create({
+  customCategoryContainer: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row'
+  },
+
+  seperatorLine: {
+    borderTopWidth: 2,
+    borderTopColor: 'gray',
+    marginHorizontal: 10,
+    marginVertical: 5
+  },
+
+  titleText: {
+    marginHorizontal: 10,
+    fontSize: 14
+  },
+
+  settingIcon: {
+    paddingLeft: 10,
+    alignSelf: 'flex-end',
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  }
+});
+
+export { containerStyles, customCategoryStyles };

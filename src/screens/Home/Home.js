@@ -32,6 +32,7 @@ import {
 } from '../../actions/groupActions';
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 import { getGroupDefaultMarkCategory } from '../../actions/groupDefaultMarkCategory';
+import { getGroupAllCustomMarkCategory } from '../../actions/groupCustomMarkCategory';
 
 class Home extends Component {
   constructor(props) {
@@ -64,11 +65,13 @@ class Home extends Component {
 
     const data = {
       groupMarkId: this.props.getActiveGroupData.groupMarks,
+      groupCategoryId: this.props.getActiveGroupData.groupCustomMarkCategory,
       token: this.props.token
     };
 
     this.props.getGroupAllMarks(data);
-    this.props.getGroupDefaultMarkCategory({ token: this.props.token });
+    this.props.getGroupDefaultMarkCategory(data);
+    this.props.getGroupAllCustomMarkCategory(data);
   }
 
   componentWillUnmount() {
@@ -180,7 +183,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(getActiveGroupRefreshDataOnly(data)),
     getGroupMember: data => dispatch(getGroupMember(data)),
     getGroupDefaultMarkCategory: data =>
-      dispatch(getGroupDefaultMarkCategory(data))
+      dispatch(getGroupDefaultMarkCategory(data)),
+    getGroupAllCustomMarkCategory: data =>
+      dispatch(getGroupAllCustomMarkCategory(data))
   };
 };
 

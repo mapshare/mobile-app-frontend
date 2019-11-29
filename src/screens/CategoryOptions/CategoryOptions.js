@@ -6,9 +6,10 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 //Redux actions
 import { categoriesOptionOnClick } from '../../actions/groupDefaultMarkCategory';
 import { addCustomMarkModalWindow } from '../../actions/modalWindowAction';
+import { sortGroupMark } from '../../actions/groupMarkAction';
 
 // Componenets Style
-import { containerStyles } from './Stylesheet';
+import { containerStyles, customCategoryStyles } from './Stylesheet';
 import AddCustomMark from '../AddCustomMark/AddCustomMark';
 
 class CategoryOptions extends Component {
@@ -16,17 +17,21 @@ class CategoryOptions extends Component {
     super(props);
 
     this.state = {
-      selectedCategories: this.props.getGroupDefaultMarkCategoryData,
+      selectedDefaultCategories: this.props.getGroupDefaultMarkCategoryData,
+      selectedCustomCategories: this.props.getGroupAllCustomMarkCategoryData,
       categoryIsSelected: false
     };
+
+    this.sortSelectedCategories = [];
   }
 
-  getCategory = (data, index) => {
-    const ref = `categoryId-${index}`;
-    let iconColor = this.state.selectedCategories[index].isSelected
+  // get default category
+  getDefaultCategory = (data, index) => {
+    const ref = `defaultCategoryId-${index}`;
+    let iconColor = this.state.selectedDefaultCategories[index].isSelected
       ? 'red'
       : 'green';
-    let iconName = this.state.selectedCategories[index].isSelected
+    let iconName = this.state.selectedDefaultCategories[index].isSelected
       ? 'minus'
       : 'plus';
 
@@ -34,32 +39,119 @@ class CategoryOptions extends Component {
       <TouchableOpacity
         key={ref}
         style={containerStyles.categoryContainer}
-        onPress={() => this.categoryOnClick(data, index)}
+        onPress={() => this.defaultCategoryOnClick(data, index)}
       >
         <Icon name={iconName} size={18} color={iconColor} />
-        <Text style={containerStyles.categoryText}>
+        <Text
+          style={[
+            containerStyles.categoryText,
+            { color: `${data.categoryColor}` }
+          ]}
+        >
           {data.defaultCategoryName}
         </Text>
       </TouchableOpacity>
     );
   };
 
-  categoryOnClick = (data, index) => {
-    this.state.selectedCategories[index].isSelected = !this.state
-      .selectedCategories[index].isSelected;
+  // get custom category
+  getCustomCategory = (data, index) => {
+    const ref = `customCategoryId-${index}`;
+    let iconColor = this.state.selectedCustomCategories[index].isSelected
+      ? 'red'
+      : 'green';
+    let iconName = this.state.selectedCustomCategories[index].isSelected
+      ? 'minus'
+      : 'plus';
 
-    this.setState({
-      categoryIsSelected: !this.state.categoryIsSelected
-    });
+    return (
+      <View key={ref} style={containerStyles.categoryContainer}>
+        <TouchableOpacity
+          style={customCategoryStyles.customCategoryContainer}
+          onPress={() => this.customCategoryOnClick(data, index)}
+        >
+          <Icon name={iconName} size={18} color={iconColor} />
+          <Text
+            style={[
+              containerStyles.categoryText,
+              { color: `${data.categoryColor}` }
+            ]}
+          >
+            {data.customMarkCategoryName}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={customCategoryStyles.settingIcon}>
+          <Icon name="settings" size={18} />
+        </TouchableOpacity>
+      </View>
+    );
   };
 
-  renderCategories() {
-    const categoryView = [];
+  // default category on click
+  defaultCategoryOnClick = (data, index) => {
+    this.state.selectedDefaultCategories[index].isSelected = !this.state
+      .selectedDefaultCategories[index].isSelected;
+
+    this.setState(
+      {
+        categoryIsSelected: !this.state.categoryIsSelected
+      },
+      () => {
+        if (!this.state.selectedDefaultCategories[index].isSelected) {
+          this.sortSelectedCategories.push(data._id);
+          console.log('true: ', this.sortSelectedCategories);
+        } else {
+          let index = this.sortSelectedCategories.indexOf(data._id);
+          if (index !== -1) this.sortSelectedCategories.splice(index, 1);
+          console.log('false: ', this.sortSelectedCategories);
+        }
+      }
+    );
+  };
+
+  // custom category on click
+  customCategoryOnClick = (data, index) => {
+    this.state.selectedCustomCategories[index].isSelected = !this.state
+      .selectedCustomCategories[index].isSelected;
+
+    this.setState(
+      {
+        categoryIsSelected: !this.state.categoryIsSelected
+      },
+      () => {
+        if (this.state.categoryIsSelected) {
+          this.sortSelectedCategories.push(data._id);
+          console.log('true: ', this.sortSelectedCategories);
+        } else {
+          this.sortSelectedCategories.pop(data._id);
+          console.log('false: ', this.sortSelectedCategories);
+        }
+      }
+    );
+  };
+
+  // render default category
+  renderDefaultCategories() {
+    const defaultCategoryView = [];
     this.props.getGroupDefaultMarkCategoryData.map((data, index) => {
-      categoryView.push(this.getCategory(data, index));
+      defaultCategoryView.push(this.getDefaultCategory(data, index));
     });
 
-    return categoryView;
+    return defaultCategoryView;
+  }
+
+  // render custom category
+  renderCustomCategories() {
+    const customCategoryView = [];
+    this.props.getGroupAllCustomMarkCategoryData.map((data, index) => {
+      customCategoryView.push(this.getCustomCategory(data, index));
+    });
+
+    return customCategoryView;
+  }
+
+  sortOnclick() {
+    this.props.sortGroupMark(this.sortSelectedCategories);
   }
 
   render() {
@@ -73,8 +165,20 @@ class CategoryOptions extends Component {
           <Text>Create</Text>
           <Text>Category</Text>
         </TouchableOpacity>
-        <View>{this.renderCategories()}</View>
-        <TouchableOpacity style={containerStyles.sortButtonContainer}>
+        <View>{this.renderDefaultCategories()}</View>
+        {this.state.selectedCustomCategories.length > 0 && (
+          <View>
+            <View style={customCategoryStyles.seperatorLine} />
+            <Text style={customCategoryStyles.titleText}>
+              Custom Categories
+            </Text>
+            <View>{this.renderCustomCategories()}</View>
+          </View>
+        )}
+        <TouchableOpacity
+          style={containerStyles.sortButtonContainer}
+          onPress={this.sortOnclick}
+        >
           <Icon name="check" size={20} color="white" />
           <Text style={containerStyles.buttonTextStyle}>Sort</Text>
         </TouchableOpacity>
@@ -89,7 +193,9 @@ const mapStateToProps = state => {
     categoriesOptionOnClickStatus:
       state.groupDefaultMarkCategoryReducer.categoriesOptionOnClickStatus,
     getGroupDefaultMarkCategoryData:
-      state.groupDefaultMarkCategoryReducer.getGroupDefaultMarkCategoryData
+      state.groupDefaultMarkCategoryReducer.getGroupDefaultMarkCategoryData,
+    getGroupAllCustomMarkCategoryData:
+      state.groupCustomMarkCategoryReducer.getGroupAllCustomMarkCategoryData
   };
 };
 
@@ -97,7 +203,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     categoriesOptionOnClick: bool => dispatch(categoriesOptionOnClick(bool)),
-    addCustomMarkModalWindow: bool => dispatch(addCustomMarkModalWindow(bool))
+    addCustomMarkModalWindow: bool => dispatch(addCustomMarkModalWindow(bool)),
+    sortGroupMarkData: data => dispatch(sortGroupMarkData(data))
   };
 };
 

@@ -9,6 +9,7 @@ import keys from '../data/key';
  * -------------
  * ADD GROUP CUSTOM MARK CATEGORY
  * GET GROUP CUSTOM MARK CATEGORY
+ * GET ALL GROUP CUSTOM MARK CATEGORY
  * UPDATE GROUP CUSTOM MARK CATEGORY
  * DELETE GROUP CUSTOM MARK CATEGORY
  *
@@ -105,6 +106,63 @@ export const getGroupCustomMarkCategory = data => {
       .catch(err => {
         dispatch(getGroupCustomMarkCategorySuccess(false));
         dispatch(getGroupCustomMarkCategoryError(err.response.data));
+      });
+  };
+};
+
+/*
+ *   GET GROUP ALL CUSTOM MARK CATEGORY
+ */
+export const getGroupAllCustomMarkCategorySuccess = bool => {
+  return {
+    type: keys.GET_GROUP_ALL_CUSTOM_MARK_CATEGORY_SUCCESS,
+    getGroupAllCustomMarkCategoryStatus: bool
+  };
+};
+
+export const getGroupAllCustomMarkCategoryDataSuccess = data => {
+  return {
+    type: keys.GET_GROUP_ALL_CUSTOM_MARK_CATEGORY_DATA_SUCCESS,
+    getGroupAllCustomMarkCategoryData: data
+  };
+};
+
+export const getGroupAllCustomMarkCategoryError = data => {
+  return {
+    type: keys.GET_GROUP_ALL_CUSTOM_MARK_CATEGORY_ERROR,
+    getGroupAllCustomMarkCategoryError: data
+  };
+};
+
+export const getGroupAllCustomMarkCategory = data => {
+  const sortCategories = (a, b) => {
+    const categoryA = a.customMarkCategoryName.toUpperCase();
+    const categoryB = b.customMarkCategoryName.toUpperCase();
+
+    let comparison = 0;
+    if (categoryA > categoryB) {
+      comparison = 1;
+    } else if (categoryA < categoryB) {
+      comparison = -1;
+    }
+    return comparison;
+  };
+
+  return dispatch => {
+    axios
+      .get(API_URL + '/groups/' + data.groupCategoryId + '/customCategory', {
+        headers: { 'authentication': data.token }
+      })
+      .then(res => {
+        const data = res.data.groupCustomCategories.sort(sortCategories);
+        // console.log('success get all custom category: ', data);
+        dispatch(getGroupAllCustomMarkCategoryDataSuccess(data));
+        dispatch(getGroupAllCustomMarkCategorySuccess(true));
+      })
+      .catch(err => {
+        // console.log('failed get all custom category: ', err.response.data);
+        dispatch(getGroupAllCustomMarkCategorySuccess(false));
+        dispatch(getGroupAllCustomMarkCategoryError(err.response.data));
       });
   };
 };

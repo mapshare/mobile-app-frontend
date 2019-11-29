@@ -11,7 +11,7 @@ import keys from '../data/key';
  * GET GROUP MARK
  * UPDATE GROUP MARK
  * DELETE GROUP MARK
- *
+ * Sort Group Mark
  */
 
 /*
@@ -240,5 +240,12 @@ export const deleteGroupMark = data => {
         dispatch(deleteGroupMarkSuccess(false));
         dispatch(deleteGroupMarkError(err.response.data));
       });
+  };
+};
+
+export const sortGroupMark = data => {
+  return {
+    type: keys.SORT_GROUP_MARK,
+    sortGroupMarkData: data
   };
 };
