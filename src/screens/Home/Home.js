@@ -29,6 +29,9 @@ import {
   groupExists,
   getActiveGroupRefreshDataOnly
 } from '../../actions/groupActions';
+import {
+  getUser,
+} from '../../actions/userActions';
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 
 class Home extends Component {
@@ -53,6 +56,7 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+        this.props.getUser({token: this.props.token})
       }, 5000)
     });
 
@@ -162,6 +166,7 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
+    getUser: data => dispatch(getUser(data)),
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
     getActiveGroupDataSuccess: data =>

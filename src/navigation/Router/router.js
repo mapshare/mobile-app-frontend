@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StatusBar } from "react-native";
+import { Platform, StatusBar, TouchableHighlight } from "react-native";
 import {
   Router,
   Stack,
@@ -62,7 +62,7 @@ import {
 //Create a dedicated class that will manage the tabBar icon
 class TabIcon extends Component {
   render() {
-    return <Icon name={this.props.name} size={18} />;
+    return (<Icon name={this.props.name} size={20} color={this.props.focused ? '#087bff' : '#000000'}/>);
   }
 }
 
@@ -165,11 +165,11 @@ class App extends Component {
             />
 
             <Scene
-              title="MAP"
+              title="DISCOVER"
               key="map"
               component={Map}
               icon={TabIcon}
-              name="map"
+              name="compass"
               hideNavBar
             />
 

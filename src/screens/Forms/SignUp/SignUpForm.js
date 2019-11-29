@@ -115,15 +115,16 @@ class SignUpForm extends Component {
             })
           }
           placeholder="First Name"
+          maxLength={12}
           placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
           autoCapitalize="none"
-          onSubmitEditing={() => this.password.focus()}
+          onSubmitEditing={() => this.lastName.focus()}
         />
         {this.state.userFirstNameError ? (
-          <Text>{this.state.userFirstNameError}</Text>
+          <Text style={styles.errorMessage}>{this.state.userFirstNameError}</Text>
         ) : null}
 
         <TextInput
@@ -134,15 +135,17 @@ class SignUpForm extends Component {
             })
           }
           placeholder="Last Name"
+          maxLength={12}
           placeholderTextColor="rgba(0,0,0,0.7)"
           selectionColor="#fff"
           autoCorrect={false}
           returnKeyType="next"
           autoCapitalize="none"
-          onSubmitEditing={() => this.password.focus()}
+          ref={input => (this.lastName = input)}
+          onSubmitEditing={() => this.email.focus()}
         />
         {this.state.userLastNameError ? (
-          <Text>{this.state.userLastNameError}</Text>
+          <Text style={styles.errorMessage}>{this.state.userLastNameError}</Text>
         ) : null}
 
         <TextInput
@@ -157,9 +160,10 @@ class SignUpForm extends Component {
           returnKeyType="next"
           keyboardType="email-address"
           autoCapitalize="none"
+          ref={input => (this.email = input)}
           onSubmitEditing={() => this.password.focus()}
         />
-        {this.state.emailError ? <Text>{this.state.emailError}</Text> : null}
+        {this.state.emailError ? <Text style={styles.errorMessage}>{this.state.emailError}</Text> : null}
 
         <TextInput
           style={styles.inputBox}
@@ -176,7 +180,7 @@ class SignUpForm extends Component {
           ref={input => (this.password = input)}
         />
         {this.state.passwordError ? (
-          <Text>{this.state.passwordError}</Text>
+          <Text style={styles.errorMessage}>{this.state.passwordError}</Text>
         ) : null}
 
         <TouchableOpacity style={styles.button}>

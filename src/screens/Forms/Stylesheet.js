@@ -121,4 +121,7 @@ export default StyleSheet.create({
         justifyContent: 'space-evenly',
         alignContent: 'space-around'
     },
+    errorMessage: {
+        color: "red"
+    },
 });

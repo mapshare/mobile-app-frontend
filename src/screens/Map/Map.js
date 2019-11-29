@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import { connect } from 'react-redux';
 import * as Geolocation from '@react-native-community/geolocation';
@@ -30,22 +30,30 @@ class Map extends Component {
 
     this.data = null;
     this.location = {
+      address: '',
       latitude: 0.0,
-      longitude: 0.0
+      longitude: 0.0,
+      zoomLocation: false,
+      findLocation: false
     };
+  }
+
+  componentDidMount(){
+    this.findCoordinates();
   }
 
   getCoordsFromName(loc) {
     console.log(loc.lng, loc.lat);
 
-    this.location.longitude = loc.lng;
-    this.location.latitude = loc.lat;
+    this.location.longitude = loc.geometry.location.lng;
+    this.location.latitude = loc.geometry.location.lat;
+    this.location.address = loc.formatted_address;
+    this.location.findLocation = true;
     this.setState(this.location);
 
-    // this.renderAnnotations()
     this._mapcoord.setCamera({
       centerCoordinate: [this.location.longitude, this.location.latitude],
-      zoomLevel: 8
+      zoomLevel: 12
     });
   }
 
@@ -54,12 +62,13 @@ class Map extends Component {
       position => {
         this.location.longitude = position.coords.longitude;
         this.location.latitude = position.coords.latitude;
+        this.location.zoomLocation = true;
         this.setState(this.location);
       },
       error =>
-        alert(
+        Alert.alert(
           'Please make sure Location/GPS is Enabled',
-          JSON.stringify(error)
+          JSON.stringify(error.message)
         ),
       { enableHighAccuracy: false, timeout: 2000 }
     );
@@ -69,9 +78,8 @@ class Map extends Component {
     this.findCoordinates();
     this._mapcoord.setCamera({
       centerCoordinate: [this.location.longitude, this.location.latitude],
-      zoomLevel: 8
+      zoomLevel: 10
     });
-    this.renderAnnotations();
   };
 
   mapOnClick = data => {
@@ -81,20 +89,52 @@ class Map extends Component {
     }
   };
 
-  renderAnnotations() {
-    console.log('Test');
-    return (
-      <Mapbox.PointAnnotation
-        key="pointAnnotation"
-        id="pointAnnotation"
-        coordinate={[this.location.longitude, this.location.latitude]}
-      >
-        <View style={annotationStyles.container}>
-          <View style={annotationStyles.fill} />
-        </View>
-        <Mapbox.Callout title="We did it!!" />
-      </Mapbox.PointAnnotation>
-    );
+  renderLocationAnnotation() {
+
+    //Zoom to User location
+
+    if (this.location.zoomLocation == true){
+      console.log("zoom");
+      this.location.zoomLocation = false;
+      return (
+        <Mapbox.PointAnnotation
+          key="pointAnnotation"
+          id="pointAnnotation"
+          coordinate={[this.location.longitude, this.location.latitude]}
+          title="You are Here!!"
+        >
+          <View style={annotationStyles.container}>
+            <View style={annotationStyles.fill} />
+          </View>
+          <Mapbox.Callout title="You are Here!!"/>
+        </Mapbox.PointAnnotation>
+      );
+    }
+
+  }
+
+  renderSearchAnnotation() {
+
+    //Zoom to searched location
+
+    if (this.location.findLocation == true){
+      this.location.findLocation = false;
+      console.log("search")
+      return (
+        <Mapbox.PointAnnotation
+          title={this.location.address}
+          key="pointAnnotation1"
+          id="pointAnnotation1"
+          coordinate={[this.location.longitude, this.location.latitude]}
+        >
+          <View style={annotationStyles.container}>
+            <View style={annotationStyles.fill} />
+          </View>
+          <Mapbox.Callout title={this.location.address} />
+        </Mapbox.PointAnnotation>
+      );
+    }
+
   }
 
   render() {
@@ -123,9 +163,11 @@ class Map extends Component {
             showUserLocation={true}
             logoEnabled={false}
             compassEnabled={true}
+            loadingEnabled={true}
             style={mapStyles.container}
-            onDidFinishLoadingMap={this.findCoordinates}
           >
+            {this.renderLocationAnnotation()}
+            {this.renderSearchAnnotation()}
             <Mapbox.Camera
               ref={Component => (this._mapcoord = Component)}
               centerCoordinate={[
@@ -138,7 +180,7 @@ class Map extends Component {
           <Icon
             style={mapStyles.locationButton}
             name="location-pin"
-            size={25}
+            size={30}
             onPress={this.zoomCoordinates}
           ></Icon>
         </View>

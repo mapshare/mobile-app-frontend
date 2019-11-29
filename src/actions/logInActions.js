@@ -45,7 +45,7 @@ export const logInUser = data => {
   return async dispatch => {
     try {
       // Display Loading Screen (WIP - WILL IMPLEMENT WITH LOCAL STORAGE SAVING)
-      // Actions.loadingScreen({ type: ActionConst.RESET });
+      //Actions.loadingScreen({ type: ActionConst.RESET });
 
       const res = await axios.post(API_URL + '/login', userData);
       // Load all groups on user login
@@ -54,9 +54,12 @@ export const logInUser = data => {
       dispatch(logInUserDataSuccess(res.data));
       dispatch(logInToken(res.headers.authentication));
       dispatch(logInSuccess(true));
+
     } catch (err) {
+
       dispatch(logInSuccess(false));
       dispatch(logInUserError(err.response.data));
     }
+
   };
 };

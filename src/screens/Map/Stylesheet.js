@@ -37,7 +37,7 @@ const mapStyles = StyleSheet.create({
   locationButton: {
     position: "absolute",
     bottom: 10,
-    right: 10
+    right: 10,
   },
   searchBar: {
     marginLeft: 5,
