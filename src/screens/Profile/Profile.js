@@ -89,6 +89,14 @@ const mapDispatchToProps = dispatch => {
     getUser: data => dispatch(getUser(data)),
     getUserDataSuccess: data => dispatch(getUserDataSuccess(data)),
     updateUser: data => dispatch(updateUser(data)),
+    getActiveGroup: data => dispatch(getActiveGroup(data)),
+    getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
+    getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
+    getActiveGroupError: data => dispatch(getActiveGroupError(data)),
+    groupExists: data => dispatch(groupExists(data)),
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
+    getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
+    getGroupMember: data => dispatch(getGroupMember(data))
   };
 }
 

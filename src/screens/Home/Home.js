@@ -27,11 +27,14 @@ import {
   getActiveGroupSuccess,
   getActiveGroupDataSuccess,
   groupExists,
-  getActiveGroupRefreshDataOnly
+  getActiveGroupRefreshDataOnly,
+  getGroupMember
 } from '../../actions/groupActions';
+
 import {
   getUser,
 } from '../../actions/userActions';
+
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 
 class Home extends Component {
@@ -48,6 +51,9 @@ class Home extends Component {
   }
 
   componentDidMount() {
+
+    this.props.getUser({token: this.props.token});
+
     // update every 5 seconds
     this.setState({
       interval: setInterval(() => {
@@ -56,6 +62,8 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+
+        this.props.getUser({token: this.props.token});
 
         this.props.getGroupAllMarks({
           groupMarkId: this.props.getActiveGroupData.groupMarks,
@@ -66,17 +74,8 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
-
-        this.props.getUser({token: this.props.token})
       }, 5000)
     });
-
-    const data = {
-      groupMarkId: this.props.getActiveGroupData.groupMarks,
-      token: this.props.token
-    };
-
-    this.props.getGroupAllMarks(data);
   }
 
   componentWillUnmount() {
@@ -91,17 +90,6 @@ class Home extends Component {
     if (prevProps.groupExistsStatus !== this.props.groupExistsStatus) {
       if (!this.props.groupExistsStatus) {
         this.clearActiveGroup();
-      }
-    }
-
-    if (prevProps.updateGroupStatus !== this.props.updateGroupStatus) {
-      if (this.props.updateGroupStatus) {
-        const data = {
-          token: this.props.token,
-          groupId: this.props.getActiveGroupData._id
-        };
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroup(data);
       }
     }
   }
@@ -132,10 +120,10 @@ class Home extends Component {
               source={
                 this.props.getActiveGroupData.groupImg
                   ? {
-                      uri:
-                        'data:image/png;base64,' +
-                        this.props.getActiveGroupData.groupImg
-                    }
+                    uri:
+                      'data:image/png;base64,' +
+                      this.props.getActiveGroupData.groupImg
+                  }
                   : require('../../assests/images/food.jpg')
               }
               resizeMode="cover"
@@ -164,13 +152,15 @@ class Home extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
+    getUserData: state.userReducer.getUserData,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
     token: state.logInReducer.token,
     groupExistsStatus: state.groupReducer.groupExistsStatus,
     updateGroupStatus: state.groupReducer.updateGroupStatus,
     updateGroupData: state.groupReducer.updateGroupStatus,
-    loadingData: state.groupReducer.loadingData
+    loadingData: state.groupReducer.loadingData,
+    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData
   };
 };
 
@@ -180,13 +170,12 @@ const mapDispatchToProps = dispatch => {
     getUser: data => dispatch(getUser(data)),
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
-    getActiveGroupDataSuccess: data =>
-      dispatch(getActiveGroupDataSuccess(data)),
+    getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
-    getActiveGroupRefreshDataOnly: data =>
-      dispatch(getActiveGroupRefreshDataOnly(data))
+    getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
+    getGroupMember: data => dispatch(getGroupMember(data))
   };
 };
 

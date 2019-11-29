@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StatusBar, TouchableHighlight } from "react-native";
+import { Platform, StatusBar, TouchableHighlight, ToastAndroid, BackHandler } from "react-native";
 import {
   Router,
   Stack,
@@ -62,6 +62,8 @@ import {
   getGroups,
 } from '../../actions/groupActions';
 
+let backPressed = 0;
+
 //Create a dedicated class that will manage the tabBar icon
 class TabIcon extends Component {
   render() {
@@ -70,6 +72,33 @@ class TabIcon extends Component {
 }
 
 class App extends Component {
+
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton.bind(this));
+}
+
+constructor(){
+    super();
+    this.state={
+        isloggedin: false,
+        backPressed: 1
+    }
+}
+
+handleBackButton(){
+    if(backPressed > 0){
+            BackHandler.exitApp();
+            backPressed = 0;
+        }else {
+            backPressed++;
+            ToastAndroid.show("Press Again To Exit", ToastAndroid.SHORT);
+            setTimeout( () => { backPressed = 0}, 2000);
+            return true;
+    }
+}
+
+
   render() {
     return (
       <Router
