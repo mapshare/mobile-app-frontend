@@ -1,11 +1,14 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import { connect } from 'react-redux';
 
 //Redux actions
-import { getCurrentOnClickMark } from '../../actions/groupMarkAction';
+import {
+  getCurrentOnClickMark,
+  getGroupAllMarks
+} from '../../actions/groupMarkAction';
 import { clickMarkModalWindow } from '../../actions/modalWindowAction';
 
 // Componenets Style
@@ -15,17 +18,6 @@ import { containerStyles } from './Stylesheet';
 class Marks extends Component {
   constructor(props) {
     super(props);
-    this.marksArray = [];
-  }
-
-  componentWillMount() {
-    this.marksArray = this.props.getGroupAllMarksData;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.addGroupMarkStatus != prevProps.addGroupMarkStatus) {
-      this.marksArray = this.props.getGroupAllMarksData;
-    }
   }
 
   onClickMark = (data, event) => {
@@ -37,7 +29,8 @@ class Marks extends Component {
 
   renderMark = (data, index) => {
     const ref = `markId-${index}`;
-    const coordinate = this.marksArray[index].geometry.coordinates;
+    const coordinate = this.props.getGroupAllMarksData[index].geometry
+      .coordinates;
 
     return (
       <Mapbox.PointAnnotation
@@ -46,17 +39,17 @@ class Marks extends Component {
         coordinate={coordinate}
         onSelected={event => this.onClickMark(data, event)}
       >
-        <View style={containerStyles.container}>
+        <View key={ref} style={containerStyles.container}>
           <View style={containerStyles.fill} />
         </View>
       </Mapbox.PointAnnotation>
     );
   };
 
-  renderAnnotations() {
+  renderAnnotations(data) {
     const marksView = [];
 
-    this.marksArray.map((data, index) => {
+    data.map((data, index) => {
       marksView.push(this.renderMark(data, index));
     });
 
@@ -64,16 +57,15 @@ class Marks extends Component {
   }
 
   render() {
-    return <View>{this.renderAnnotations()}</View>;
+    return (
+      <View>{this.renderAnnotations(this.props.getGroupAllMarksData)}</View>
+    );
   }
 }
 
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
-    coordinates: state.groupMarkReducer.coordinates,
-    getUserData: state.logInReducer.userData,
-    logInToken: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
     addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
     getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData,
@@ -85,8 +77,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getCurrentOnClickMark: data => dispatch(getCurrentOnClickMark(data)),
-    clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool))
+    clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool)),
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data))
   };
 };
 
-export default Marks = connect(mapStateToProps, mapDispatchToProps)(Marks);
+export default connect(mapStateToProps, mapDispatchToProps)(Marks);
