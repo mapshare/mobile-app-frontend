@@ -44,6 +44,10 @@ class Profile extends Component {
     this.props.getActiveGroupError("");
     Actions.Auth({ type: ActionConst.RESET })
   }
+
+  updateProfile() {
+    Actions.updateProfile()
+  }
   
   goTester() {
     Actions.tester()
@@ -60,7 +64,7 @@ class Profile extends Component {
             <Text style={styles.info}>{this.props.getActiveGroupData.groupName}</Text>
             <Text style={styles.description}>{this.props.getActiveGroupData.groupDescription}{'\n'}</Text>
             
-            <TouchableOpacity style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => { this.updateProfile() }}>
               <Text>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.logoutButton} onPress={() => { this.goLogin() }}>

@@ -43,7 +43,7 @@ export default class EventsView extends Component {
               style={styles.addButton}
               >Add Event</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.eventClickListener("row")}>
+              <TouchableOpacity /*onPress={() => this.eventClickListener("row")}*/>
                 <View style={styles.eventBox} >
                   <View style={styles.eventDate}>
                      <Text  style={styles.eventDay}>{event.day}</Text>
