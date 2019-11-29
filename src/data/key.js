@@ -287,6 +287,8 @@ const CAPTION_DATA = 'CAPTION_DATA';
 const IMAGE_STATUS = 'IMAGE_STATUS';
 const IMAGE_DATA = 'IMAGE_DATA';
 
+const BANNED_USER_DATA = 'BANED_USER_DATA';
+
 export default {
   // logInReducer.js
   LOG_IN_SUCCESS,
@@ -365,6 +367,8 @@ export default {
   DELETE_GROUP_SUCCESS,
   DELETE_GROUP_DATA_SUCCESS,
   DELETE_GROUP_ERROR,
+  // groupReducer.js - GET BANNED USER FROM GROUP
+  BANNED_USER_DATA,
   // groupEventReducer.js - ADD GROUP EVENT
   ADD_GROUP_EVENT_SUCCESS,
   ADD_GROUP_EVENT_DATA_SUCCESS,
@@ -544,5 +548,5 @@ export default {
   CAPTION_DATA,
   // addPostReducer.js - SET IMAGE
   IMAGE_STATUS,
-  IMAGE_DATA
+  IMAGE_DATA,
 };

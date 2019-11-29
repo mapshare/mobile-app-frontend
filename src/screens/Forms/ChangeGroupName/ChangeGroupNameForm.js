@@ -28,6 +28,7 @@ class changeGroupNameForm extends Component {
         this.state = {
             groupName: '',
             succesModalVisible: false,
+            changeGroupNameError: "",
         };
     }
 
@@ -40,22 +41,30 @@ class changeGroupNameForm extends Component {
     }
 
     changeGroupName = async () => {
-        const data = {
-            token: this.props.token,
-            groupName: this.state.groupName,
-            groupId: this.props.currentEditingGroupData._id,
-            activeGroupId: this.props.getActiveGroupData._id,
+        let changeGroupNameError = "";
+        changeGroupNameError = validator('groupNamePresent', this.state.groupName);
+        !changeGroupNameError ? changeGroupNameError = validator('groupNameMinLength', this.state.groupName) : false;
+        !changeGroupNameError ? changeGroupNameError = validator('groupNameMaxLength', this.state.groupName) : false;
+        this.setState({ changeGroupNameError: changeGroupNameError });
+
+        if (!changeGroupNameError) {
+            const data = {
+                token: this.props.token,
+                groupName: this.state.groupName.trim(),
+                groupId: this.props.currentEditingGroupData._id,
+                activeGroupId: this.props.getActiveGroupData._id,
+            }
+
+            this.props.updateGroupSuccess(false);
+            this.props.updateGroup(data);
+            this.setSuccesModalVisible(!this.state.succesModalVisible);
+            Actions.pop();
         }
-        
-        this.props.updateGroupSuccess(false);
-        this.props.updateGroup(data);
-        this.setSuccesModalVisible(!this.state.succesModalVisible);
-        Actions.pop();
     };
-    
+
     setSuccesModalVisible(visible) {
-        this.setState({ succesModalVisible: visible },()=>{
-            setTimeout(()=>{
+        this.setState({ succesModalVisible: visible }, () => {
+            setTimeout(() => {
                 this.setState({ succesModalVisible: !visible });
             }, 3000);
         });
@@ -86,9 +95,11 @@ class changeGroupNameForm extends Component {
                     selectionColor="#fff"
                     autoCorrect={false}
                     returnKeyType="next"
+                    maxLength={15}
                     autoCapitalize="none"
                     onSubmitEditing={() => this.changeGroupName()}
                 />
+                {this.state.changeGroupNameError ? <Text>{this.state.changeGroupNameError}</Text> : null}
 
                 <TouchableOpacity style={styles.button}>
                     <Text style={styles.buttonText} onPress={() => this.changeGroupName()}>

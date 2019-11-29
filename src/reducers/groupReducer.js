@@ -10,10 +10,7 @@ const INITIAL_GROUP_STATE = {
   getGroupMemberData: {
     _id: ''
   },
-  getEditingGroupMemberData: {
-    _id: '',
-    memberRole: ''
-  },
+  getEditingGroupMemberData: {},
   loadingData: false,
   getGroupsData: ''
 };
@@ -70,66 +67,32 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
       return { ...state, addGroupMemberError: action.addGroupMemberError };
     // UPDATE GROUP MEMBER
     case keys.UPDATE_GROUP_MEMBER_SUCCESS:
-      return {
-        ...state,
-        updateGroupMemberStatus: action.updateGroupMemberStatus
-      };
+      return { ...state, updateGroupMemberStatus: action.updateGroupMemberStatus };
     case keys.UPDATE_GROUP_MEMBER_DATA_SUCCESS:
       return { ...state, updateGroupMemberData: action.updateGroupMemberData };
     case keys.UPDATE_GROUP_MEMBER_ERROR:
-      return {
-        ...state,
-        updateGroupMemberError: action.updateGroupMemberError
-      };
+      return { ...state, updateGroupMemberError: action.updateGroupMemberError };
     // REQUEST TO JOIN GROUP
     case keys.REQUEST_TO_JOIN_GROUP_SUCCESS:
-      return {
-        ...state,
-        getRequestToJoinGroupStatus: action.getRequestToJoinGroupStatus
-      };
+      return { ...state, getRequestToJoinGroupStatus: action.getRequestToJoinGroupStatus };
     case keys.REQUEST_TO_JOIN_GROUP_DATA_SUCCESS:
-      return {
-        ...state,
-        getRequestToJoinGroupData: action.getRequestToJoinGroupData
-      };
+      return { ...state, getRequestToJoinGroupData: action.getRequestToJoinGroupData };
     case keys.REQUEST_TO_JOIN_GROUP_ERROR:
-      return {
-        ...state,
-        getRequestToJoinGroupError: action.getRequestToJoinGroupError
-      };
+      return { ...state, getRequestToJoinGroupError: action.getRequestToJoinGroupError };
     // REVIEW JOIN GROUP REQUESTS
     case keys.REQUEST_TO_JOIN_GROUP_SUCCESS:
-      return {
-        ...state,
-        getReviewJoinGroupRequestsStatus:
-          action.getReviewJoinGroupRequestsStatus
-      };
+      return { ...state, getReviewJoinGroupRequestsStatus: action.getReviewJoinGroupRequestsStatus };
     case keys.REQUEST_TO_JOIN_GROUP_DATA_SUCCESS:
-      return {
-        ...state,
-        getReviewJoinGroupRequestsData: action.getReviewJoinGroupRequestsData
-      };
+      return { ...state, getReviewJoinGroupRequestsData: action.getReviewJoinGroupRequestsData };
     case keys.REQUEST_TO_JOIN_GROUP_ERROR:
-      return {
-        ...state,
-        getReviewJoinGroupRequestsError: action.getReviewJoinGroupRequestsError
-      };
+      return { ...state, getReviewJoinGroupRequestsError: action.getReviewJoinGroupRequestsError };
     // GET ALL JOIN GROUP REQUESTS
     case keys.GET_ALL_JOIN_GROUP_REQUESTS_SUCCESS:
-      return {
-        ...state,
-        getAllJoinGroupRequestsStatus: action.getAllJoinGroupRequestsStatus
-      };
+      return { ...state, getAllJoinGroupRequestsStatus: action.getAllJoinGroupRequestsStatus };
     case keys.GET_ALL_JOIN_GROUP_REQUESTS_DATA_SUCCESS:
-      return {
-        ...state,
-        getAllJoinGroupRequestsData: action.getAllJoinGroupRequestsData
-      };
+      return { ...state, getAllJoinGroupRequestsData: action.getAllJoinGroupRequestsData };
     case keys.GET_ALL_JOIN_GROUP_REQUESTS_ERROR:
-      return {
-        ...state,
-        getAllJoinGroupRequestsError: action.getAllJoinGroupRequestsError
-      };
+      return { ...state, getAllJoinGroupRequestsError: action.getAllJoinGroupRequestsError };
     // GET GROUP MEMBER
     case keys.GET_GROUP_MEMBER_SUCCESS:
       return { ...state, getGroupMemberStatus: action.getGroupMemberStatus };
@@ -139,33 +102,18 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
       return { ...state, getGroupMemberError: action.getGroupMemberError };
     // GET EDITING GROUP MEMBER
     case keys.GET_GROUP_MEMBER_SUCCESS:
-      return {
-        ...state,
-        getEditingGroupMemberStatus: action.getEditingGroupMemberStatus
-      };
+      return { ...state, getEditingGroupMemberStatus: action.getEditingGroupMemberStatus };
     case keys.GET_EDITING_GROUP_MEMBER_DATA:
-      return {
-        ...state,
-        getEditingGroupMemberData: action.getEditingGroupMemberData
-      };
+      return { ...state, getEditingGroupMemberData: action.getEditingGroupMemberData };
     case keys.GET_GROUP_MEMBER_ERROR:
-      return {
-        ...state,
-        getEditingGroupMemberError: action.getEditingGroupMemberError
-      };
+      return { ...state, getEditingGroupMemberError: action.getEditingGroupMemberError };
     // GET ALL GROUP MEMBER
     case keys.GET_ALL_GROUP_MEMBER_SUCCESS:
-      return {
-        ...state,
-        getAllGroupMemberStatus: action.getAllGroupMemberStatus
-      };
+      return { ...state, getAllGroupMemberStatus: action.getAllGroupMemberStatus };
     case keys.GET_ALL_GROUP_MEMBER_DATA_SUCCESS:
       return { ...state, getAllGroupMemberData: action.getAllGroupMemberData };
     case keys.GET_ALL_GROUP_MEMBER_ERROR:
-      return {
-        ...state,
-        getAllGroupMemberError: action.getAllGroupMemberError
-      };
+      return { ...state, getAllGroupMemberError: action.getAllGroupMemberError };
     // UPDATE GROUP
     case keys.UPDATE_GROUP_SUCCESS:
       return { ...state, updateGroupStatus: action.updateGroupStatus };
@@ -187,6 +135,9 @@ export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {
       return { ...state, deleteGroupData: action.deleteGroupData };
     case keys.DELETE_GROUP_ERROR:
       return { ...state, deleteGroupError: action.deleteGroupError };
+    // GET BANED USER FROM GROUP
+    case keys.BANNED_USER_DATA:
+      return { ...state, bannedUserData: action.bannedUserData };
     default:
       return state;
   }

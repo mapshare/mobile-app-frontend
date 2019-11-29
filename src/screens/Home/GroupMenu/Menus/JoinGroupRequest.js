@@ -31,7 +31,8 @@ import {
     reviewJoinGroupRequests,
     reviewJoinGroupRequestsSuccess,
     getAllJoinGroupRequests,
-    allJoinGroupRequestsSuccess
+    allJoinGroupRequestsSuccess,
+    banUserFromGroup
 } from '../../../../actions/groupActions';
 
 import {
@@ -56,6 +57,10 @@ class JoinGroupRequest extends Component {
         this.state = {
             editingGroupId: "",
             succesModalVisible: false,
+            modalVisible: false,
+            selectedUser: "",
+            // Requred to pervent button spam
+            singleActivation: false,
         };
     }
 
@@ -82,17 +87,31 @@ class JoinGroupRequest extends Component {
         }
     }
 
-    reviewRequest(status, selectedPendingUser) {
+    reviewRequest(status) {
         const data = {
             token: this.props.token,
             groupId: this.props.currentEditingGroupData._id,
             status: status,
-            pendingUserId: selectedPendingUser._id,
+            pendingUserId: this.state.selectedUser._id,
         }
         this.props.reviewJoinGroupRequestsSuccess(false);
         this.props.reviewJoinGroupRequests(data);
-        this.props.allJoinGroupRequestsSuccess(false);
-        this.setSuccesModalVisible(!this.state.succesModalVisible);
+        this.props.allJoinGroupRequestsSuccess(false); 
+        this.setModalVisible(!this.state.modalVisible)
+    }
+
+    declineAndBanUser(){
+        const data = {
+            token: this.props.token,
+            groupId: this.props.currentEditingGroupData._id,
+            status: false,
+            pendingUserId: this.state.selectedUser._id,
+        }
+        this.props.banUserFromGroup(data);
+        this.props.reviewJoinGroupRequestsSuccess(false);
+        this.props.reviewJoinGroupRequests(data);
+        this.props.allJoinGroupRequestsSuccess(false); 
+        this.setModalVisible(!this.state.modalVisible)
     }
 
     setSuccesModalVisible(visible) {
@@ -103,9 +122,52 @@ class JoinGroupRequest extends Component {
         });
     }
 
+    setModalVisible(visible) {
+        this.setState({ modalVisible: visible });
+    }
+
     render() {
         return (
             <View style={styles.modalStyle}>
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        this.setModalVisible(!this.state.modalVisible);
+                    }}>
+                    <TouchableWithoutFeedback
+                        disabled={this.state.singleActivation}
+                        onPress={() => {
+                            this.setState({ singleActivation: true }, () => {
+                                this.setModalVisible(!this.state.modalVisible);
+                                setTimeout(() => {
+                                    this.setState({ singleActivation: false });
+                                }, 1000)
+                            });
+                        }}>
+                        <View style={styles.joinRequestModalPopUp}>
+
+                            <View style={styles.joinRequestModalContainer} >
+                                <TouchableOpacity style={styles.joinRequestModalItem} onPress={() => this.reviewRequest(true)}>
+                                    <Text style={styles.textBox} >Accept</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.joinRequestModalItem} onPress={() => this.reviewRequest(false)}>
+                                    <Text style={styles.textBox} >Decline</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.joinRequestModalItem} onPress={() => this.declineAndBanUser()}>
+                                    <Text style={styles.textBox} >Ban</Text>
+                                </TouchableOpacity>
+                                <View style={styles.flatListItemSeporator} />
+                                <TouchableOpacity style={styles.joinRequestModalItem} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                                    <Text style={styles.textBox} >Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
 
                 <Modal
                     animationType="fade"
@@ -125,7 +187,7 @@ class JoinGroupRequest extends Component {
                     </TouchableOpacity>
                 </View>
                 <SafeAreaView style={styles.content} >
-                    <Text style={styles.textBox}>Pending Group Join Request:</Text>
+                    <Text style={styles.textBox}>Review Join Requests:</Text>
                     <View style={styles.flatListItemSeporator} />
                     <FlatList
                         data={this.props.getAllJoinGroupRequestsData}
@@ -140,15 +202,13 @@ class JoinGroupRequest extends Component {
                                         </Text>
                                     </View>
                                     <View style={styles.flatListColThree}>
-                                        <TouchableOpacity onPress={() => this.reviewRequest(true, request.item)}>
-                                            <Icon style={styles.acceptIcon} name="check" size={30} />
+                                        <TouchableOpacity style={styles.bannedIconButton} onPress={() => {
+                                            this.setState({ selectedUser: request.item }, () => {
+                                                this.setModalVisible(!this.state.modalVisible);
+                                            })
+                                        }}>
+                                            <Icon style={styles.bannedIcon} name="options" size={30} />
                                         </TouchableOpacity>
-                                    </View>
-                                    <View style={styles.flatListColFour}>
-                                        <TouchableOpacity onPress={() => this.reviewRequest(false, request.item)}>
-                                            <Icon style={styles.declineIcon} name="close" size={30} />
-                                        </TouchableOpacity>
-
                                     </View>
                                 </View>
 
@@ -210,6 +270,7 @@ const mapDispatchToProps = dispatch => {
         reviewJoinGroupRequestsSuccess: data => dispatch(reviewJoinGroupRequestsSuccess(data)),
         getAllJoinGroupRequests: data => dispatch(getAllJoinGroupRequests(data)),
         allJoinGroupRequestsSuccess: data => dispatch(allJoinGroupRequestsSuccess(data)),
+        banUserFromGroup: data => dispatch(banUserFromGroup(data)),
     };
 };
 

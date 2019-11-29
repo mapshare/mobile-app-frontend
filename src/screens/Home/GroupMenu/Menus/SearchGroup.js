@@ -94,9 +94,9 @@ class SearchGroup extends Component {
     }
 
     editGroup(group) {
-        Actions.editGroupMenu();
         this.props.currentEditingGroupStatus(false);
         this.props.setCurrentEditingGroup(group);
+        Actions.editGroupMenu({ currentEditingGroup: group });
     }
 
     showSearchResults() {
@@ -122,13 +122,19 @@ class SearchGroup extends Component {
                                 <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
                                     {group.item.groupName}
                                 </Text>
-                                <Text style={styles.textBoxSmall}>
-                                    Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Owner: {group.item.createdBy.userFirstName}
+                                    <Text style={[styles.idTextBox, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        {" #" + group.item.createdBy._id.slice(0, 6)}
+                                    </Text>
+                                </Text>
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Status: {group.item.groupIsPublic ? "Public" : "Private"}
                                 </Text>
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                <TouchableOpacity onPress={() => this.editGroup(group.item)}>
+                                <TouchableOpacity style={styles.editGroupIconPadding} onPress={() => this.editGroup(group.item)}>
                                     <Icon style={styles.editGroupIcon} name="note" size={30} />
                                 </TouchableOpacity>
                             </View>
@@ -147,15 +153,23 @@ class SearchGroup extends Component {
                                         {group.item.groupName}
                                     </Text>
                                     <Text style={styles.textBoxSmall}>
-                                        Created By: {group.item.createdBy.userFirstName} {group.item.createdBy.userLastName}
+                                        Owner: {group.item.createdBy.userFirstName}
+                                        <Text style={styles.idTextBox}>
+                                            {" #" + group.item.createdBy._id.slice(0, 6)}
+                                        </Text>
+                                    </Text>
+                                    <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        Status: {group.item.groupIsPublic ? "Public" : "Private"}
                                     </Text>
                                 </View>
 
                                 <View style={styles.flatListColThreeWide} >
                                     {!group.item.isMember &&
                                         !group.item.isPending &&
-                                        <TouchableOpacity style={styles.flatListItemButton} onPress={() => this.joinGroup(group.item._id)}>
-                                            <Text style={styles.flatListItemButtonText}>Join</Text>
+                                        <TouchableOpacity style={styles.editGroupIconPadding} onPress={() => this.joinGroup(group.item._id)}>
+                                            <View style={styles.flatListItemButton} >
+                                                <Text style={styles.flatListItemButtonText}>Join</Text>
+                                            </View>
                                         </TouchableOpacity>}
                                     {group.item.isPending &&
                                         <Text style={styles.flatListItemButtonText}>Pending</Text>

@@ -49,6 +49,7 @@ import GroupMembersListMenu from "../../screens/Home/GroupMenu/Menus/GroupMember
 import JoinGroupRequestMenu from "../../screens/Home/GroupMenu/Menus/JoinGroupRequest";
 import ChangeGroupNameMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupName";
 import ChangeGroupDescriptionMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupDescription";
+import BanedUsersList from "../../screens/Home/GroupMenu/Menus/BanedUsersList";
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
@@ -208,6 +209,7 @@ class App extends Component {
           <Scene key="joinGroupRequestMenu" hideNavBar hideTabBar component={JoinGroupRequestMenu} />
           <Scene key="changeGroupNameMenu" hideNavBar hideTabBar component={ChangeGroupNameMenu} />
           <Scene key="changeGroupDescriptionMenu" hideNavBar hideTabBar component={ChangeGroupDescriptionMenu} />
+          <Scene key="banedUsersList" hideNavBar hideTabBar component={BanedUsersList} />
 
           {/* MODALS */}
           <Scene key="loadingScreen" component={LoadingScreen} />

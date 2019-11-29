@@ -31,7 +31,8 @@ import {
     getUserGroupsSuccess,
     getUserGroups,
     getGroupsSuccess,
-    getGroups
+    getGroups,
+    getEditingGroupMember,
 } from '../../../../actions/groupActions';
 
 import {
@@ -102,10 +103,19 @@ class MyGroups extends Component {
                                 <Text style={[styles.flatListItemText, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
                                     {group.item.groupName}
                                 </Text>
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Owner: {group.item.createdBy.userFirstName}
+                                    <Text style={[styles.idTextBox, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                        {" #" + group.item.createdBy._id.slice(0, 6)}
+                                    </Text>
+                                </Text>
+                                <Text style={[styles.textBoxSmall, (activeGroupId == group.item._id) ? styles.activeGroupColour : ""]}>
+                                    Status: {group.item.groupIsPublic ? "Public" : "Private"}
+                                </Text>
                             </View>
 
                             <View style={styles.flatListColThree}>
-                                <TouchableOpacity onPress={() => this.editGroup(group.item)}>
+                                <TouchableOpacity style={styles.editGroupIconPadding} onPress={() => this.editGroup(group.item)}>
                                     <Icon style={styles.editGroupIcon} name="note" size={30} />
                                 </TouchableOpacity>
                             </View>
@@ -131,6 +141,11 @@ class MyGroups extends Component {
     editGroup = async (group) => {
         this.props.currentEditingGroupStatus(false);
         this.props.setCurrentEditingGroup(group);
+        const data = {
+            token: this.props.token,
+            groupId: group._id,
+        }
+        this.props.getEditingGroupMember(data);
         Actions.editGroupMenu({ currentEditingGroup: group });
     }
 
@@ -207,6 +222,7 @@ const mapDispatchToProps = dispatch => {
         setCurrentEditingGroup: data => dispatch(setCurrentEditingGroup(data)),
         getGroupsSuccess: data => dispatch(getGroupsSuccess(data)),
         getGroups: data => dispatch(getGroups(data)),
+        getEditingGroupMember: data => dispatch(getEditingGroupMember(data)),
     };
 };
 

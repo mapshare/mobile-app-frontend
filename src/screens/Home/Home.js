@@ -82,17 +82,6 @@ class Home extends Component {
         this.clearActiveGroup();
       }
     }
-
-    if (prevProps.updateGroupStatus !== this.props.updateGroupStatus) {
-      if (this.props.updateGroupStatus) {
-        const data = {
-          token: this.props.token,
-          groupId: this.props.getActiveGroupData._id
-        };
-        this.props.getActiveGroupSuccess(false);
-        this.props.getActiveGroup(data);
-      }
-    }
   }
 
   checkIfGroupExists(groupId) {

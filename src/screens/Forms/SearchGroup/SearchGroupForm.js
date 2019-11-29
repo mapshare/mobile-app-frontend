@@ -43,7 +43,7 @@ class SearchGroupForm extends Component {
             searchGroupError: '',
         };
     }
-    componentDidMount(){
+    componentDidMount() {
         this.searchGroupName();
     }
 
@@ -119,6 +119,7 @@ class SearchGroupForm extends Component {
                             placeholderTextColor="#B8B8B8"
                             selectionColor="#fff"
                             autoCorrect={false}
+                            maxLength={15}
                             returnKeyType="next"
                             autoCapitalize="none"
                             onSubmitEditing={() => this.searchGroupName(this.state.groupName)}
