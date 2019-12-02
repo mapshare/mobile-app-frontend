@@ -7,7 +7,8 @@ import {
   Alert,
   ScrollView,
   SafeAreaView,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  AsyncStorage
 } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -51,6 +52,7 @@ class Home extends Component {
       groupImg: ''
     };
     this.appTourTargets = []
+    this.firstLaunch = false
   }
 
   componentWillMount() {
@@ -62,7 +64,7 @@ class Home extends Component {
 
     this.props.getUser({token: this.props.token});
 
-    // update every 5 seconds
+    // update every 25 seconds
     this.setState({
       interval: setInterval(() => {
         this.checkIfGroupExists(this.props.getActiveGroupData._id);
@@ -85,14 +87,28 @@ class Home extends Component {
       }, 25000)
     });
 
-    setTimeout(() => {
-      let appTourSequence = new AppTourSequence()
-      this.appTourTargets.forEach(appTourTarget => {
-        appTourSequence.add(appTourTarget)
-      })
-
-      AppTour.ShowSequence(appTourSequence)
-    }, 1000)
+    // Check First Launch and store state in launched using AsyncStorage
+    AsyncStorage.getItem('Launched').then((result) => {
+      console.log(result)
+      if (result === null){
+        AsyncStorage.setItem('Launched', JSON.stringify('true')).then(() => AsyncStorage.getItem('Launched')
+        .then((result)=>console.log('Launched:',result)))
+        this.firstLaunch = true;
+      } else {
+        this.firstLaunch = false;
+      }
+    }).then(() => {
+      if (this.firstLaunch) {
+        setTimeout(() => {
+          let appTourSequence = new AppTourSequence()
+          this.appTourTargets.forEach(appTourTarget => {
+            appTourSequence.add(appTourTarget)
+          })
+    
+          AppTour.ShowSequence(appTourSequence)
+        }, 1000)
+      }
+    })
   }
 
   componentWillUnmount() {
