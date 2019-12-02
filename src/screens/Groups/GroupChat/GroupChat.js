@@ -8,10 +8,12 @@ import {
   ScrollView,
   TextInput,
   FlatList,
-  Button
+  Button,
+  KeyboardAvoidingView
 } from "react-native";
 
 import Moment from 'moment';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 // Componenets Style
 import styles from "./Stylesheet";
@@ -81,7 +83,9 @@ class GroupChat extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      
+      <View style={styles.container} >
+        
         <FlatList style={styles.list}
           inverted
           data={this.props.chatLogData.data}
@@ -98,6 +102,7 @@ class GroupChat extends Component {
               </View>
             )
           }} />
+          
         <View style={styles.footer}>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputs}
@@ -114,7 +119,9 @@ class GroupChat extends Component {
             <Image source={{ uri: "https://png.icons8.com/small/75/ffffff/filled-sent.png" }} style={styles.iconSend} />
           </TouchableOpacity>
         </View>
+        
       </View>
+      
     );
   }
 }

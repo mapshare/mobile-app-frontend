@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 // Componenets Style
 export default StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   list: {
     paddingHorizontal: 17,
