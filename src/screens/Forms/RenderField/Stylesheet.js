@@ -32,6 +32,21 @@ const mainStyles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 16
+  },
+
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: 'gray'
+  },
+
+  inputAndroid: {
+    fontSize: 16,
+    color: 'black'
+  },
+
+  inputIOS: {
+    fontSize: 16,
+    color: 'black'
   }
 });
 

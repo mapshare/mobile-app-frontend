@@ -92,8 +92,13 @@ export const geocodingLocation = data => {
 };
 
 export const addGroupMark = data => {
+  const defaultMarkCategoryId = data.categoryId.defaultMarkCategory;
+  const customMarkCategoryId = data.categoryId.customMarkCategory;
+
   let markData = {
     markName: data.markName,
+    defaultMarkCategory: defaultMarkCategoryId,
+    customMarkCategory: customMarkCategoryId,
     markLocations: data.markLocations,
     geometry: data.geometry,
     groupMarkCreatedBy: data.groupMarkCreatedBy
@@ -110,6 +115,7 @@ export const addGroupMark = data => {
         dispatch(addGroupMarkSuccess(true));
       })
       .catch(err => {
+        console.log('failed add mark: ', err.response.data);
         dispatch(addGroupMarkSuccess(false));
         dispatch(addGroupMarkError(err.response.data));
       });
@@ -284,9 +290,23 @@ export const deleteGroupMark = data => {
   };
 };
 
+export const sortGroupMarkOnClick = bool => {
+  return {
+    type: keys.SORT_GROUP_MARK_FLAG,
+    sortGroupMarkOnClickFlag: bool
+  };
+};
+
 export const sortGroupMark = data => {
   return {
     type: keys.SORT_GROUP_MARK,
     sortGroupMarkData: data
+  };
+};
+
+export const setSortGroupMark = (data, bool) => {
+  return dispatch => {
+    dispatch(sortGroupMarkOnClick(bool));
+    dispatch(sortGroupMark(data));
   };
 };

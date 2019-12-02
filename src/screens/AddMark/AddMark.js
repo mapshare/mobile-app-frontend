@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { View, TouchableHighlight } from "react-native";
-import { connect } from "react-redux";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
+import React, { Component } from 'react';
+import { View, TouchableHighlight } from 'react-native';
+import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //Redux actions
-import { addGroupMarkOnClick } from "../../actions/groupMarkAction";
+import { addGroupMarkOnClick } from '../../actions/groupMarkAction';
 
 // Componenets Style
-import { containerStyles } from "./Stylesheet";
+import { containerStyles } from './Stylesheet';
 
 class AddMark extends Component {
   addLocationOnClick = () => {
@@ -41,7 +41,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddMark);
+export default connect(mapStateToProps, mapDispatchToProps)(AddMark);

@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 //Redux actions
 import { categoriesOptionOnClick } from '../../actions/groupDefaultMarkCategory';
 import { addCustomMarkModalWindow } from '../../actions/modalWindowAction';
-import { sortGroupMark } from '../../actions/groupMarkAction';
+import { setSortGroupMark } from '../../actions/groupMarkAction';
 
 // Componenets Style
 import { containerStyles, customCategoryStyles } from './Stylesheet';
@@ -99,11 +99,9 @@ class CategoryOptions extends Component {
       () => {
         if (!this.state.selectedDefaultCategories[index].isSelected) {
           this.sortSelectedCategories.push(data._id);
-          console.log('true: ', this.sortSelectedCategories);
         } else {
           let index = this.sortSelectedCategories.indexOf(data._id);
           if (index !== -1) this.sortSelectedCategories.splice(index, 1);
-          console.log('false: ', this.sortSelectedCategories);
         }
       }
     );
@@ -119,12 +117,11 @@ class CategoryOptions extends Component {
         categoryIsSelected: !this.state.categoryIsSelected
       },
       () => {
-        if (this.state.categoryIsSelected) {
+        if (!this.state.selectedCustomCategories[index].isSelected) {
           this.sortSelectedCategories.push(data._id);
-          console.log('true: ', this.sortSelectedCategories);
         } else {
-          this.sortSelectedCategories.pop(data._id);
-          console.log('false: ', this.sortSelectedCategories);
+          let index = this.sortSelectedCategories.indexOf(data._id);
+          if (index !== -1) this.sortSelectedCategories.splice(index, 1);
         }
       }
     );
@@ -150,8 +147,8 @@ class CategoryOptions extends Component {
     return customCategoryView;
   }
 
-  sortOnclick() {
-    this.props.sortGroupMark(this.sortSelectedCategories);
+  sortOnclick(data) {
+    this.props.setSortGroupMark(data, !this.props.sortGroupMarkOnClickFlag);
   }
 
   render() {
@@ -177,7 +174,7 @@ class CategoryOptions extends Component {
         )}
         <TouchableOpacity
           style={containerStyles.sortButtonContainer}
-          onPress={this.sortOnclick}
+          onPress={() => this.sortOnclick(this.sortSelectedCategories)}
         >
           <Icon name="check" size={20} color="white" />
           <Text style={containerStyles.buttonTextStyle}>Sort</Text>
@@ -195,7 +192,8 @@ const mapStateToProps = state => {
     getGroupDefaultMarkCategoryData:
       state.groupDefaultMarkCategoryReducer.getGroupDefaultMarkCategoryData,
     getGroupAllCustomMarkCategoryData:
-      state.groupCustomMarkCategoryReducer.getGroupAllCustomMarkCategoryData
+      state.groupCustomMarkCategoryReducer.getGroupAllCustomMarkCategoryData,
+    sortGroupMarkOnClickFlag: state.groupMarkReducer.sortGroupMarkOnClickFlag
   };
 };
 
@@ -204,7 +202,7 @@ const mapDispatchToProps = dispatch => {
   return {
     categoriesOptionOnClick: bool => dispatch(categoriesOptionOnClick(bool)),
     addCustomMarkModalWindow: bool => dispatch(addCustomMarkModalWindow(bool)),
-    sortGroupMarkData: data => dispatch(sortGroupMarkData(data))
+    setSortGroupMark: (data, bool) => dispatch(setSortGroupMark(data, bool))
   };
 };
 

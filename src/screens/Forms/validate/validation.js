@@ -67,6 +67,13 @@ const validation = {
     }
   },
 
+  categoryId: {
+    presence: {
+      message: '^Category is required',
+      allowEmpty: false
+    }
+  },
+
   additionalInformation: {
     presence: {
       message: '^Description is required',
