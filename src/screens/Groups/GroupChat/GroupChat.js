@@ -8,7 +8,8 @@ import {
   ScrollView,
   TextInput,
   FlatList,
-  Button
+  Button,
+  SafeAreaView
 } from "react-native";
 
 import Moment from 'moment';
@@ -35,7 +36,9 @@ import {
   getGroupMemberSuccess
 } from '../../../actions/groupActions';
 
-import validator from '../../Forms/validate/validation_wrapper'
+import validator from '../../Forms/validate/validation_wrapper';
+
+import ActiveMemberMenuBtn from './activeMemberMenuBtn';
 
 class GroupChat extends Component {
   constructor(props) {
@@ -82,22 +85,28 @@ class GroupChat extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <FlatList style={styles.list}
-          inverted
-          data={this.props.chatLogData.data}
-          keyExtractor={(item) => { return item._id; }}
-          renderItem={({ item }) => {
-            let inMessage = item.messageCreatedBy === this.props.getGroupMemberData._id;
-            let itemStyle = inMessage ? styles.itemIn : styles.itemOut;
-            return (
-              <View style={[styles.item, itemStyle]}>
-                <View style={[styles.balloon]}>
-                  <Text>{item.messageCreatedByName} {this.renderDate(item.messageCreatedAt)}</Text>
-                  <Text>{item.messageBody}</Text>
+        <SafeAreaView style={styles.TopBar}>
+          <ActiveMemberMenuBtn />
+          <Text style={styles.TopBarTitle}>Group Chat</Text>
+        </SafeAreaView>
+        <SafeAreaView style={styles.chatArea}>
+          <FlatList style={styles.list}
+            inverted
+            data={this.props.chatLogData.data}
+            keyExtractor={(item) => { return item._id; }}
+            renderItem={({ item }) => {
+              let inMessage = item.messageCreatedBy === this.props.getGroupMemberData._id;
+              let itemStyle = inMessage ? styles.itemIn : styles.itemOut;
+              return (
+                <View style={[styles.item, itemStyle]}>
+                  <View style={[styles.balloon]}>
+                    <Text>{item.messageCreatedByName} {this.renderDate(item.messageCreatedAt)}</Text>
+                    <Text>{item.messageBody}</Text>
+                  </View>
                 </View>
-              </View>
-            )
-          }} />
+              )
+            }} />
+        </SafeAreaView>
         <View style={styles.footer}>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputs}

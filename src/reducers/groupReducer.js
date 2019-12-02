@@ -12,7 +12,8 @@ const INITIAL_GROUP_STATE = {
   },
   getEditingGroupMemberData: {},
   loadingData: false,
-  getGroupsData: ''
+  getGroupsData: '',
+  getAllGroupMemberData: [],  
 };
 
 export const groupReducer = (state = INITIAL_GROUP_STATE, action) => {

@@ -208,6 +208,47 @@ export const getUserGroups = data => {
 };
 
 /*
+ *   GET GROUP MEMBER
+ */
+export const getGroupMemberSuccess = bool => {
+  return {
+    type: keys.GET_GROUP_MEMBER_SUCCESS,
+    getGroupMemberStatus: bool
+  };
+};
+
+export const getGroupMemberDataSuccess = data => {
+  return {
+    type: keys.GET_GROUP_MEMBER_DATA_SUCCESS,
+    getGroupMemberData: data
+  };
+};
+
+export const getGroupMemberError = data => {
+  return {
+    type: keys.GET_GROUP_MEMBER_ERROR,
+    getGroupMemberError: data
+  };
+};
+
+export const getGroupMember = data => {
+  return dispatch => {
+    axios
+      .get(API_URL + '/groups/' + data.groupId + '/member', {
+        headers: { 'authentication': data.token }
+      })
+      .then(res => {
+        dispatch(getGroupMemberDataSuccess(res.data));
+        dispatch(getGroupMemberSuccess(true));
+      })
+      .catch(err => {
+        dispatch(getGroupMemberSuccess(false));
+        dispatch(getGroupMemberError(err.response.data));
+      });
+  };
+};
+
+/*
 *   GET ACTIVE GROUP
 */
 import { connectToGroupChat } from "./groupChatRoomAction"
@@ -396,47 +437,6 @@ export const addGroupMember = data => {
       .catch(err => {
         dispatch(addGroupMemberSuccess(false));
         dispatch(addGroupMemberError(err.response.data));
-      });
-  };
-};
-
-/*
- *   GET GROUP MEMBER
- */
-export const getGroupMemberSuccess = bool => {
-  return {
-    type: keys.GET_GROUP_MEMBER_SUCCESS,
-    getGroupMemberStatus: bool
-  };
-};
-
-export const getGroupMemberDataSuccess = data => {
-  return {
-    type: keys.GET_GROUP_MEMBER_DATA_SUCCESS,
-    getGroupMemberData: data
-  };
-};
-
-export const getGroupMemberError = data => {
-  return {
-    type: keys.GET_GROUP_MEMBER_ERROR,
-    getGroupMemberError: data
-  };
-};
-
-export const getGroupMember = data => {
-  return dispatch => {
-    axios
-      .get(API_URL + '/groups/' + data.groupId + '/member', {
-        headers: { 'authentication': data.token }
-      })
-      .then(res => {
-        dispatch(getGroupMemberDataSuccess(res.data));
-        dispatch(getGroupMemberSuccess(true));
-      })
-      .catch(err => {
-        dispatch(getGroupMemberSuccess(false));
-        dispatch(getGroupMemberError(err.response.data));
       });
   };
 };
@@ -858,8 +858,14 @@ export const leaveGroup = data => {
   if (data.memberId) {
     deleteByMember = "/" + data.memberId;
   }
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
+      // disconnect from chatRoom and groupFeed
+      let { socket } = getState().groupChatRoomReducer;
+      socket.disconnect();
+      let { groupFeedSocket } = getState().groupFeedReducer;
+      groupFeedSocket.disconnect();
+
       // Display Loading Screen
       Actions.loadingScreen({ type: ActionConst.RESET });
 
@@ -871,6 +877,7 @@ export const leaveGroup = data => {
 
       if (data.activeGroupId == data.groupId) {
         // Clear active group data
+        AsyncStorage.setItem('lastActiveGroupId', "");
         dispatch(getActiveGroupSuccess(false));
         dispatch(getActiveGroupDataSuccess(""));
         dispatch(getActiveGroupError(""));
@@ -886,6 +893,7 @@ export const leaveGroup = data => {
 
     } catch (err) {
       // Clear active group data
+      AsyncStorage.setItem('lastActiveGroupId', "");
       dispatch(getActiveGroupSuccess(false));
       dispatch(getActiveGroupDataSuccess(""));
       dispatch(getActiveGroupError(""));
@@ -893,7 +901,7 @@ export const leaveGroup = data => {
       // Go to initial select group page if deleting active group
       Actions.initial({ type: ActionConst.RESET });
 
-      console.log(err.response);
+      console.log(err);
       dispatch(leaveGroupSuccess(false));
       dispatch(leaveGroupError(err.response.data));
     }
@@ -925,8 +933,15 @@ export const deleteGroupError = data => {
 };
 
 export const deleteGroup = data => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
+      // disconnect from chatRoom and groupFeed
+      let { socket } = getState().groupChatRoomReducer;
+      socket.disconnect();
+      let { groupFeedSocket } = getState().groupFeedReducer;
+      groupFeedSocket.disconnect();
+
+
       // Display Loading Screen
       Actions.loadingScreen({ type: ActionConst.RESET });
 
@@ -940,6 +955,7 @@ export const deleteGroup = data => {
 
       if (data.activeGroupId == data.groupId) {
         // Clear active group data
+        AsyncStorage.setItem('lastActiveGroupId', "");
         dispatch(getActiveGroupSuccess(false));
         dispatch(getActiveGroupDataSuccess(""));
         dispatch(getActiveGroupError(""));
@@ -953,6 +969,12 @@ export const deleteGroup = data => {
         Actions.myGroupsMenu();
       }
     } catch (err) {
+      // Clear active group data
+      AsyncStorage.setItem('lastActiveGroupId', "");
+      dispatch(getActiveGroupSuccess(false));
+      dispatch(getActiveGroupDataSuccess(""));
+      dispatch(getActiveGroupError(""));
+
       // If error send to initial select group page
       Actions.initial({ type: ActionConst.RESET });
       dispatch(deleteGroupSuccess(false));

@@ -97,13 +97,13 @@ export default StyleSheet.create({
         position: 'absolute',
     },
     CreatePostButton: {
-        padding:20
+        padding: 20
     },
     CreatePostIcon: {
         color: "#0F0",
     },
     postImagePreview: {
-        paddingTop: 20
+        paddingTop: 20,
     },
     previewImage: {
         backgroundColor: "rgba(0,0,0,0.9)",
@@ -122,6 +122,6 @@ export default StyleSheet.create({
         alignContent: 'space-around'
     },
     errorMessage: {
-        color: "red"
+        color: "#990000",
     },
 });
