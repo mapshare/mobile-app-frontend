@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from './src/reduxStore/configureStore';
 import SplashScreen from 'react-native-splash-screen'
 
-import { API_URL, CHAT_URL } from 'react-native-dotenv'
+import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
 
 // Import Libraries
 
