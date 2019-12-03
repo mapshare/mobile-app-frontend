@@ -34,6 +34,7 @@ import EditPostForm from '../../screens/Forms/EditPost/EditPost';
 import LoadingScreen from '../../screens/Loading/Loading';
 import ModalWindow from '../../screens/ModalWindow/ModalWindow';
 import AddCustomMark from '../../screens/AddCustomMark/AddCustomMark';
+import CustomMarkOptions from '../../screens/CustomMarkOptions/CustomMarkOptions';
 
 // InitialGroupMenu
 import InitialAddGroup from '../../screens/InitialGroupMenu/Menus/AddGroup';
@@ -266,6 +267,7 @@ class App extends Component {
           <Scene key="modalWindow" component={ModalWindow} />
           <Scene key="editPostForm" component={EditPostForm} />
           <Scene key="addCustomMark" component={AddCustomMark} />
+          <Scene key="customMarkOptions" component={CustomMarkOptions} />
         </Lightbox>
       </Router>
     );
