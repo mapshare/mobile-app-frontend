@@ -52,7 +52,26 @@ export default StyleSheet.create({
         right: 0,
         padding: 20,
     },
+    logOutButton: {
+        zIndex: 1,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        paddingVertical: 20,
+        paddingHorizontal: 15,
+        alignSelf: "center",
+        alignContent: "center",
+        justifyContent: "center",
+        alignItems: "center"
+    },
     closeIcon: {
+        color: "#FFF",
+        alignSelf: "center",
+        alignContent: "center",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    logOutIcon: {
         color: "#FFF",
     },
     activeGroupColour: {

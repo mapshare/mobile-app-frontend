@@ -61,7 +61,8 @@ export const logInUser = data => {
 
       Actions.initial({ type: ActionConst.RESET });
     } catch (err) {
-
+      AsyncStorage.setItem('token', "");
+      Actions.Auth({ type: ActionConst.RESET });
       dispatch(logInSuccess(false));
       dispatch(logInUserError(err.response.data));
     }

@@ -45,9 +45,10 @@ export const connectToGroupFeed = data => {
 
     return dispatch => {
         console.log(CHAT_URL)
+        let socket;
         try {
             console.log("Connecting to Group Feed")
-            const socket = io.connect(CHAT_URL + '/groupFeed:' + newData.groupId);
+            socket = io.connect(CHAT_URL + '/groupFeed:' + newData.groupId);
             if (!socket) throw ("Unable to connect to server");
             dispatch(groupFeedSocket(socket));
 
@@ -75,6 +76,7 @@ export const connectToGroupFeed = data => {
             });
         } catch (error) {
             console.log(error);
+            socket.disconnect();
             dispatch(groupFeedStatus(false));
             dispatch(groupFeedError(error));
         }
@@ -132,13 +134,14 @@ export const disconnectGroupFeedError = data => {
     };
 };
 
-export const disconnectGroupChatRoom = data => {
+export const disconnectGroupFeed = data => {
     return dispatch => {
         try {
-            data.groupFeedSocket.emit('disconnect', true);
+            data.groupFeedSocket.disconnect();
             data.groupFeedSocket.removeAllListeners();
             dispatch(disconnectGroupFeedStatus(true));
         } catch (error) {
+            console.log(error);
             dispatch(disconnectGroupFeedStatus(false));
             dispatch(disconnectGroupFeedError(error));
         }
