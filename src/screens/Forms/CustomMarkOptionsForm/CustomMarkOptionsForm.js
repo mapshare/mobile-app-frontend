@@ -6,8 +6,11 @@ import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
-import { addCustomMarkModalWindow } from '../../../actions/modalWindowAction';
-import { addGroupCustomMarkCategory } from '../../../actions/groupCustomMarkCategory';
+import { customMarkOptionModalWindow } from '../../../actions/modalWindowAction';
+import {
+  updateGroupCustomMarkCategory,
+  deleteGroupCustomMarkCategory
+} from '../../../actions/groupCustomMarkCategory';
 
 // Componenets Style
 import { containerStyles } from './Stylesheet';
@@ -16,13 +19,24 @@ import validator from '../validate/validation_wrapper';
 import RenderField from '../RenderField/RenderField';
 
 // Creating Component
-class AddCustomMarkForm extends Component {
+class CustomMarkOptionsForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      categoryColor: '',
-      saveColor: false
+      categoryColor: this.props.getGroupCustomMarkCategoryData.categoryColor,
+      saveColor: true
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.getGroupCustomMarkCategoryData !==
+      prevProps.getGroupCustomMarkCategoryData
+    ) {
+      this.setState({
+        categoryColor: this.props.getGroupCustomMarkCategoryData.categoryColor
+      });
+    }
   }
 
   submit = values => {
@@ -31,13 +45,25 @@ class AddCustomMarkForm extends Component {
         customMarkCategoryName: values.customMarkCategoryName,
         categoryColor: this.state.categoryColor,
         groupId: this.props.getActiveGroup._id,
-        token: this.props.logInToken
+        token: this.props.logInToken,
+        categoryId: this.props.getGroupCustomMarkCategoryData._id
       };
 
-      this.props.addCustomMarkModalWindow(false);
-      this.props.addGroupCustomMarkCategory(formValues);
+      this.props.customMarkOptionModalWindow(false);
+      this.props.updateGroupCustomMarkCategory(formValues);
     }
   };
+
+  deleteOnClick() {
+    const data = {
+      groupId: this.props.getActiveGroup._id,
+      token: this.props.logInToken,
+      categoryId: this.props.getGroupCustomMarkCategoryData._id
+    };
+
+    this.props.deleteGroupCustomMarkCategory(data);
+    this.props.customMarkOptionModalWindow(false);
+  }
 
   render() {
     const { handleSubmit } = this.props;
@@ -48,7 +74,7 @@ class AddCustomMarkForm extends Component {
           name="customMarkCategoryName"
           component={RenderField}
           type="addCustomMark"
-          label="Create Custom Mark"
+          label="Edit Custom Mark"
         />
         <Text style={containerStyles.colorPickerText}>
           *Tap on the circle to save the color for the category
@@ -77,7 +103,13 @@ class AddCustomMarkForm extends Component {
           style={containerStyles.buttonContainer}
           onPress={handleSubmit(this.submit)}
         >
-          <Text style={containerStyles.buttonText}>Save Category</Text>
+          <Text style={containerStyles.buttonText}>Update Category</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={containerStyles.buttonContainer}
+          onPress={() => this.deleteOnClick()}
+        >
+          <Text style={containerStyles.deleteButtonText}>Delete Category</Text>
         </TouchableOpacity>
       </View>
     );
@@ -96,33 +128,44 @@ const validate = values => {
 };
 
 const clearUpForm = (result, dispatch) => {
-  dispatch(reset('addCustomMarkRF'));
+  dispatch(reset('CustomMarkOptionsRF'));
 };
 
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
     logInToken: state.logInReducer.token,
-    getActiveGroup: state.groupReducer.getActiveGroupData
+    getActiveGroup: state.groupReducer.getActiveGroupData,
+    getGroupCustomMarkCategoryData:
+      state.groupCustomMarkCategoryReducer.getGroupCustomMarkCategoryData,
+    initialValues: {
+      customMarkCategoryName:
+        state.groupCustomMarkCategoryReducer.getGroupCustomMarkCategoryData
+          .customMarkCategoryName
+    }
   };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    addCustomMarkModalWindow: bool => dispatch(addCustomMarkModalWindow(bool)),
-    addGroupCustomMarkCategory: data =>
-      dispatch(addGroupCustomMarkCategory(data))
+    updateGroupCustomMarkCategory: data =>
+      dispatch(updateGroupCustomMarkCategory(data)),
+    customMarkOptionModalWindow: bool =>
+      dispatch(customMarkOptionModalWindow(bool)),
+    deleteGroupCustomMarkCategory: data =>
+      dispatch(deleteGroupCustomMarkCategory(data))
   };
 };
 
-AddCustomMarkForm = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddCustomMarkForm);
-
-export default reduxForm({
-  form: 'addCustomMarkRF',
-  onSubmitSuccess: clearUpForm,
-  validate
-})(AddCustomMarkForm);
+)(
+  reduxForm({
+    form: 'CustomMarkOptionsRF',
+    onSubmitSuccess: clearUpForm,
+    enableReinitialize: true,
+    validate
+  })(CustomMarkOptionsForm)
+);

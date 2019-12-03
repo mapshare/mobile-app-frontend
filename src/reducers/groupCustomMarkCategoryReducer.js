@@ -2,7 +2,8 @@ import keys from '../data/key';
 
 const INITIAL_GROUP_CUSTOM_MARK_CATEGORY_STATE = {
   status: false,
-  getGroupAllCustomMarkCategoryData: []
+  getGroupAllCustomMarkCategoryData: [],
+  getGroupCustomMarkCategoryDataSuccess: {}
 };
 
 export const groupCustomMarkCategoryReducer = (

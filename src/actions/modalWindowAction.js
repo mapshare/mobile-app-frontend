@@ -20,3 +20,10 @@ export const addCustomMarkModalWindow = bool => {
     addCustomMarkStatus: bool
   };
 };
+
+export const customMarkOptionModalWindow = bool => {
+  return {
+    type: keys.CUSTOM_MARK_OPTION_MODAL_WINDOW,
+    customMarkOptionStatus: bool
+  };
+};

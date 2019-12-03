@@ -66,17 +66,18 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+
+        const data = {
+          groupMarkId: this.props.getActiveGroupData.groupMarks,
+          groupCategoryId: this.props.getActiveGroupData
+            .groupCustomMarkCategory,
+          token: this.props.token
+        };
+
+        this.props.getGroupDefaultMarkCategory(data);
+        this.props.getGroupAllCustomMarkCategory(data);
       }, 5000)
     });
-
-    const data = {
-      groupMarkId: this.props.getActiveGroupData.groupMarks,
-      groupCategoryId: this.props.getActiveGroupData.groupCustomMarkCategory,
-      token: this.props.token
-    };
-
-    this.props.getGroupDefaultMarkCategory(data);
-    this.props.getGroupAllCustomMarkCategory(data);
   }
 
   componentWillUnmount() {

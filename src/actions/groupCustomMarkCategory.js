@@ -192,8 +192,9 @@ export const updateGroupCustomMarkCategoryError = data => {
 };
 
 export const updateGroupCustomMarkCategory = data => {
-  let customMarkCategoryData = {
-    customMarkCategoryName: data.customMarkCategoryName
+  const customMarkCategoryData = {
+    customMarkCategoryName: data.customMarkCategoryName,
+    categoryColor: data.categoryColor
   };
 
   return dispatch => {
@@ -203,15 +204,17 @@ export const updateGroupCustomMarkCategory = data => {
           '/groups/' +
           data.groupId +
           '/customCategory/' +
-          customMarkCategoryId,
+          data.categoryId,
         customMarkCategoryData,
         { headers: { 'authentication': data.token } }
       )
       .then(res => {
+        // console.log('update: ', res.data);
         dispatch(updateGroupCustomMarkCategoryDataSuccess(res.data));
         dispatch(updateGroupCustomMarkCategorySuccess(true));
       })
       .catch(err => {
+        // console.log('failed: ', err.response.data);
         dispatch(updateGroupCustomMarkCategorySuccess(false));
         dispatch(updateGroupCustomMarkCategoryError(err.response.data));
       });
@@ -250,14 +253,16 @@ export const deleteGroupCustomMarkCategory = data => {
           '/groups/' +
           data.groupId +
           '/customCategory/' +
-          customMarkCategoryId,
+          data.categoryId,
         { headers: { 'authentication': data.token } }
       )
       .then(res => {
+        // console.log('success! ', res.data);
         dispatch(deleteGroupCustomMarkCategoryDataSuccess(res.data));
         dispatch(deleteGroupCustomMarkCategorySuccess(true));
       })
       .catch(err => {
+        // console.log('failed! ', err.response.data);
         dispatch(deleteGroupCustomMarkCategorySuccess(false));
         dispatch(deleteGroupCustomMarkCategoryError(err.response.data));
       });

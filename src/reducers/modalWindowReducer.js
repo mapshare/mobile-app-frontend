@@ -3,7 +3,8 @@ import keys from '../data/key';
 const INITIAL_MODAL_WINDOW_STATE = {
   addMarkStatus: false,
   onClickMarkStatus: false,
-  addCustomMarkStatus: false
+  addCustomMarkStatus: false,
+  customMarkOptionStatus: false
 };
 
 export const modalWindowReducer = (
@@ -17,6 +18,11 @@ export const modalWindowReducer = (
       return { ...state, addMarkStatus: action.addMarkStatus };
     case keys.CLICK_MARK_MODAL_WINDOW:
       return { ...state, onClickMarkStatus: action.onClickMarkStatus };
+    case keys.CUSTOM_MARK_OPTION_MODAL_WINDOW:
+      return {
+        ...state,
+        customMarkOptionStatus: action.customMarkOptionStatus
+      };
     default:
       return state;
   }

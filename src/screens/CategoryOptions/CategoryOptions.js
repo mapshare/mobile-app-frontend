@@ -5,12 +5,17 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //Redux actions
 import { categoriesOptionOnClick } from '../../actions/groupDefaultMarkCategory';
-import { addCustomMarkModalWindow } from '../../actions/modalWindowAction';
+import { getGroupCustomMarkCategoryDataSuccess } from '../../actions/groupCustomMarkCategory';
+import {
+  addCustomMarkModalWindow,
+  customMarkOptionModalWindow
+} from '../../actions/modalWindowAction';
 import { setSortGroupMark } from '../../actions/groupMarkAction';
 
 // Componenets Style
 import { containerStyles, customCategoryStyles } from './Stylesheet';
 import AddCustomMark from '../AddCustomMark/AddCustomMark';
+import CustomMarkOptions from '../CustomMarkOptions/CustomMarkOptions';
 
 class CategoryOptions extends Component {
   constructor(props) {
@@ -80,7 +85,10 @@ class CategoryOptions extends Component {
             {data.customMarkCategoryName}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={customCategoryStyles.settingIcon}>
+        <TouchableOpacity
+          style={customCategoryStyles.settingIcon}
+          onPress={() => this.customCategoryOptionOnClick(data)}
+        >
           <Icon name="settings" size={18} />
         </TouchableOpacity>
       </View>
@@ -147,6 +155,11 @@ class CategoryOptions extends Component {
     return customCategoryView;
   }
 
+  customCategoryOptionOnClick = data => {
+    this.props.customMarkOptionModalWindow(true);
+    this.props.getGroupCustomMarkCategoryDataSuccess(data);
+  };
+
   sortOnclick(data) {
     this.props.setSortGroupMark(data, !this.props.sortGroupMarkOnClickFlag);
   }
@@ -154,6 +167,7 @@ class CategoryOptions extends Component {
   render() {
     return (
       <ScrollView>
+        <CustomMarkOptions />
         <AddCustomMark />
         <TouchableOpacity
           style={containerStyles.buttonContainer}
@@ -202,7 +216,11 @@ const mapDispatchToProps = dispatch => {
   return {
     categoriesOptionOnClick: bool => dispatch(categoriesOptionOnClick(bool)),
     addCustomMarkModalWindow: bool => dispatch(addCustomMarkModalWindow(bool)),
-    setSortGroupMark: (data, bool) => dispatch(setSortGroupMark(data, bool))
+    setSortGroupMark: (data, bool) => dispatch(setSortGroupMark(data, bool)),
+    customMarkOptionModalWindow: bool =>
+      dispatch(customMarkOptionModalWindow(bool)),
+    getGroupCustomMarkCategoryDataSuccess: data =>
+      dispatch(getGroupCustomMarkCategoryDataSuccess(data))
   };
 };
 
