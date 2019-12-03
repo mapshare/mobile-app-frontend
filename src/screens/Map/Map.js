@@ -162,7 +162,7 @@ class Map extends Component {
 
   render() {
     return (
-      <View style={containerStyles.container}>
+      <View style={containerStyles.mainContainer}>
         {this.props.addMarkStatus && <ModalWindow modalContent="addMark" />}
         {this.props.onClickMarkStatus && (
           <ModalWindow modalContent="onClickMark" />

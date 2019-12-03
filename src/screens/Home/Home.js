@@ -94,7 +94,7 @@ class Home extends Component {
 
         this.props.getGroupDefaultMarkCategory(data);
         this.props.getGroupAllCustomMarkCategory(data);
-      }, 25000)
+      }, 5000)
     });
 
     setTimeout(() => {
