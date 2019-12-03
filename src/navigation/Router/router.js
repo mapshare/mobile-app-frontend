@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Platform, StatusBar } from 'react-native';
+import React, { Component } from "react";
+import { Platform, StatusBar, TouchableHighlight, ToastAndroid, BackHandler } from "react-native";
 import {
   Router,
   Stack,
@@ -53,6 +53,9 @@ import ChangeGroupNameMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupN
 import ChangeGroupDescriptionMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupDescription';
 import BanedUsersList from '../../screens/Home/GroupMenu/Menus/BanedUsersList';
 
+// Profile Update Menu
+import updateProfile from "../../screens/Profile/Updator/UpdateProfile"
+
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
 };
@@ -62,14 +65,43 @@ import { connect } from 'react-redux';
 
 import { getGroups } from '../../actions/groupActions';
 
+let backPressed = 0;
+
 //Create a dedicated class that will manage the tabBar icon
 class TabIcon extends Component {
   render() {
-    return <Icon name={this.props.name} size={18} />;
+    return (<Icon name={this.props.name} size={25} color={this.props.focused ? '#087bff' : '#000000'} />);
   }
 }
 
 class App extends Component {
+
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton.bind(this));
+  }
+
+  constructor() {
+    super();
+    this.state = {
+      isloggedin: false,
+      backPressed: 1
+    }
+  }
+
+  handleBackButton() {
+    if (backPressed > 0) {
+      BackHandler.exitApp();
+      backPressed = 0;
+    } else {
+      backPressed++;
+      ToastAndroid.show("Press Again To Exit", ToastAndroid.SHORT);
+      setTimeout(() => { backPressed = 0 }, 2000);
+      return true;
+    }
+  }
+
+
   render() {
     return (
       <Router
@@ -158,6 +190,7 @@ class App extends Component {
             tabs={true}
           >
             <Scene
+              title="HOME"
               key="home"
               component={Home}
               hideNavBar
@@ -166,14 +199,16 @@ class App extends Component {
             />
 
             <Scene
+              title="DISCOVER"
               key="map"
               component={Map}
               icon={TabIcon}
-              name="map"
+              name="compass"
               hideNavBar
             />
 
             <Scene
+              title="CHAT"
               key="chat"
               component={Chat}
               icon={TabIcon}
@@ -182,6 +217,7 @@ class App extends Component {
             />
 
             <Scene
+              title="EVENTS"
               key="events"
               component={Events}
               icon={TabIcon}
@@ -190,6 +226,7 @@ class App extends Component {
             />
 
             <Scene
+              title="MORE"
               key="profile"
               component={Profile}
               icon={TabIcon}
@@ -198,6 +235,8 @@ class App extends Component {
             />
           </Stack>
 
+          {/* MANAGE PROFILE NAVIGATION */}
+          <Scene key='updateProfile' hideNavBar hideTabBar component={updateProfile} />
           {/* MANAGE GROUP NAVIGATION */}
           <Scene
             key="myGroupsMenu"

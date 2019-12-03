@@ -9,11 +9,20 @@ import styles from "./Stylesheet";
 
 export default class Loading extends Component {
 
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            visible: true,
+        };
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <Spinner
-                   visible={true}
+                   ref={Component => (this._loading = Component)}
+                   visible={this.state.visible}
                    textContent={'Please wait...'}
                    textStyle={styles.spinnerTextStyle}>
                    </Spinner>

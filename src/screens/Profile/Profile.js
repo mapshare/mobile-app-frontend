@@ -4,7 +4,8 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native';
 
 // Componenets Style
@@ -22,6 +23,12 @@ import {
   getActiveGroupRefreshDataOnly
 } from '../../actions/groupActions';
 
+import {
+  getUser,
+  getUserDataSuccess,
+  updateUser
+} from '../../actions/userActions';
+
 
 class Profile extends Component {
 
@@ -30,12 +37,18 @@ class Profile extends Component {
   }
 
   goLogin() {
+    AsyncStorage.setItem('token', "");
+    AsyncStorage.setItem('lastActiveGroupId', "");
     this.props.getActiveGroupSuccess(false);
     this.props.getActiveGroupDataSuccess("");
     this.props.getActiveGroupError("");
     Actions.Auth({ type: ActionConst.RESET })
   }
 
+  updateProfile() {
+    Actions.updateProfile()
+  }
+  
   goTester() {
     Actions.tester()
   }
@@ -47,15 +60,12 @@ class Profile extends Component {
         <Image style={styles.avatar} source={{ uri: 'https://ksassets.timeincuk.net/wp/uploads/sites/54/2019/06/image-asset-920x518.jpeg' }} />
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <Text style={styles.name}>John Doe</Text>
-            <Text style={styles.info}>Spartan Teams</Text>
-            <Text style={styles.description}>I'm going in! When I look behind me, you'd better be there!</Text>
-
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text>Setting</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.testerMode} onPress={this.goTester}>
-              <Text>Enter Debug Mode</Text>
+            <Text style={styles.name}>{this.props.getUserData.userFirstName} {this.props.getUserData.userLastName}</Text>
+            <Text style={styles.info}>{this.props.getActiveGroupData.groupName}</Text>
+            <Text style={styles.description}>{this.props.getActiveGroupData.groupDescription}{'\n'}</Text>
+            
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => { this.updateProfile() }}>
+              <Text>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.logoutButton} onPress={() => { this.goLogin() }}>
               <Text>Log Out</Text>
@@ -71,25 +81,26 @@ class Profile extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
+    getUserData: state.userReducer.getUserData,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
-    getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
     token: state.logInReducer.token,
-    groupExistsStatus: state.groupReducer.groupExistsStatus,
-    updateGroupStatus: state.groupReducer.updateGroupStatus,
-    updateGroupData: state.groupReducer.updateGroupStatus,
-    loadingData: state.groupReducer.loadingData
   };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
+    getUser: data => dispatch(getUser(data)),
+    getUserDataSuccess: data => dispatch(getUserDataSuccess(data)),
+    updateUser: data => dispatch(updateUser(data)),
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
     getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
     getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
+    getGroupMember: data => dispatch(getGroupMember(data))
   };
 }
 

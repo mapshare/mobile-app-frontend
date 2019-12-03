@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
+  DeviceEventEmitter
 } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -18,6 +19,7 @@ import GroupFeed from '../Groups/GroupFeed/GroupFeed';
 import styles from './Stylesheet';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -30,6 +32,11 @@ import {
   getActiveGroupRefreshDataOnly,
   getGroupMember
 } from '../../actions/groupActions';
+
+import {
+  getUser,
+} from '../../actions/userActions';
+
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 import { getGroupDefaultMarkCategory } from '../../actions/groupDefaultMarkCategory';
 import { getGroupAllCustomMarkCategory } from '../../actions/groupCustomMarkCategory';
@@ -45,9 +52,18 @@ class Home extends Component {
       interval: '',
       groupImg: ''
     };
+    this.appTourTargets = []
+  }
+
+  componentWillMount() {
+    this.registerSequenceStepEvent()
+    this.registerFinishSequenceEvent()
   }
 
   componentDidMount() {
+
+    this.props.getUser({ token: this.props.token });
+
     // update every 5 seconds
     this.setState({
       interval: setInterval(() => {
@@ -56,6 +72,8 @@ class Home extends Component {
           groupId: this.props.getActiveGroupData._id,
           token: this.props.token
         });
+
+        this.props.getUser({ token: this.props.token });
 
         this.props.getGroupAllMarks({
           groupMarkId: this.props.getActiveGroupData.groupMarks,
@@ -76,15 +94,24 @@ class Home extends Component {
 
         this.props.getGroupDefaultMarkCategory(data);
         this.props.getGroupAllCustomMarkCategory(data);
-      }, 5000)
+      }, 25000)
     });
+
+    setTimeout(() => {
+      let appTourSequence = new AppTourSequence()
+      this.appTourTargets.forEach(appTourTarget => {
+        appTourSequence.add(appTourTarget)
+      })
+
+      AppTour.ShowSequence(appTourSequence)
+    }, 1000)
   }
 
   componentWillUnmount() {
     clearInterval(this.state.interval);
   }
 
-  loadingScreen() {}
+  loadingScreen() { }
 
   componentDidUpdate(prevProps) {
     // Checks if Active Group Still Exists.
@@ -94,6 +121,26 @@ class Home extends Component {
         this.clearActiveGroup();
       }
     }
+  }
+
+  registerSequenceStepEvent = () => {
+    if (this.sequenceStepListener) {
+      this.sequenceStepListener.remove()
+    }
+    this.sequenceStepListener = DeviceEventEmitter.addListener(
+      'onShowSequenceStepEvent',
+
+    )
+  }
+
+  registerFinishSequenceEvent = () => {
+    if (this.finishSequenceListener) {
+      this.finishSequenceListener.remove()
+    }
+    this.finishSequenceListener = DeviceEventEmitter.addListener(
+      'onFinishSequenceEvent',
+
+    )
   }
 
   checkIfGroupExists(groupId) {
@@ -115,17 +162,25 @@ class Home extends Component {
     return (
       <View style={styles.root}>
         <View style={styles.Body}>
-          <GroupMenu />
-          <CreatePostButton />
+          <GroupMenu
+            style={styles.image}
+            addAppTourTarget={appTourTarget => {
+              this.appTourTargets.push(appTourTarget)
+            }} />
+          <CreatePostButton
+            style={styles.image}
+            addAppTourTarget={appTourTarget => {
+              this.appTourTargets.push(appTourTarget)
+            }} />
           <View style={styles.InfoBody}>
             <ImageBackground
               source={
                 this.props.getActiveGroupData.groupImg
                   ? {
-                      uri:
-                        'data:image/png;base64,' +
-                        this.props.getActiveGroupData.groupImg
-                    }
+                    uri:
+                      'data:image/png;base64,' +
+                      this.props.getActiveGroupData.groupImg
+                  }
                   : require('../../assests/images/food.jpg')
               }
               resizeMode="cover"
@@ -154,6 +209,7 @@ class Home extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
+    getUserData: state.userReducer.getUserData,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     getActiveGroupStatus: state.groupReducer.getActiveGroupStatus,
     token: state.logInReducer.token,
@@ -168,6 +224,7 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
+    getUser: data => dispatch(getUser(data)),
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
     getActiveGroupDataSuccess: data =>

@@ -21,8 +21,8 @@ class MSearch extends React.Component {
                 listViewDisplayed='auto'    // true/false/undefined
                 fetchDetails={true}
                 onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                    this.props.notifyChange(details.geometry.location);
-                    //console.log(details)
+                    this.props.notifyChange(details);
+                    //console.log(details.formatted_address)
                     this.googlePlacesAutocomplete._handleChangeText('') // use _handleChangeText to set the text that you want
                 }
 

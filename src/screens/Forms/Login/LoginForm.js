@@ -33,6 +33,7 @@ class LogInForm extends Component {
         userEmail: '',
         userPassword: ''
       },
+      incorrectError:'',
       emailError: '',
       passwordError: ''
     };
@@ -41,22 +42,9 @@ class LogInForm extends Component {
   componentDidMount() {}
 
   componentDidUpdate(prevProps) {
-    if (prevProps.logInStatus !== this.props.logInStatus) {
-      if (this.props.logInStatus) {
-        Keyboard.dismiss();
-        // Actions.tester();
-        // When we setup local storage we would want to load active group before checking if we have one selected
-        if (this.props.getActiveGroupStatus) {
-          Actions.navTab({ type: ActionConst.RESET });
-        } else {
-          console.log('initialMyGroups');
-          Actions.initial({ type: ActionConst.RESET });
-        }
-      }
-    }
-
     if (this.props.getLogInError) {
-      alert(this.props.getLogInError);
+      //alert(this.props.getLogInError);
+      this.state.incorrectError = "Wrong Email or Password. Please Try Again"
       this.props.logInUserError('');
     }
   }
@@ -80,6 +68,7 @@ class LogInForm extends Component {
         }
       }
     );
+    Keyboard.dismiss();
   };
 
   showData = async () => {
@@ -106,7 +95,7 @@ class LogInForm extends Component {
           autoCapitalize="none"
           onSubmitEditing={() => this.password.focus()}
         />
-        {this.state.emailError ? <Text>{this.state.emailError}</Text> : null}
+        {this.state.emailError ? <Text style={styles.errorMessage}>{this.state.emailError}</Text> : null}
 
         <TextInput
           style={styles.inputBox}
@@ -119,12 +108,15 @@ class LogInForm extends Component {
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="rgba(0,0,0,0.7)"
-          // returnKeyType="Login"
+          returnKeyType="go"
+          onSubmitEditing={this.LoginUser}
           ref={input => (this.password = input)}
         />
         {this.state.passwordError ? (
-          <Text>{this.state.passwordError}</Text>
+          <Text style={styles.errorMessage}>{this.state.passwordError}</Text>
         ) : null}
+
+        {this.state.incorrectError ? <Text style={styles.errorMessage}>{this.state.incorrectError}</Text> : null}
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.LoginUser}>
