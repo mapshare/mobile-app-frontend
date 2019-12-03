@@ -99,6 +99,8 @@ export const addGroupMark = data => {
     groupMarkCreatedBy: data.groupMarkCreatedBy
   };
 
+  console.log(markData.markLocations)
+
   return dispatch => {
     axios
       .post(API_URL + '/groups/' + data.groupId + '/mark', markData, {

@@ -65,7 +65,12 @@ class LocationDetailWindow extends Component {
     ];
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    if (this.props.getCurrentOnClickMarkData.locationImageSet) {
+      console('there is an image')
+    }
+    console.log(this.props.getCurrentOnClickMarkData.locationImageSet)
+  }
 
   getPosition = scrollPosition => {
     if (scrollPosition > 250) {
@@ -80,6 +85,7 @@ class LocationDetailWindow extends Component {
   };
 
   renderView(data) {
+    console.log(data);
     return (
       <View style={containerStyles.imageContainer}>
         <View style={imageCarouselStyles.imageOptionStyle}>
