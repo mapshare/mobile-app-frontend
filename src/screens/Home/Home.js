@@ -30,12 +30,21 @@ import {
   getActiveGroupDataSuccess,
   groupExists,
   getActiveGroupRefreshDataOnly,
-  getGroupMember
+  getGroupMember,
+  getAllGroupMember,
 } from '../../actions/groupActions';
 
 import {
   getUser,
 } from '../../actions/userActions';
+
+import {
+  disconnectGroupFeed
+} from '../../actions/groupFeedAction';
+
+import {
+  disconnectGroupChatRoom
+} from '../../actions/groupChatRoomAction';
 
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 import { getGroupDefaultMarkCategory } from '../../actions/groupDefaultMarkCategory';
@@ -61,40 +70,62 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    try {
+      this.props.getUser({ token: this.props.token });
 
-    this.props.getUser({ token: this.props.token });
+      this.props.getAllGroupMember({
+        groupId: this.props.getActiveGroupData._id,
+        token: this.props.token
+      });
+
+      this.props.getGroupMember({
+        groupId: this.props.getActiveGroupData._id,
+        token: this.props.token
+      });
+    } catch (error) {
+      console.log("Home component mount Error: " + error);
+    }
 
     // update every 5 seconds
     this.setState({
       interval: setInterval(() => {
-        this.checkIfGroupExists(this.props.getActiveGroupData._id);
-        this.props.getActiveGroupRefreshDataOnly({
-          groupId: this.props.getActiveGroupData._id,
-          token: this.props.token
-        });
+        try {
+          this.checkIfGroupExists(this.props.getActiveGroupData._id);
+          this.props.getActiveGroupRefreshDataOnly({
+            groupId: this.props.getActiveGroupData._id,
+            token: this.props.token
+          });
 
-        this.props.getUser({ token: this.props.token });
+          this.props.getUser({ token: this.props.token });
 
-        this.props.getGroupAllMarks({
-          groupMarkId: this.props.getActiveGroupData.groupMarks,
-          token: this.props.token
-        });
+          this.props.getGroupAllMarks({
+            groupMarkId: this.props.getActiveGroupData.groupMarks,
+            token: this.props.token
+          });
 
-        this.props.getGroupMember({
-          groupId: this.props.getActiveGroupData._id,
-          token: this.props.token
-        });
+          this.props.getAllGroupMember({
+            groupId: this.props.getActiveGroupData._id,
+            token: this.props.token
+          });
 
-        const data = {
-          groupMarkId: this.props.getActiveGroupData.groupMarks,
-          groupCategoryId: this.props.getActiveGroupData
-            .groupCustomMarkCategory,
-          token: this.props.token
-        };
+          this.props.getGroupMember({
+            groupId: this.props.getActiveGroupData._id,
+            token: this.props.token
+          });
 
-        this.props.getGroupDefaultMarkCategory(data);
-        this.props.getGroupAllCustomMarkCategory(data);
-      }, 5000)
+          const data = {
+            groupMarkId: this.props.getActiveGroupData.groupMarks,
+            groupCategoryId: this.props.getActiveGroupData
+              .groupCustomMarkCategory,
+            token: this.props.token
+          };
+
+          this.props.getGroupDefaultMarkCategory(data);
+          this.props.getGroupAllCustomMarkCategory(data);
+        } catch (error) {
+          console.log("Home Interval Error: " + error);
+        }
+      }, 25000)
     });
 
     setTimeout(() => {
@@ -152,6 +183,9 @@ class Home extends Component {
   }
 
   clearActiveGroup() {
+    AsyncStorage.setItem('lastActiveGroupId', "");
+    this.props.disconnectGroupChatRoom({ socket: this.props.socket });
+    this.props.disconnectGroupFeed({ groupFeedSocket: this.props.groupFeedSocket });
     this.props.getActiveGroupSuccess(false);
     this.props.getActiveGroupDataSuccess('');
     this.props.getActiveGroupError('');
@@ -159,6 +193,15 @@ class Home extends Component {
   }
 
   render() {
+    let groupImageSource = require('../../assests/images/food.jpg');
+    try {
+      groupImageSource = this.props.getActiveGroupData.groupImg ? {
+        uri: 'data:image/png;base64,' + this.props.getActiveGroupData.groupImg
+      }
+        : require('../../assests/images/food.jpg');
+    } catch (error) {
+      groupImageSource = require('../../assests/images/food.jpg');
+    }
     return (
       <View style={styles.root}>
         <View style={styles.Body}>
@@ -174,15 +217,7 @@ class Home extends Component {
             }} />
           <View style={styles.InfoBody}>
             <ImageBackground
-              source={
-                this.props.getActiveGroupData.groupImg
-                  ? {
-                    uri:
-                      'data:image/png;base64,' +
-                      this.props.getActiveGroupData.groupImg
-                  }
-                  : require('../../assests/images/food.jpg')
-              }
+              source={groupImageSource}
               resizeMode="cover"
               style={styles.image}
             >
@@ -217,7 +252,9 @@ const mapStateToProps = state => {
     updateGroupStatus: state.groupReducer.updateGroupStatus,
     updateGroupData: state.groupReducer.updateGroupStatus,
     loadingData: state.groupReducer.loadingData,
-    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData
+    getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData,
+    socket: state.groupChatRoomReducer.socket,
+    groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
   };
 };
 
@@ -232,9 +269,11 @@ const mapDispatchToProps = dispatch => {
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
-    getActiveGroupRefreshDataOnly: data =>
-      dispatch(getActiveGroupRefreshDataOnly(data)),
+    getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
     getGroupMember: data => dispatch(getGroupMember(data)),
+    disconnectGroupFeed: data => dispatch(disconnectGroupFeed(data)),
+    disconnectGroupChatRoom: data => dispatch(disconnectGroupChatRoom(data)),
+    getAllGroupMember: data => dispatch(getAllGroupMember(data)),
     getGroupDefaultMarkCategory: data =>
       dispatch(getGroupDefaultMarkCategory(data)),
     getGroupAllCustomMarkCategory: data =>

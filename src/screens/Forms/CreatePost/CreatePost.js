@@ -58,8 +58,8 @@ class AddPostCaption extends Component {
     }
 
     updatePostCaption(postCaption) {
-        const addPostError = validator('postCaption', postCaption);
-        const trimedCaption = postCaption.slice(0, 100);
+        const addPostError = validator('postCaption', postCaption.slice(0, 100).trim());
+        const trimedCaption = postCaption.slice(0, 100).trim();
         this.setState({ postCaption: trimedCaption, addPostError: addPostError ? addPostError : "" });
     }
 

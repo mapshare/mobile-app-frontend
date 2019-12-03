@@ -48,14 +48,13 @@ class EditPost extends Component {
     }
 
     editPost() {
-        const editPostError = validator('postCaption', this.state.postCaption);
-
+        const editPostError = validator('postCaption', this.state.postCaption.slice(0, 100).trim());
         this.setState({ editPostError: editPostError }, () => {
             if (!editPostError) {
                 const data = {
                     postId: this.props.editingPost._id,
                     postImage: this.state.postImage,
-                    postCaption: this.state.postCaption,
+                    postCaption: this.state.postCaption.slice(0, 100).trim(),
                     groupFeedSocket: this.props.groupFeedSocket
                 };
                 this.props.updatePostInGroupFeed(data);
@@ -65,15 +64,9 @@ class EditPost extends Component {
     }
 
     updatePostCaption(postCaption) {
-        const editPostError = validator('postCaption', postCaption);
-        if (!editPostError) {
-            this.setState({ postCaption: postCaption, editPostError: '' });
-        } else {
-            this.setState({
-                postCaption: this.state.postCaption,
-                editPostError: editPostError
-            });
-        }
+        const addPostError = validator('postCaption', postCaption.slice(0, 100).trim());
+        const trimedCaption = postCaption.slice(0, 100).trim();
+        this.setState({ postCaption: trimedCaption, addPostError: addPostError ? addPostError : "" });
     }
 
     choosePhoto() {
@@ -128,16 +121,13 @@ class EditPost extends Component {
                 <View style={styles.row}>
                     <View style={styles.postImagePreview}>
                         <TouchableOpacity
-                            style={styles.CreatePostButton}
                             onPress={() => {
                                 this.choosePhoto();
                             }}
                         >
                             <Image
                                 style={styles.previewImage}
-                                source={{
-                                    uri: 'data:image/png;base64,' + this.state.postImage
-                                }}
+                                source={{ uri: 'data:image/png;base64,' + this.state.postImage, width: 120, height: 120, scale: 1.1 }}
                             />
                         </TouchableOpacity>
                     </View>
@@ -152,13 +142,12 @@ class EditPost extends Component {
                             selectionColor="#fff"
                             autoCorrect={false}
                             multiline={true}
+                            maxLength={100}
                             returnKeyType="next"
                             autoCapitalize="none"
                             onSubmitEditing={() => { }}
                         />
-                        {this.state.editPostError ? (
-                            <Text>{this.state.editPostError}</Text>
-                        ) : null}
+                        {this.state.addPostError ? <Text>{this.state.addPostError}</Text> : null}
                     </View>
                 </View>
             </View>

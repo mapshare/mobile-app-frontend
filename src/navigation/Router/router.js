@@ -35,6 +35,7 @@ import LoadingScreen from '../../screens/Loading/Loading';
 import ModalWindow from '../../screens/ModalWindow/ModalWindow';
 import AddCustomMark from '../../screens/AddCustomMark/AddCustomMark';
 import CustomMarkOptions from '../../screens/CustomMarkOptions/CustomMarkOptions';
+import ActiveMemberList from "../../screens/Groups/GroupChat/activeMemberList";
 
 // InitialGroupMenu
 import InitialAddGroup from '../../screens/InitialGroupMenu/Menus/AddGroup';
@@ -300,6 +301,7 @@ class App extends Component {
           />
 
           {/* MODALS */}
+          <Scene key="activeMemberList" component={ActiveMemberList} />
           <Scene key="loadingScreen" component={LoadingScreen} />
           <Scene key="createPostModal" component={CreatePostModal} />
           <Scene key="editPostModal" component={EditPostModal} />
