@@ -90,6 +90,7 @@ export const createGroup = data => {
         token: data.token
       }
       await dispatch(getUserGroups({ token: data.token }));
+      await dispatch(getGroups({ token: data.token }))
       dispatch(getActiveGroup(newGroupData));
       dispatch(createGroupDataSuccess(res.data));
       dispatch(createGroupSuccess(true));
