@@ -80,6 +80,7 @@ export const updateUser = data => {
         userEmail: data.userEmail,
         userFirstName: data.userFirstName,
         userLastName: data.userLastName,
+        userImages: data.userImages,
         userEmail: data.userEmail,
     }
 

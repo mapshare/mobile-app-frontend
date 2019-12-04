@@ -115,7 +115,7 @@ class Home extends Component {
         } catch (error) {
           console.log("Home Interval Error: " + error);
         }
-      }, 25000)
+      }, 11000)
     });
 
     // Check First Launch and store state in launched using AsyncStorage

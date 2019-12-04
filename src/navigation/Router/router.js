@@ -52,8 +52,6 @@ import ChangeGroupNameMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupN
 import ChangeGroupDescriptionMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupDescription";
 import BanedUsersList from "../../screens/Home/GroupMenu/Menus/BanedUsersList";
 
-// Profile Update Menu
-import updateProfile from "../../screens/Profile/Updator/UpdateProfile"
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
@@ -237,8 +235,6 @@ handleBackButton(){
             />
           </Stack>
 
-          {/* MANAGE PROFILE NAVIGATION */}
-          <Scene key='updateProfile' hideNavBar hideTabBar component={updateProfile} />
           {/* MANAGE GROUP NAVIGATION */}
           <Scene key='myGroupsMenu' hideNavBar hideTabBar component={MyGroupsMenu} />
           <Scene key="searchGroupMenu" hideNavBar hideTabBar component={SearchGroupMenu} />

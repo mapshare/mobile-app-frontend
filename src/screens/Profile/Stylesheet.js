@@ -20,7 +20,7 @@ export default StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'center',
     position: 'absolute',
-    marginTop: 130
+    marginTop: 130,
   },
   name: {
     fontSize: 22,
@@ -87,7 +87,7 @@ export default StyleSheet.create({
   modalWindow: {
     
     justifyContent:'center',
-    flex: .50
+    marginTop: 20
   },
   modalText: {
     alignSelf: 'center',
@@ -107,5 +107,18 @@ export default StyleSheet.create({
   },
   center: {
     alignSelf: 'center',
-  }
+  },
+  Text: {
+    fontSize:18,
+    marginBottom:20
+  },
+  image: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: "white",
+    marginBottom: 10,
+    alignSelf:'center'
+  },
 });

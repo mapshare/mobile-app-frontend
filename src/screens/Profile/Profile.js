@@ -7,12 +7,15 @@ import {
   ScrollView,
   AsyncStorage,
   Modal,
-  TextInput
+  TextInput,
+  Alert
 } from 'react-native';
 
 // Componenets Style
 import styles from "./Stylesheet"
 import { Actions, ActionConst } from "react-native-router-flux";
+import validator from "../Forms/validate/validation_wrapper";
+import ImagePicker from 'react-native-image-picker';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -44,12 +47,14 @@ import {
 
 class Profile extends Component {
 
+
   constructor(props) {
     super(props);
     this.state = {
       user: {
         userFirstName: "",
         userLastName: "",
+        userImages: ""
       },
       userFirstNameError: "",
       userLastNameError: "",
@@ -62,13 +67,45 @@ class Profile extends Component {
     modalVisible: false,
   };
 
-  openModal() {
+  profileModalOpen() {
+    this.state.user.userFirstName = this.props.getUserData.userFirstName;
+    this.state.user.userLastName = this.props.getUserData.userLastName;
+    this.state.user.userImages = this.props.getUserData.userImages;
     this.setState({modalVisible:true});
   }
 
-  closeModal() {
+  profileModalClose() {
     this.setState({modalVisible:false});
+    this.state.userFirstNameError = null;
+    this.state.userLastNameError = null;
+    this.state.user.userImages = null;
   }
+
+  choosePhoto() {
+    this.setState({ isImagePickerActive: true }, () => {
+
+        let options = {
+            title: null,
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else {
+
+              this.state.user.userImages = response.data;
+
+            }
+        });
+        setTimeout(() => { this.setState({ isImagePickerActive: false }); }, 1000)
+    });
+};
 
   goLogin() {
     AsyncStorage.setItem('token', "");
@@ -81,34 +118,38 @@ class Profile extends Component {
     Actions.Auth({ type: ActionConst.RESET })
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.updateStatus !== this.props.updateStatus) {
-      if (this.props.updateStatus) {
-        Keyboard.dismiss();
-        alert(
-          "Profile Information Updated"
-        );
-        //Actions.pop();
-      }
-    }
-
-    //if (this.props.getRegisterError) {
-      //alert(this.props.getRegisterError);
-      //this.props.registerUserError("");
-    //}
-  }
-
   update = async () => {
-    const userFirstNameError = validator(
+
+    let updateRecord = false;
+
+    let userFirstNameError = validator(
       "firstName",
       this.state.user.userFirstName
     );
-    const userLastNameError = validator(
+    let userLastNameError = validator(
       "lastName",
       this.state.user.userLastName
     );
-    
+    console.log(this.state.user.userFirstName, '=',this.props.getUserData.userFirstName)
    // const passwordError = validator("password", this.state.user.userPassword);
+
+   if (this.state.user.userFirstName === this.props.getUserData.userFirstName ) {
+      userFirstNameError = null
+    }else {
+      updateRecord = true;
+    }
+
+    if (this.state.user.userFirstName === this.props.getUserData.userFirstName) {
+      userLastNameError = null  
+    }else {
+      updateRecord = true;
+    }
+
+    console.log (this.props.getUserData.userImages , '=', this.state.user.userImages)
+
+    if (this.props.getUserData.userImages !== this.state.user.userImages) {
+      updateRecord = true;
+    }
 
     this.setState(
       {
@@ -121,20 +162,24 @@ class Profile extends Component {
           !userLastNameError
         ) {
           
-          const data = {
-            userFirstName: this.props.userFirstName,
-            userLastName: this.props.userLastName,
-            token: this.props.token
+          if (updateRecord === true) {
+            const data = {
+              userFirstName: this.state.user.userFirstName,
+              userLastName: this.state.user.userLastName,
+              userImages: this.state.user.userImages,
+              token: this.props.token
+            }
+            console.log(data)
+            this.props.updateUser(data);
+  
+            Alert.alert(
+              "Profile Information Updated"
+            );
+            updateRecord = false;
+            this.profileModalClose();
           }
 
-          this.props.updateUser(data);
-          console.log(data)
-        } else {
-          /* console.log("this.state.userFirstNameError " + this.state.userFirstNameError)
-        console.log("this.state.userLastNameError " + this.state.userLastNameError)
-        console.log("this.state.emailError " + this.state.emailError)
-        console.log("this.state.passwordError " + this.state.passwordError) */
-        }
+        } 
       }
     );
   };
@@ -143,23 +188,25 @@ class Profile extends Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.header}></View>
-        <Image style={styles.avatar} source={{ uri: 'https://ksassets.timeincuk.net/wp/uploads/sites/54/2019/06/image-asset-920x518.jpeg' }} />
+        <Image style={styles.avatar} source={{ uri: 'data:image/jpeg;base64,' + this.props.getUserData.userImages }}/>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>{this.props.getUserData.userFirstName} {this.props.getUserData.userLastName}</Text>
             <Text style={styles.info}>{this.props.getActiveGroupData.groupName}</Text>
             <Text style={styles.description}>{this.props.getActiveGroupData.groupDescription}{'\n'}</Text>
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={() => { this.openModal() }}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => { this.profileModalOpen() }}>
               <Text>Edit Profile</Text>
             </TouchableOpacity>
             <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
-              onRequestClose={() => this.closeModal()}
+              onRequestClose={() => this.profileModalClose()}
           >
             <View style={styles.modalWindow} ScrollView>
               <Text style={styles.modalText}>Update Profile</Text>
+              <Image style={styles.image} source={{ uri: 'data:image/jpeg;base64,' + this.state.user.userImages }} />
+              <TouchableOpacity style={styles.center} onPress={() => this.choosePhoto()}><Text style={styles.Text}>Change Image</Text></TouchableOpacity>
               <TextInput style={styles.inputBox}
                         onChangeText={FirstName =>
                           this.setState({
@@ -195,7 +242,7 @@ class Profile extends Component {
                         returnKeyType="next"
                         autoCapitalize="none"
                         ref={input => (this.lastName = input)}
-                        onSubmitEditing={() => this.update}
+                        onSubmitEditing={() => this.update()}
                         />
               {this.state.userLastNameError ? (
                 <Text style={styles.errorMessage}>{this.state.userLastNameError}</Text>
@@ -203,7 +250,7 @@ class Profile extends Component {
               <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.update()}>
                 <Text>Update</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => { this.closeModal() }}>
+              <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => { this.profileModalClose() }}>
                 <Text>Cancel</Text>
             </TouchableOpacity>
             </View>
@@ -223,6 +270,7 @@ class Profile extends Component {
 const mapStateToProps = state => {
   return {
     getUserData: state.userReducer.getUserData,
+    updateStatus: state.userReducer.status,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     token: state.logInReducer.token,
     socket: state.groupChatRoomReducer.socket,

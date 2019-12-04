@@ -51,6 +51,7 @@ export default StyleSheet.create({
     },
     addButton: {
       textAlign:"right",
+      fontSize: 20,
       //position: 'absolute',
       marginRight: 5,
       //top: 2,
