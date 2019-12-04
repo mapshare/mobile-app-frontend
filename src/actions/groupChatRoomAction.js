@@ -48,6 +48,13 @@ export const chatLogData = data => {
     };
 };
 
+export const activeMembersData = data => {
+    return {
+        type: keys.ACTIVE_MEMBERS_DATA,
+        activeMembersData: data,
+    };
+};
+
 export const newMessageStatus = data => {
     return {
         type: keys.NEW_MESSAGE_STATUS,
@@ -71,9 +78,10 @@ export const connectToGroupChatError = data => {
 
 export const connectToGroupChat = data => {
     return dispatch => {
+        let socket;
         try {
             console.log("Connecting To ChatRoom")
-            const socket = io.connect(CHAT_URL + '/' + data.groupId);
+            socket = io.connect(CHAT_URL + '/' + data.groupId);
             if (!socket) throw ("Unable to connect to server");
             dispatch(connectToGroupChatDataSuccess(socket));
 
@@ -98,12 +106,20 @@ export const connectToGroupChat = data => {
                     .on('join room', (data) => {
                         dispatch(chatLogData(data));
                         dispatch(joinGroupChatRoomSuccess(true));
+                    })
+                    .on('Still Connected', (data) => {
+                        socket.emit('Still Connected', { connected: true });
+                    })
+                    .on('User Joined or Left', (data) => {
+                        dispatch(activeMembersData(data));
                     });
             });
         } catch (error) {
+            socket.disconnect();
             dispatch(connectToGroupChatSuccess(false));
             dispatch(connectToGroupChatError(error));
         }
+
     }
 };
 
@@ -296,10 +312,11 @@ export const disconnectGroupChatRoomError = data => {
 export const disconnectGroupChatRoom = data => {
     return dispatch => {
         try {
-            data.socket.emit('disconnect', true);
+            data.socket.disconnect();
             data.socket.removeAllListeners();
             dispatch(disconnectGroupChatRoomSuccess(true));
         } catch (error) {
+            console.log(error);
             dispatch(disconnectGroupChatRoomSuccess(false));
             dispatch(disconnectGroupChatRoomError(error));
         }

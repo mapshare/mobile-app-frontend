@@ -118,6 +118,7 @@ class Map extends Component {
       console.log("zoom");
       this.location.zoomLocation = false;
       return (
+        
         <Mapbox.PointAnnotation
           key="pointAnnotation"
           id="pointAnnotation"
@@ -127,7 +128,7 @@ class Map extends Component {
           <View style={annotationStyles.container}>
             <View style={annotationStyles.fill} />
           </View>
-          <Mapbox.Callout title="You are Here!!"/>
+          <Mapbox.Callout title="You are Here!!" />
         </Mapbox.PointAnnotation>
       );
     }
@@ -151,7 +152,7 @@ class Map extends Component {
           <View style={annotationStyles.container}>
             <View style={annotationStyles.fill} />
           </View>
-          <Mapbox.Callout title={this.location.address} />
+          <Mapbox.Callout title={this.location.address}  onPress/>
         </Mapbox.PointAnnotation>
       );
     }

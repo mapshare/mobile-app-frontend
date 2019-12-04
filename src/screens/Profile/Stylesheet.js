@@ -84,4 +84,28 @@ export default StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#FFBF00",
   },
+  modalWindow: {
+    
+    justifyContent:'center',
+    flex: .50
+  },
+  modalText: {
+    alignSelf: 'center',
+    fontSize: 30,
+    marginBottom:20
+  },
+  errorMessage: {
+    color: "red"
+  },
+  inputBox: {
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  center: {
+    alignSelf: 'center',
+  }
 });

@@ -1,7 +1,8 @@
 import keys from '../data/key';
 
 const INITIAL_GROUP_CHAT_ROOM_STATE = {
-    chatLogData: { data: [] }
+    chatLogData: { data: [] },
+    activeMembersData: [],
 };
 
 export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, action) => {
@@ -26,6 +27,8 @@ export const groupChatRoomReducer = (state = INITIAL_GROUP_CHAT_ROOM_STATE, acti
             }
         case keys.CHAT_LOG_DATA:
             return { ...state, chatLogData: action.chatLogData };
+        case keys.ACTIVE_MEMBERS_DATA:
+            return { ...state, activeMembersData: action.activeMembersData };
         case keys.NEW_MESSAGE_STATUS:
             return { ...state, getNewMessageStatus: action.getNewMessageStatus };
         case keys.NEW_MESSAGE_DATA:
