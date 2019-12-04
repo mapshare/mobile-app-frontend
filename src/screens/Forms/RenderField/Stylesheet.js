@@ -7,7 +7,8 @@ const mainStyles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     height: 40,
-    padding: 10
+    padding: 10,
+    backgroundColor: 'white'
   },
 
   textareaInputStyle: {

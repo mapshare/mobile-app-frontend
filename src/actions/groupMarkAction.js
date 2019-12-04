@@ -178,17 +178,19 @@ export const getGroupAllMarks = data => {
   };
 };
 
-export const getGroupMark = data => {
+export const getGroupMarkById = data => {
   return dispatch => {
     axios
       .get(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
         headers: { 'authentication': data.token }
       })
       .then(res => {
+        console.log('get mark by id success!')
         dispatch(getGroupMarkDataSuccess(res.data));
         dispatch(getGroupMarkSuccess(true));
       })
       .catch(err => {
+        console.log('get mark by id failed!: ', err.response.data)
         dispatch(getGroupMarkSuccess(false));
         dispatch(getGroupMarkError(err.response.data));
       });
@@ -222,9 +224,7 @@ export const updateGroupMarkError = data => {
 export const updateGroupMark = data => {
   let markData = {
     markName: data.markName,
-    markLocations: data.markLocations,
-    geometry: data.geometry,
-    groupMarkCreatedBy: data.groupMarkCreatedBy
+    markLocations: data.locationImageData,
   };
 
   return dispatch => {
@@ -235,10 +235,18 @@ export const updateGroupMark = data => {
         { headers: { 'authentication': data.token } }
       )
       .then(res => {
+        const getMarkData = {
+          groupId: data.groupId,
+          token: data.token,
+          markId: res.data.updatedMark._id
+        }
+        console.log('update mark success! ', res.data)
+        dispatch(getGroupMarkById(getMarkData));
         dispatch(updateGroupMarkDataSuccess(res.data));
         dispatch(updateGroupMarkSuccess(true));
       })
       .catch(err => {
+        console.log('update mark failed: ', err.response.data)
         dispatch(updateGroupMarkSuccess(false));
         dispatch(updateGroupMarkError(err.response.data));
       });
@@ -272,14 +280,16 @@ export const deleteGroupMarkError = data => {
 export const deleteGroupMark = data => {
   return dispatch => {
     axios
-      .post(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
+      .delete(API_URL + '/groups/' + data.groupId + '/mark/' + data.markId, {
         headers: { 'authentication': data.token }
       })
       .then(res => {
+        // console.log('success delete!')
         dispatch(deleteGroupMarkDataSuccess(res.data));
         dispatch(deleteGroupMarkSuccess(true));
       })
       .catch(err => {
+        // console.log('failed! error: ', err.response.data)
         dispatch(deleteGroupMarkSuccess(false));
         dispatch(deleteGroupMarkError(err.response.data));
       });

@@ -13,3 +13,13 @@ export const clickMarkModalWindow = bool => {
     onClickMarkStatus: bool
   };
 };
+
+export const deleteLocationModalWindow = data => {
+  return {
+    type: keys.DELETE_LOCATION_MODAL_WINDOW,
+    deleteLocation: {
+      ...data,
+      status: data.status,
+    }
+  };
+};

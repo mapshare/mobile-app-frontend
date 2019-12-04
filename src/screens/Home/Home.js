@@ -60,7 +60,7 @@ class Home extends Component {
 
   componentDidMount() {
 
-    this.props.getUser({token: this.props.token});
+    this.props.getUser({ token: this.props.token });
 
     // update every 5 seconds
     this.setState({
@@ -71,7 +71,7 @@ class Home extends Component {
           token: this.props.token
         });
 
-        this.props.getUser({token: this.props.token});
+        this.props.getUser({ token: this.props.token });
 
         this.props.getGroupAllMarks({
           groupMarkId: this.props.getActiveGroupData.groupMarks,
@@ -99,7 +99,7 @@ class Home extends Component {
     clearInterval(this.state.interval);
   }
 
-  loadingScreen() {}
+  loadingScreen() { }
 
   componentDidUpdate(prevProps) {
     // Checks if Active Group Still Exists.
@@ -117,7 +117,7 @@ class Home extends Component {
     }
     this.sequenceStepListener = DeviceEventEmitter.addListener(
       'onShowSequenceStepEvent',
-      
+
     )
   }
 
@@ -127,7 +127,7 @@ class Home extends Component {
     }
     this.finishSequenceListener = DeviceEventEmitter.addListener(
       'onFinishSequenceEvent',
-      
+
     )
   }
 
@@ -150,16 +150,16 @@ class Home extends Component {
     return (
       <View style={styles.root}>
         <View style={styles.Body}>
-          <GroupMenu 
-          style={styles.image}
-          addAppTourTarget={appTourTarget => {
-            this.appTourTargets.push(appTourTarget)
-          }}/>
-          <CreatePostButton 
-          style={styles.image}
-          addAppTourTarget={appTourTarget => {
-            this.appTourTargets.push(appTourTarget)
-          }}/>
+          <GroupMenu
+            style={styles.image}
+            addAppTourTarget={appTourTarget => {
+              this.appTourTargets.push(appTourTarget)
+            }} />
+          <CreatePostButton
+            style={styles.image}
+            addAppTourTarget={appTourTarget => {
+              this.appTourTargets.push(appTourTarget)
+            }} />
           <View style={styles.InfoBody}>
             <ImageBackground
               source={

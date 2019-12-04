@@ -67,7 +67,7 @@ class AddMarkForm extends Component {
         locationAddress: values.locationAddress,
         loactionPriceRange: this.state.priceRange,
         additionalInformation: values.additionalInformation,
-        locationImageSet: [{ locationImageData: this.state.photo }]
+        locationImageData: this.state.photo && this.state.photo.data
       },
       geometry: { coordinates: this.props.coordinates },
       groupMarkCreatedBy: this.props.getUserData._id,
@@ -127,13 +127,13 @@ class AddMarkForm extends Component {
               style={containerStyles.imageStyle}
             />
           ) : (
-            <TouchableOpacity
-              style={containerStyles.imageUpload}
-              onPress={this.choosePhoto}
-            >
-              <Icon name="plus" size={30}></Icon>
-            </TouchableOpacity>
-          )}
+              <TouchableOpacity
+                style={containerStyles.imageUpload}
+                onPress={this.choosePhoto}
+              >
+                <Icon name="plus" size={30}></Icon>
+              </TouchableOpacity>
+            )}
         </View>
         <TouchableOpacity
           style={containerStyles.buttonContainer}
