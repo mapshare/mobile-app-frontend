@@ -22,6 +22,7 @@ import { containerStyles, mapStyles, annotationStyles } from './Stylesheet';
 import ModalWindow from '../ModalWindow/ModalWindow';
 import AddMark from '../AddMark/AddMark';
 import Marks from '../Marks/Marks';
+import BottomWindow from '../BottomWindow/BottomWindow';
 
 console.log(MAPBOX);
 
@@ -45,7 +46,7 @@ class Map extends Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.findCoordinates();
   }
 
@@ -114,7 +115,7 @@ class Map extends Component {
 
     //Zoom to User location
 
-    if (this.location.zoomLocation == true){
+    if (this.location.zoomLocation == true) {
       console.log("zoom");
       this.location.zoomLocation = false;
       return (
@@ -127,7 +128,7 @@ class Map extends Component {
           <View style={annotationStyles.container}>
             <View style={annotationStyles.fill} />
           </View>
-          <Mapbox.Callout title="You are Here!!"/>
+          <Mapbox.Callout title="You are Here!!" />
         </Mapbox.PointAnnotation>
       );
     }
@@ -138,7 +139,7 @@ class Map extends Component {
 
     //Zoom to searched location
 
-    if (this.location.findLocation == true){
+    if (this.location.findLocation == true) {
       this.location.findLocation = false;
       console.log("search")
       return (
@@ -205,6 +206,7 @@ class Map extends Component {
             size={30}
             onPress={this.zoomCoordinates}
           ></Icon>
+          {this.props.reviewWindowStatus && <BottomWindow bottomWindowType="review" />}
         </View>
       </View>
     );
@@ -220,7 +222,8 @@ const mapStateToProps = state => {
     onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
     token: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
-    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag
+    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
+    reviewWindowStatus: state.bottomWindowReducer.reviewWindowStatus
   };
 };
 

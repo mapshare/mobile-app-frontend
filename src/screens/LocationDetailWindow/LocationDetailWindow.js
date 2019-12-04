@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 //Redux actions
 import { addGroupMark } from '../../actions/groupMarkAction';
 import { deleteLocationModalWindow } from "../../actions/modalWindowAction";
+import { reviewBottomWindow } from '../../actions/bottomWindowAction'
 
 // Componenets Style
 import {
@@ -257,7 +258,7 @@ class LocationDetailWindow extends Component {
           <View style={containerStyles.reviewContainer}>
             <View style={locationReviewStyles.titleContainer}>
               <Text style={locationDetailStyles.textStyle}>Location Reviews</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => { this.props.reviewBottomWindow(true) }}>
                 <Icon name="plus" size={20} />
               </TouchableOpacity>
             </View>
@@ -285,7 +286,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addGroupMark: bool => dispatch(addGroupMark(bool)),
-    deleteLocationModalWindow: data => dispatch(deleteLocationModalWindow(data))
+    deleteLocationModalWindow: data => dispatch(deleteLocationModalWindow(data)),
+    reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool))
   };
 };
 

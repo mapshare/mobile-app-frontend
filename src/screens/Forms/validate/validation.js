@@ -82,6 +82,21 @@ const validation = {
     }
   },
 
+  reviewContent: {
+    presence: {
+      message: '^Review is empty',
+      allowEmpty: false
+    },
+    length: {
+      maximum: 50,
+      message: '^Maximum of 50 characters'
+    },
+    format: {
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
+    }
+  },
+
   postCaption: {
     presence: {
       message: '^Caption is required',
@@ -125,14 +140,14 @@ const validation = {
     }
   },
 
-  groupDescriptionPresent:{
+  groupDescriptionPresent: {
     presence: {
       message: '^A Group Description is required',
       allowEmpty: false
     },
   },
 
-  groupDescriptionMaxLength:{
+  groupDescriptionMaxLength: {
     length: {
       maximum: 50,
       message: '^Group Description must be less than 50 characters',

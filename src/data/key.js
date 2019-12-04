@@ -290,6 +290,8 @@ const IMAGE_DATA = 'IMAGE_DATA';
 
 const BANNED_USER_DATA = 'BANED_USER_DATA';
 
+const REVIEW_BOTTOM_WINDOW = 'REVIEW_BOTTOM_WINDOW';
+
 export default {
   // logInReducer.js
   LOG_IN_SUCCESS,
@@ -551,4 +553,6 @@ export default {
   // addPostReducer.js - SET IMAGE
   IMAGE_STATUS,
   IMAGE_DATA,
+  // bottomWindowReducer.js - REVIEW
+  REVIEW_BOTTOM_WINDOW
 };

@@ -49,7 +49,7 @@ const mapStyles = StyleSheet.create({
     position: 'absolute',
     zIndex: 9999,
     borderTopWidth: 0,
-    borderBottomWidth:0,
+    borderBottomWidth: 0,
     //borderRadius: 100,
   }
 });
