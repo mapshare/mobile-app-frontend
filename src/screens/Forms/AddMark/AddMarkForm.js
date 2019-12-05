@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
-import { addGroupMark, newMarkAdded } from '../../../actions/groupMarkAction';
+import { addGroupMark, newMarkAdded, addGroupMarkOnClick } from '../../../actions/groupMarkAction';
 import { addMarkModalWindow } from '../../../actions/modalWindowAction';
 
 // Componenets Style
@@ -79,7 +79,7 @@ class AddMarkForm extends Component {
       categoryId: values.categoryId,
       markLocations: {
         locationAddress: values.locationAddress.trim(),
-        loactionPriceRange: this.state.priceRange,
+        loactionPriceRange: values.loactionPriceRange,
         additionalInformation: values.additionalInformation.trim(),
         locationImageData: this.state.photo && this.state.photo.data
       },

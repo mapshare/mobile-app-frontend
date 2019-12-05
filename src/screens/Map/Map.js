@@ -209,8 +209,8 @@ class Map extends Component {
             size={30}
             onPress={this.zoomCoordinates}
           ></Icon>
-          {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         </View>
+        {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         {this.props.categoriesOptionOnClickStatus && (
           <View style={containerStyles.categoryContainer}>
             <CategoryOptions />
