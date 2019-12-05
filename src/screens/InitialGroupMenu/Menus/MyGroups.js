@@ -9,7 +9,8 @@ import {
     Alert,
     Modal,
     FlatList,
-    SafeAreaView
+    SafeAreaView,
+    AsyncStorage
 } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -159,6 +160,26 @@ class MyGroups extends Component {
                             }}>
                             <Icon style={styles.closeIcon} name="plus" size={30} />
                         </TouchableOpacity>
+
+                        {/* LOGOUT FUNCTION 
+                        <TouchableOpacity
+                            disabled={this.state.singleActivation}
+                            style={styles.logOutButton}
+                            onPress={() => {
+                                this.setState({ singleActivation: true }, () => {
+                                    AsyncStorage.setItem('token', "");
+                                    AsyncStorage.setItem('lastActiveGroupId', "");
+                                    Actions.Auth({ type: ActionConst.RESET });
+
+                                    setTimeout(() => {
+                                        this.setState({ singleActivation: false });
+                                    }, 1000)
+                                });
+                            }}>
+                            <Icon style={styles.logOutIcon} name="logout" size={30} />
+                        </TouchableOpacity>
+                        */}
+
                         <SafeAreaView style={styles.content} >
                             <TouchableWithoutFeedback
                                 disabled={this.state.singleActivation}

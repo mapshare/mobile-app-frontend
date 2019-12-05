@@ -34,6 +34,7 @@ import EditPostForm from "../../screens/Forms/EditPost/EditPost";
 import LoadingScreen from "../../screens/Loading/Loading";
 import ModalWindow from '../../screens/ModalWindow/ModalWindow';
 import BottomWindow from "../../screens/BottomWindow/BottomWindow";
+import ActiveMemberList from "../../screens/Groups/GroupChat/activeMemberList";
 
 // InitialGroupMenu
 import InitialAddGroup from "../../screens/InitialGroupMenu/Menus/AddGroup";
@@ -253,6 +254,7 @@ class App extends Component {
           <Scene key="banedUsersList" hideNavBar hideTabBar component={BanedUsersList} />
 
           {/* MODALS */}
+          <Scene key="activeMemberList" component={ActiveMemberList} />
           <Scene key="loadingScreen" component={LoadingScreen} />
           <Scene key="createPostModal" component={CreatePostModal} />
           <Scene key="editPostModal" component={EditPostModal} />
