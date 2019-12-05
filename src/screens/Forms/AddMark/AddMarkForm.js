@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
-import { addGroupMark, newMarkAdded } from '../../../actions/groupMarkAction';
+import { addGroupMark, newMarkAdded, addGroupMarkOnClick } from '../../../actions/groupMarkAction';
 import { addMarkModalWindow } from '../../../actions/modalWindowAction';
 
 // Componenets Style
@@ -89,6 +89,7 @@ class AddMarkForm extends Component {
       token: this.props.logInToken
     };
 
+    console.log(formValues)
     this.props.addMarkModalWindow(false);
     this.props.addGroupMarkOnClick(false);
     this.props.addGroupMark(formValues);

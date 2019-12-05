@@ -64,14 +64,6 @@ class GroupFeed extends Component {
                             return (
                                 <View style={styles.groupPost}>
                                     <View style={styles.groupPostHeader}>
-                                        <View style={styles.headerColOne}>
-                                            <Image
-                                                style={styles.groupPostProfilePic}
-                                                source={{ uri: 'data:image/png;base64,' + item.userProfilePic }}
-                                            />
-                                            <Text style={styles.postText}></Text>
-
-                                        </View>
                                         <View style={styles.headerColTwo}>
                                             <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>
                                         </View>
