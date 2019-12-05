@@ -187,7 +187,7 @@ class LocationDetailWindow extends Component {
       reviewSet.map((data, index) => {
         reviewViews.push(
           <View style={locationReviewStyles.mainContainer}>
-            <Image style={locationReviewStyles.profilePic} source={{ uri: 'data:image/png;base64,' + data.userProfilePic }} />
+            <Image style={locationReviewStyles.profilePic} source={data.userProfilePic ? { uri: 'data:image/png;base64,' + data.userProfilePic } : { uri: this.avatar }} />
             <View style={locationReviewStyles.contentContainer}>
               <View style={locationReviewStyles.reviewHeaderContainer}>
                 <Text style={locationReviewStyles.usernameText}>
@@ -222,7 +222,7 @@ class LocationDetailWindow extends Component {
           scrollEventThrottle={16}
           stickyHeaderIndices={this.state.screenViewPosition && [1]}
         >
-          {this.state.locationData &&
+          {/* {this.state.locationData &&
             <Carousel
               layout={'default'}
               data={this.state.locationData.markImages}
@@ -232,8 +232,8 @@ class LocationDetailWindow extends Component {
               itemWidth={width}
               onSnapToItem={index => this.setState({ activeSlide: index })}
             />
-          }
-          <View style={infoDescriptionStyles.mainContainer}>
+          } */}
+          {/* <View style={infoDescriptionStyles.mainContainer}>
             <View
               style={[
                 infoDescriptionStyles.contentContainer,
@@ -255,7 +255,7 @@ class LocationDetailWindow extends Component {
                 </Text>
               </View>
             </View>
-          </View>
+          </View> */}
           <View style={locationDetailStyles.mainContainer}>
             {this.renderAddress(
               this.props.getCurrentOnClickMarkData.markLocations.locationAddress
