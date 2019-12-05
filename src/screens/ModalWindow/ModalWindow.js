@@ -24,6 +24,7 @@ import { containerStyles, eventModalWindow } from './Stylesheet';
 
 import AddMarkForm from '../Forms/AddMark/AddMarkForm';
 import LocationDetailWindow from '../LocationDetailWindow/LocationDetailWindow';
+import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 
 class ModalWindow extends Component {
   constructor(props) {
@@ -211,6 +212,7 @@ class ModalWindow extends Component {
           {this.content(this.props.modalContent)}
         </ScrollView>
       </View>
+
     );
   }
 }
@@ -221,7 +223,9 @@ const mapStateToProps = state => {
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     token: state.logInReducer.token,
     modalWindowStatus: state.modalWindowReducer.status,
-    getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData
+    getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
+    deleteLocation: state.modalWindowReducer.deleteLocation
+
   };
 };
 

@@ -24,6 +24,7 @@ import ModalWindow from '../ModalWindow/ModalWindow';
 import AddMark from '../AddMark/AddMark';
 import Categories from '../Categories/Categories';
 import Marks from '../Marks/Marks';
+import BottomWindow from '../BottomWindow/BottomWindow';
 import CategoryOptions from '../CategoryOptions/CategoryOptions';
 
 console.log(MAPBOX);
@@ -238,6 +239,7 @@ class Map extends Component {
                       }}
                       
           ></Icon>
+          {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         </View>
         {this.props.categoriesOptionOnClickStatus && (
           <View style={containerStyles.categoryContainer}>
@@ -260,7 +262,8 @@ const mapStateToProps = state => {
       state.groupDefaultMarkCategoryReducer.categoriesOptionOnClickStatus,
     token: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
-    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag
+    newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
+    reviewWindow: state.bottomWindowReducer.reviewWindow
   };
 };
 

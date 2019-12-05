@@ -63,6 +63,15 @@ const imageCarouselStyles = StyleSheet.create({
     padding: 10
   },
 
+  imageOptionBackground: {
+    opacity: .3,
+    height: reponsiveStyle.hp('4%'),
+    width: reponsiveStyle.wp('4%'),
+    backgroundColor: 'black',
+    alignSelf: 'center',
+    position: 'absolute',
+  },
+
   imageContent: {
     width: reponsiveStyle.wp('90%'),
     height: reponsiveStyle.hp('40%'),
@@ -103,7 +112,7 @@ const infoDescriptionStyles = StyleSheet.create({
   },
 
   locationNameStyles: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: 'bold'
   }
 });
@@ -113,6 +122,13 @@ const locationDetailStyles = StyleSheet.create({
     flex: 1,
     width: reponsiveStyle.wp('90%'),
     marginBottom: 15
+  },
+
+  optionContainer: {
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    margin: 10,
+    marginBottom: 0
   },
 
   infoContainer: {
@@ -140,7 +156,8 @@ const locationReviewStyles = StyleSheet.create({
     width: reponsiveStyle.wp('90%'),
     height: reponsiveStyle.hp('5%'),
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
 
   mainContainer: {

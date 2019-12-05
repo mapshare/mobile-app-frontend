@@ -14,6 +14,16 @@ export const clickMarkModalWindow = bool => {
   };
 };
 
+export const deleteLocationModalWindow = data => {
+  return {
+    type: keys.DELETE_LOCATION_MODAL_WINDOW,
+    deleteLocation: {
+      ...data,
+      status: data.status,
+    }
+  };
+};
+
 export const addCustomMarkModalWindow = bool => {
   return {
     type: keys.ADD_CUSTOM_MARK_MODAL_WINDOW,
