@@ -42,7 +42,7 @@ class CustomMarkOptionsForm extends Component {
   submit = values => {
     if (this.state.categoryColor && this.state.saveColor) {
       const formValues = {
-        customMarkCategoryName: values.customMarkCategoryName,
+        customMarkCategoryName: values.customMarkCategoryName.trim(),
         categoryColor: this.state.categoryColor,
         groupId: this.props.getActiveGroup._id,
         token: this.props.logInToken,
