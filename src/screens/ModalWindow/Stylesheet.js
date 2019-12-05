@@ -13,7 +13,8 @@ const containerStyles = StyleSheet.create({
     position: 'absolute',
     padding: 10,
     backgroundColor: 'white',
-    zIndex: 10
+    zIndex: 20000,
+    elevation:20000,
   },
 
   closeButtonContainer: {
