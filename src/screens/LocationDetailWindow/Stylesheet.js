@@ -112,7 +112,7 @@ const infoDescriptionStyles = StyleSheet.create({
   },
 
   locationNameStyles: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: 'bold'
   }
 });

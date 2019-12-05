@@ -1,7 +1,7 @@
 import keys from "../data/key";
 
 const INITIAL_BOTTOM_WINDOW_STATE = {
-  reviewWindowStatus: false,
+  reviewWindow: {},
 };
 
 export const bottomWindowReducer = (
@@ -10,7 +10,7 @@ export const bottomWindowReducer = (
 ) => {
   switch (action.type) {
     case keys.REVIEW_BOTTOM_WINDOW:
-      return { ...state, reviewWindowStatus: action.reviewWindowStatus };
+      return { ...state, reviewWindow: action.reviewWindow };
     default:
       return state;
   }

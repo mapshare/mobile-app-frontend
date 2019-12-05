@@ -86,7 +86,7 @@ class EditGroupMark extends Component {
           maxLength={20}
         />
         <Text style={containerStyles.textStyle}>Upload an image</Text>
-        <View>
+        <View style={containerStyles.imageContainer}>
           {this.state.empty ? (
             <Image
               source={{ uri: this.state.photo.uri }}

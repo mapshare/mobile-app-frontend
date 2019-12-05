@@ -206,7 +206,7 @@ class Map extends Component {
             size={30}
             onPress={this.zoomCoordinates}
           ></Icon>
-          {this.props.reviewWindowStatus && <BottomWindow bottomWindowType="review" />}
+          {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         </View>
       </View>
     );
@@ -223,7 +223,7 @@ const mapStateToProps = state => {
     token: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
     newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
-    reviewWindowStatus: state.bottomWindowReducer.reviewWindowStatus
+    reviewWindow: state.bottomWindowReducer.reviewWindow
   };
 };
 

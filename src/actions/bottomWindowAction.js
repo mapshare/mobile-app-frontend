@@ -1,8 +1,11 @@
 import keys from '../data/key';
 
-export const reviewBottomWindow = bool => {
+export const reviewBottomWindow = data => {
   return {
     type: keys.REVIEW_BOTTOM_WINDOW,
-    reviewWindowStatus: bool
+    reviewWindow: {
+      ...data,
+      status: data.status,
+    }
   };
 };

@@ -73,15 +73,15 @@ class LocationReviewForm extends Component {
       markLocations: markLocations,
       groupId: this.props.getActiveGroupData._id,
       token: this.props.logInToken,
-      markId: this.props.getGroupMarkData.mark._id
+      markId: this.props.getCurrentOnClickMarkData._id
     };
     Keyboard.dismiss()
-    this.props.reviewBottomWindow(false);
+    this.props.reviewBottomWindow({status: false});
     this.props.updateGroupMark(formValues);
   };
 
   cancelOnClick() {
-    this.props.reviewBottomWindow(false);
+    this.props.reviewBottomWindow({status: false});
   }
 
   render() {
@@ -137,10 +137,10 @@ const mapStateToProps = state => {
     getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
     newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
-    getGroupMarkData: state.groupMarkReducer.getGroupMarkData
-    // initialValues: {
-    //   locationAddress: state.groupMarkReducer.getGeocodingLocation
-    // }
+    getGroupMarkData: state.groupMarkReducer.getGroupMarkData,
+    initialValues: {
+      reviewContent: state.bottomWindowReducer.reviewWindow.actionType == 'edit' && state.bottomWindowReducer.reviewWindow.content
+    }
   };
 };
 

@@ -80,12 +80,12 @@ class LocationDetailWindow extends Component {
       });
     }
 
-    if (this.props.getLocationReviewsData !== prevProps.getLocationReviewsData) {
-      this.setState({
-        reviewsData: this.props.getLocationReviewsData
-      })
-      console.log('reviews: ', this.props.getLocationReviewsData)
-    }
+    // if (this.props.getLocationReviewsData !== prevProps.getLocationReviewsData) {
+    //   this.setState({
+    //     reviewsData: this.props.getLocationReviewsData
+    //   })
+    //   console.log('reviews: ', this.props.getLocationReviewsData)
+    // }
   }
 
   getPosition = scrollPosition => {
@@ -193,7 +193,11 @@ class LocationDetailWindow extends Component {
                 <Text style={locationReviewStyles.usernameText}>
                   {data.userFirstName + ' ' + data.userLastName}
                 </Text>
-                <Icon name="wrench" size={18} />
+                {/* {(this.props.permisionLevel > 2 | this.props.getGroupMemberData == data.reviewCreatedBy) &&
+                  <TouchableOpacity onPress={() => { this.props.reviewBottomWindow({status: true, actionType: 'edit', content: data.reviewContent}) }}>
+                    <Icon name="wrench" size={18} />
+                  </TouchableOpacity>
+                } */}
               </View>
               <Text style={locationReviewStyles.contentText}>{data.reviewContent}</Text>
               <Text style={locationReviewStyles.reviewDateStyle}>
@@ -222,7 +226,7 @@ class LocationDetailWindow extends Component {
           scrollEventThrottle={16}
           stickyHeaderIndices={this.state.screenViewPosition && [1]}
         >
-          {/* {this.state.locationData &&
+          {this.state.locationData &&
             <Carousel
               layout={'default'}
               data={this.state.locationData.markImages}
@@ -232,8 +236,8 @@ class LocationDetailWindow extends Component {
               itemWidth={width}
               onSnapToItem={index => this.setState({ activeSlide: index })}
             />
-          } */}
-          {/* <View style={infoDescriptionStyles.mainContainer}>
+          }
+          <View style={infoDescriptionStyles.mainContainer}>
             <View
               style={[
                 infoDescriptionStyles.contentContainer,
@@ -250,12 +254,9 @@ class LocationDetailWindow extends Component {
                 <Text style={infoDescriptionStyles.locationNameStyles}>
                   {this.state.locationData && this.state.locationData.mark.markName}
                 </Text>
-                <Text style={infoDescriptionStyles.textStyles}>
-                  {this.props.getCurrentOnClickMarkData.groupMarkCreatedBy}
-                </Text>
               </View>
             </View>
-          </View> */}
+          </View>
           <View style={locationDetailStyles.mainContainer}>
             {this.renderAddress(
               this.props.getCurrentOnClickMarkData.markLocations.locationAddress
@@ -273,7 +274,7 @@ class LocationDetailWindow extends Component {
           <View style={containerStyles.reviewContainer}>
             <View style={locationReviewStyles.titleContainer}>
               <Text style={locationDetailStyles.textStyle}>Location Reviews</Text>
-              <TouchableOpacity onPress={() => { this.props.reviewBottomWindow(true) }}>
+              <TouchableOpacity onPress={() => { this.props.reviewBottomWindow({status: true, actionType: 'add'}) }}>
                 <Icon name="plus" size={20} />
               </TouchableOpacity>
             </View>
@@ -295,7 +296,8 @@ const mapStateToProps = state => {
     getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
     getGroupMarkData: state.groupMarkReducer.getGroupMarkData,
     permisionLevel: state.groupReducer.getGroupMemberData.memberRole.groupRolePermisionLevel,
-    getLocationReviewsData: state.groupMarkReducer.getLocationReviewsData
+    getLocationReviewsData: state.groupMarkReducer.getLocationReviewsData,
+    getGroupMemberData: state.groupReducer.getGroupMemberData,
   };
 };
 
