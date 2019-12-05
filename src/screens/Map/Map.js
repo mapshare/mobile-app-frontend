@@ -21,8 +21,10 @@ import { containerStyles, mapStyles, annotationStyles } from './Stylesheet';
 // Screens
 import ModalWindow from '../ModalWindow/ModalWindow';
 import AddMark from '../AddMark/AddMark';
+import Categories from '../Categories/Categories';
 import Marks from '../Marks/Marks';
 import BottomWindow from '../BottomWindow/BottomWindow';
+import CategoryOptions from '../CategoryOptions/CategoryOptions';
 
 console.log(MAPBOX);
 
@@ -161,7 +163,7 @@ class Map extends Component {
 
   render() {
     return (
-      <View style={containerStyles.container}>
+      <View style={containerStyles.mainContainer}>
         {this.props.addMarkStatus && <ModalWindow modalContent="addMark" />}
         {this.props.onClickMarkStatus && (
           <ModalWindow modalContent="onClickMark" />
@@ -176,6 +178,7 @@ class Map extends Component {
         >
           <View style={containerStyles.optionsContainer}>
             <AddMark />
+            <Categories />
           </View>
           <MSearch notifyChange={loc => this.getCoordsFromName(loc)} />
           <Mapbox.MapView
@@ -208,6 +211,11 @@ class Map extends Component {
           ></Icon>
           {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         </View>
+        {this.props.categoriesOptionOnClickStatus && (
+          <View style={containerStyles.categoryContainer}>
+            <CategoryOptions />
+          </View>
+        )}
       </View>
     );
   }
@@ -220,6 +228,8 @@ const mapStateToProps = state => {
     addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
     addMarkStatus: state.modalWindowReducer.addMarkStatus,
     onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
+    categoriesOptionOnClickStatus:
+      state.groupDefaultMarkCategoryReducer.categoriesOptionOnClickStatus,
     token: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
     newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,

@@ -1,8 +1,9 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image, Picker } from 'react-native';
+import { Text, View, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import ImagePicker from 'react-native-image-picker';
+import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
@@ -15,6 +16,7 @@ import { containerStyles } from './Stylesheet';
 
 import validator from '../validate/validation_wrapper';
 import RenderField from '../RenderField/RenderField';
+import { PRICE_RANGE } from '../../../data/constants';
 
 // Creating Component
 class AddMarkForm extends Component {
@@ -24,9 +26,21 @@ class AddMarkForm extends Component {
     this.state = {
       photo: null,
       empty: false,
-      priceRange: 0,
-      address: this.props.getGeocodingLocation
+      address: this.props.getGeocodingLocation,
+      categories: []
     };
+  }
+
+  componentDidMount() {
+    let allCategories = this.props.getGroupDefaultMarkCategoryData;
+    allCategories = allCategories.concat(
+      this.props.getGroupAllCustomMarkCategoryData
+    );
+
+    this.setState({
+      ...this.state,
+      categories: allCategories
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -63,6 +77,7 @@ class AddMarkForm extends Component {
   submit = values => {
     const formValues = {
       markName: values.markName.trim(),
+      categoryId: values.categoryId,
       markLocations: {
         locationAddress: values.locationAddress.trim(),
         loactionPriceRange: this.state.priceRange,
@@ -99,21 +114,20 @@ class AddMarkForm extends Component {
           label="Location Address"
           maxLength={60}
         />
-        <Text style={containerStyles.textStyle}>Price Range</Text>
-        <View style={containerStyles.priceRangeContainer}>
-          <Picker
-            selectedValue={this.state.priceRange}
-            style={containerStyles.priceRangeList}
-            onValueChange={(itemValue, itemIndex) =>
-              this.setState({ priceRange: itemValue })
-            }
-          >
-            <Picker.Item label="$" value="0" />
-            <Picker.Item label="$$" value="1" />
-            <Picker.Item label="$$$" value="2" />
-            <Picker.Item label="Free" value="3" />
-          </Picker>
-        </View>
+        <Field
+          name="loactionPriceRange"
+          component={RenderField}
+          type="priceRange"
+          label="Price Range"
+          items={PRICE_RANGE}
+        />
+        <Field
+          name="categoryId"
+          component={RenderField}
+          type="category"
+          label="Category"
+          items={this.state.categories}
+        />
         <Field
           name="additionalInformation"
           component={RenderField}
@@ -155,12 +169,12 @@ const validate = values => {
 
   errors.locationAddress = validator('locationAddress', values.locationAddress);
 
-  if (!values.loactionPriceRange) {
-    errors.loactionPriceRange = validator(
-      'loactionPriceRange',
-      values.loactionPriceRange
-    );
-  }
+  errors.loactionPriceRange = validator(
+    'loactionPriceRange',
+    values.loactionPriceRange
+  );
+
+  errors.categoryId = validator('categoryId', values.categoryId);
 
   errors.additionalInformation = validator(
     'additionalInformation',
@@ -182,6 +196,10 @@ const mapStateToProps = state => {
     logInToken: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
     newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
+    getGroupDefaultMarkCategoryData:
+      state.groupDefaultMarkCategoryReducer.getGroupDefaultMarkCategoryData,
+    getGroupAllCustomMarkCategoryData:
+      state.groupCustomMarkCategoryReducer.getGroupAllCustomMarkCategoryData,
     initialValues: {
       locationAddress: state.groupMarkReducer.getGeocodingLocation
     }

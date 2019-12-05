@@ -1,9 +1,11 @@
-import keys from "../data/key";
+import keys from '../data/key';
 
 const INITIAL_MODAL_WINDOW_STATE = {
   addMarkStatus: false,
   onClickMarkStatus: false,
-  deleteLocation: {}
+  deleteLocation: {},
+  addCustomMarkStatus: false,
+  customMarkOptionStatus: false
 };
 
 export const modalWindowReducer = (
@@ -11,12 +13,19 @@ export const modalWindowReducer = (
   action
 ) => {
   switch (action.type) {
+    case keys.ADD_CUSTOM_MARK_MODAL_WINDOW:
+      return { ...state, addCustomMarkStatus: action.addCustomMarkStatus };
     case keys.ADD_MARK_MODAL_WINDOW:
       return { ...state, addMarkStatus: action.addMarkStatus };
     case keys.CLICK_MARK_MODAL_WINDOW:
       return { ...state, onClickMarkStatus: action.onClickMarkStatus };
     case keys.DELETE_LOCATION_MODAL_WINDOW:
       return { ...state, deleteLocation: action.deleteLocation }
+    case keys.CUSTOM_MARK_OPTION_MODAL_WINDOW:
+      return {
+        ...state,
+        customMarkOptionStatus: action.customMarkOptionStatus
+      };
     default:
       return state;
   }

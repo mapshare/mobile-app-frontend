@@ -197,8 +197,7 @@ class JoinGroupRequest extends Component {
                                     <View style={styles.flatListColOne}></View>
                                     <View style={styles.flatListColTwo}>
                                         <Text style={styles.textBoxSmall}>
-                                            {request.item.userFirstName + " " + request.item.userLastName + "\n"}
-                                            {request.item.userEmail}
+                                            {request.item.userFirstName + " " + request.item.userLastName}
                                         </Text>
                                     </View>
                                     <View style={styles.flatListColThree}>

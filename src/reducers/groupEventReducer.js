@@ -1,9 +1,9 @@
 import keys from "../data/key";
 
 const INITIAL_GROUP_STATE = {
-  status: false,
-  groupData: {},
-  createGroupError: ""
+    status: false,
+    groupData: {},
+    createGroupError: ""
 };
 
 export const groupEventReducer = (state = INITIAL_GROUP_STATE, action) => {
@@ -29,6 +29,11 @@ export const groupEventReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, getGroupEventData: action.getGroupEventData };
         case keys.GET_GROUP_EVENT_ERROR:
             return { ...state, getGroupEventError: action.getGroupEventError };
+        // GET ALL GROUP EVENT
+        case keys.GET_ALL_GROUP_EVENT_DATA_SUCCESS:
+            return { ...state, getAllGroupEventData: action.getAllGroupEventData };
+        case keys.GET_ALL_GROUP_EVENT_ERROR:
+            return { ...state, getAllGroupEventError: action.getAllGroupEventError };
         // UPDATE GROUP EVENT
         case keys.UPDATE_GROUP_EVENT_SUCCESS:
             return { ...state, updateGroupEventStatus: action.updateGroupEventStatus };

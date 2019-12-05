@@ -7,7 +7,9 @@ const INITIAL_GROUP_MARK_STATE = {
   coordinates: [],
   getCurrentOnClickMarkData: {},
   getGroupAllMarksData: [],
+  sortGroupMarkData: [],
   getGeocodingLocation: '',
+  sortGroupMarkOnClickFlag: false,
   getLocationReviewsData: []
 };
 
@@ -73,6 +75,13 @@ export const groupMarkReducer = (state = INITIAL_GROUP_MARK_STATE, action) => {
       return { ...state, deleteGroupMarkData: action.deleteGroupMarkData };
     case keys.DELETE_GROUP_MARK_ERROR:
       return { ...state, deleteGroupMarkError: action.deleteGroupMarkError };
+    case keys.SORT_GROUP_MARK:
+      return { ...state, sortGroupMarkData: action.sortGroupMarkData };
+    case keys.SORT_GROUP_MARK_FLAG:
+      return {
+        ...state,
+        sortGroupMarkOnClickFlag: action.sortGroupMarkOnClickFlag
+      };
     default:
       return state;
   }

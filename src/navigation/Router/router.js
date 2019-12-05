@@ -9,63 +9,63 @@ import {
   Lightbox,
   Modal,
   Actions
-} from "react-native-router-flux";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
+} from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
-import SignUp from "../../screens/SignUp/SignUp";
-import LogIn from "../../screens/Login/Login";
-import Home from "../../screens/Home/Home";
-import Tester from "../../screens/Tester Screen/Tester";
-import Events from "../../screens/Events/Event";
-import Map from "../../screens/Map/Map";
-import Profile from "../../screens/Profile/Profile";
-import ManageGroupChat from "../../screens/ManageGroupChat/ManageGroupChat";
-import AddChatRoom from "../../screens/ManageGroupChat/AddChatRoom/AddChatRoom";
-import GroupChat from "../../screens/ManageGroupChat/GroupChat/GroupChat";
-import SelectChatRoom from "../../screens/ManageGroupChat/SelectChatRoom/SelectChatRoom";
-import ManageGroup from "../../screens/ManageGroup/ManageGroup";
-import SelectGroup from "../../screens/ManageGroup/SelectGroup/SelectGroup";
-import AddGroup from "../../screens/ManageGroup/AddGroup/AddGroup";
-import ManageGroupJoinRequests from "../../screens/ManageGroup/ManageGroupJoinRequests/ManageGroupJoinRequests";
-import Chat from "../../screens/Groups/GroupChat/GroupChat";
-import CreatePostModal from "../../screens/Forms/CreatePost/CreatePost";
-import EditPostModal from "../../screens/Groups/GroupFeed/EditPostModal";
-import EditPostForm from "../../screens/Forms/EditPost/EditPost";
-import LoadingScreen from "../../screens/Loading/Loading";
+import SignUp from '../../screens/SignUp/SignUp';
+import LogIn from '../../screens/Login/Login';
+import Home from '../../screens/Home/Home';
+import Tester from '../../screens/Tester Screen/Tester';
+import Events from '../../screens/Events/Event';
+import Map from '../../screens/Map/Map';
+import Profile from '../../screens/Profile/Profile';
+import ManageGroupChat from '../../screens/ManageGroupChat/ManageGroupChat';
+import AddChatRoom from '../../screens/ManageGroupChat/AddChatRoom/AddChatRoom';
+import GroupChat from '../../screens/ManageGroupChat/GroupChat/GroupChat';
+import SelectChatRoom from '../../screens/ManageGroupChat/SelectChatRoom/SelectChatRoom';
+import ManageGroup from '../../screens/ManageGroup/ManageGroup';
+import SelectGroup from '../../screens/ManageGroup/SelectGroup/SelectGroup';
+import AddGroup from '../../screens/ManageGroup/AddGroup/AddGroup';
+import ManageGroupJoinRequests from '../../screens/ManageGroup/ManageGroupJoinRequests/ManageGroupJoinRequests';
+import Chat from '../../screens/Groups/GroupChat/GroupChat';
+import CreatePostModal from '../../screens/Forms/CreatePost/CreatePost';
+import EditPostModal from '../../screens/Groups/GroupFeed/EditPostModal';
+import EditPostForm from '../../screens/Forms/EditPost/EditPost';
+import LoadingScreen from '../../screens/Loading/Loading';
 import ModalWindow from '../../screens/ModalWindow/ModalWindow';
 import BottomWindow from "../../screens/BottomWindow/BottomWindow";
+import AddCustomMark from '../../screens/AddCustomMark/AddCustomMark';
+import CustomMarkOptions from '../../screens/CustomMarkOptions/CustomMarkOptions';
 import ActiveMemberList from "../../screens/Groups/GroupChat/activeMemberList";
 
 // InitialGroupMenu
-import InitialAddGroup from "../../screens/InitialGroupMenu/Menus/AddGroup";
-import InitialMyGroups from "../../screens/InitialGroupMenu/Menus/MyGroups";
-import InitialSearchGroup from "../../screens/InitialGroupMenu/Menus/SearchGroup";
+import InitialAddGroup from '../../screens/InitialGroupMenu/Menus/AddGroup';
+import InitialMyGroups from '../../screens/InitialGroupMenu/Menus/MyGroups';
+import InitialSearchGroup from '../../screens/InitialGroupMenu/Menus/SearchGroup';
 
 // GroupMenu
-import MyGroupsMenu from "../../screens/Home/GroupMenu/Menus/MyGroups";
-import SearchGroupMenu from "../../screens/Home/GroupMenu/Menus/SearchGroup";
-import AddGroupMenu from "../../screens/Home/GroupMenu/Menus/AddGroup";
-import EditGroupMenu from "../../screens/Home/GroupMenu/Menus/EditGroup";
-import EditGroupMemberMenu from "../../screens/Home/GroupMenu/Menus/EditGroupMember";
-import GroupMembersListMenu from "../../screens/Home/GroupMenu/Menus/GroupMembersList";
-import JoinGroupRequestMenu from "../../screens/Home/GroupMenu/Menus/JoinGroupRequest";
-import ChangeGroupNameMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupName";
-import ChangeGroupDescriptionMenu from "../../screens/Home/GroupMenu/Menus/ChangeGroupDescription";
-import BanedUsersList from "../../screens/Home/GroupMenu/Menus/BanedUsersList";
+import MyGroupsMenu from '../../screens/Home/GroupMenu/Menus/MyGroups';
+import SearchGroupMenu from '../../screens/Home/GroupMenu/Menus/SearchGroup';
+import AddGroupMenu from '../../screens/Home/GroupMenu/Menus/AddGroup';
+import EditGroupMenu from '../../screens/Home/GroupMenu/Menus/EditGroup';
+import EditGroupMemberMenu from '../../screens/Home/GroupMenu/Menus/EditGroupMember';
+import GroupMembersListMenu from '../../screens/Home/GroupMenu/Menus/GroupMembersList';
+import JoinGroupRequestMenu from '../../screens/Home/GroupMenu/Menus/JoinGroupRequest';
+import ChangeGroupNameMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupName';
+import ChangeGroupDescriptionMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupDescription';
+import BanedUsersList from '../../screens/Home/GroupMenu/Menus/BanedUsersList';
 
 // Profile Update Menu
 import updateProfile from "../../screens/Profile/Updator/UpdateProfile"
 
 const headerStyle = {
-  marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+  marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
 };
 
 //Redux actions
 import { connect } from 'react-redux';
 
-import {
-  getGroups,
-} from '../../actions/groupActions';
+import { getGroups } from '../../actions/groupActions';
 
 let backPressed = 0;
 
@@ -108,10 +108,9 @@ class App extends Component {
     return (
       <Router
         hideNavBar={true}
-        titleStyle={{ color: "white" }}
-        navigationBarStyle={{ backgroundColor: "#33C1FF" }}
+        titleStyle={{ color: 'white' }}
+        navigationBarStyle={{ backgroundColor: '#33C1FF' }}
       >
-
         <Lightbox key="root" hideNavBar>
           {/* Login & SignUp */}
           <Stack key="Auth">
@@ -189,10 +188,10 @@ class App extends Component {
           {/* MAIN NAVIGATION */}
           <Stack
             key="navTab"
-            titleStyle={{ color: "white" }}
-            navigationBarStyle={{ backgroundColor: "#33C1FF" }}
-            tabs={true}>
-
+            titleStyle={{ color: 'white' }}
+            navigationBarStyle={{ backgroundColor: '#33C1FF' }}
+            tabs={true}
+          >
             <Scene
               title="HOME"
               key="home"
@@ -242,16 +241,66 @@ class App extends Component {
           {/* MANAGE PROFILE NAVIGATION */}
           <Scene key='updateProfile' hideNavBar hideTabBar component={updateProfile} />
           {/* MANAGE GROUP NAVIGATION */}
-          <Scene key='myGroupsMenu' hideNavBar hideTabBar component={MyGroupsMenu} />
-          <Scene key="searchGroupMenu" hideNavBar hideTabBar component={SearchGroupMenu} />
-          <Scene key="addGroupMenu" hideNavBar hideTabBar component={AddGroupMenu} />
-          <Scene key="editGroupMenu" hideNavBar hideTabBar component={EditGroupMenu} />
-          <Scene key="editGroupMemberMenu" hideNavBar hideTabBar component={EditGroupMemberMenu} />
-          <Scene key="groupMembersListMenu" hideNavBar hideTabBar component={GroupMembersListMenu} />
-          <Scene key="joinGroupRequestMenu" hideNavBar hideTabBar component={JoinGroupRequestMenu} />
-          <Scene key="changeGroupNameMenu" hideNavBar hideTabBar component={ChangeGroupNameMenu} />
-          <Scene key="changeGroupDescriptionMenu" hideNavBar hideTabBar component={ChangeGroupDescriptionMenu} />
-          <Scene key="banedUsersList" hideNavBar hideTabBar component={BanedUsersList} />
+          <Scene
+            key="myGroupsMenu"
+            hideNavBar
+            hideTabBar
+            component={MyGroupsMenu}
+          />
+          <Scene
+            key="searchGroupMenu"
+            hideNavBar
+            hideTabBar
+            component={SearchGroupMenu}
+          />
+          <Scene
+            key="addGroupMenu"
+            hideNavBar
+            hideTabBar
+            component={AddGroupMenu}
+          />
+          <Scene
+            key="editGroupMenu"
+            hideNavBar
+            hideTabBar
+            component={EditGroupMenu}
+          />
+          <Scene
+            key="editGroupMemberMenu"
+            hideNavBar
+            hideTabBar
+            component={EditGroupMemberMenu}
+          />
+          <Scene
+            key="groupMembersListMenu"
+            hideNavBar
+            hideTabBar
+            component={GroupMembersListMenu}
+          />
+          <Scene
+            key="joinGroupRequestMenu"
+            hideNavBar
+            hideTabBar
+            component={JoinGroupRequestMenu}
+          />
+          <Scene
+            key="changeGroupNameMenu"
+            hideNavBar
+            hideTabBar
+            component={ChangeGroupNameMenu}
+          />
+          <Scene
+            key="changeGroupDescriptionMenu"
+            hideNavBar
+            hideTabBar
+            component={ChangeGroupDescriptionMenu}
+          />
+          <Scene
+            key="banedUsersList"
+            hideNavBar
+            hideTabBar
+            component={BanedUsersList}
+          />
 
           {/* MODALS */}
           <Scene key="activeMemberList" component={ActiveMemberList} />
@@ -261,6 +310,8 @@ class App extends Component {
           <Scene key="modalWindow" component={ModalWindow} />
           <Scene key="editPostForm" component={EditPostForm} />
           <Scene key="bottomWindow" component={BottomWindow} />
+          <Scene key="addCustomMark" component={AddCustomMark} />
+          <Scene key="customMarkOptions" component={CustomMarkOptions} />
         </Lightbox>
       </Router>
     );
@@ -269,18 +320,14 @@ class App extends Component {
 
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    getGroups: data => dispatch(getGroups(data)),
+    getGroups: data => dispatch(getGroups(data))
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

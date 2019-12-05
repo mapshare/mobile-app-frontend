@@ -47,6 +47,8 @@ import {
 } from '../../actions/groupChatRoomAction';
 
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
+import { getGroupDefaultMarkCategory } from '../../actions/groupDefaultMarkCategory';
+import { getGroupAllCustomMarkCategory } from '../../actions/groupCustomMarkCategory';
 
 class Home extends Component {
   constructor(props) {
@@ -110,6 +112,16 @@ class Home extends Component {
             groupId: this.props.getActiveGroupData._id,
             token: this.props.token
           });
+
+          const data = {
+            groupMarkId: this.props.getActiveGroupData.groupMarks,
+            groupCategoryId: this.props.getActiveGroupData
+              .groupCustomMarkCategory,
+            token: this.props.token
+          };
+
+          this.props.getGroupDefaultMarkCategory(data);
+          this.props.getGroupAllCustomMarkCategory(data);
         } catch (error) {
           console.log("Home Interval Error: " + error);
         }
@@ -252,7 +264,8 @@ const mapDispatchToProps = dispatch => {
     getUser: data => dispatch(getUser(data)),
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
-    getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
+    getActiveGroupDataSuccess: data =>
+      dispatch(getActiveGroupDataSuccess(data)),
     getActiveGroupError: data => dispatch(getActiveGroupError(data)),
     groupExists: data => dispatch(groupExists(data)),
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
@@ -261,6 +274,10 @@ const mapDispatchToProps = dispatch => {
     disconnectGroupFeed: data => dispatch(disconnectGroupFeed(data)),
     disconnectGroupChatRoom: data => dispatch(disconnectGroupChatRoom(data)),
     getAllGroupMember: data => dispatch(getAllGroupMember(data)),
+    getGroupDefaultMarkCategory: data =>
+      dispatch(getGroupDefaultMarkCategory(data)),
+    getGroupAllCustomMarkCategory: data =>
+      dispatch(getGroupAllCustomMarkCategory(data))
   };
 };
 
