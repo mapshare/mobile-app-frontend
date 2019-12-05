@@ -19,7 +19,6 @@ import {
   locationDetailStyles,
   locationReviewStyles
 } from './Stylesheet';
-import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 
 // Creating Component
 class LocationDetailWindow extends Component {
@@ -29,63 +28,41 @@ class LocationDetailWindow extends Component {
     this.state = {
       activeSlide: 0,
       screenViewPosition: false,
-      locationData: this.props.getGroupMarkData,
-      reviewsData: this.props.getLocationReviewsData
+      locationImages: [],
+      locationData: {},
+      reviewsData: []
     };
 
     this.avatar = 'https://source.unsplash.com/60x60/?random';
-
-    this.images = [
-      { uri: 'https://source.unsplash.com/1024x768/?nature' },
-      { uri: 'https://source.unsplash.com/1024x768/?water' },
-      { uri: 'https://source.unsplash.com/1024x768/?girl' },
-      { uri: 'https://source.unsplash.com/1024x768/?tree' }
-    ];
-
-    this.reviews = [
+    this.image = [
       {
-        username: 'Erika',
-        date: Date.now(),
-        content: 'this is a not bad location',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
-      },
-      {
-        username: 'Zafar',
-        date: Date.now(),
-        content: 'nice location',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
-      },
-      {
-        username: 'Corey',
-        date: Date.now(),
-        content: 'pretty good!',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
-      },
-      {
-        username: 'Kc',
-        date: Date.now(),
-        content: 'nice price good amount and tasty',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
+        path: '../../assests/images/pin-map-icon.jpg'
       }
-    ];
+    ]
   }
 
   componentDidMount() {
+
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.getGroupMarkData !== prevProps.getGroupMarkData) {
       this.setState({
-        locationData: this.props.getGroupMarkData
+        locationImages: this.props.getGroupMarkData.markImages,
       });
     }
 
-    // if (this.props.getLocationReviewsData !== prevProps.getLocationReviewsData) {
-    //   this.setState({
-    //     reviewsData: this.props.getLocationReviewsData
-    //   })
-    //   console.log('reviews: ', this.props.getLocationReviewsData)
-    // }
+    if (this.state.locationImages !== prevState.locationImages) {
+      this.setState({
+        locationData: this.props.getGroupMarkData.mark
+      })
+    }
+
+    if (this.props.getLocationReviewsData !== prevProps.getLocationReviewsData) {
+      this.setState({
+        reviewsData: this.props.getLocationReviewsData
+      })
+    }
   }
 
   getPosition = scrollPosition => {
@@ -107,7 +84,7 @@ class LocationDetailWindow extends Component {
           <View style={containerStyles.imageContainer}>
             <View style={imageCarouselStyles.imageOptionStyle}>
               <Text style={imageCarouselStyles.textStyles}>
-                {data.index + 1}/{this.props.getGroupMarkData.markImages.length}
+                {data.index + 1}/{this.state.locationImages.length}
               </Text>
               {this.props.permisionLevel > 2 &&
                 <TouchableOpacity onPress={() => this.props.deleteLocationModalWindow({ type: 'image', status: true })}>
@@ -226,17 +203,15 @@ class LocationDetailWindow extends Component {
           scrollEventThrottle={16}
           stickyHeaderIndices={this.state.screenViewPosition && [1]}
         >
-          {this.state.locationData &&
-            <Carousel
-              layout={'default'}
-              data={this.state.locationData.markImages}
-              renderItem={data => this.renderView(data)}
-              sliderWidth={width}
-              sliderHeight={height}
-              itemWidth={width}
-              onSnapToItem={index => this.setState({ activeSlide: index })}
-            />
-          }
+          <Carousel
+            layout={'default'}
+            data={this.state.locationImages.length > 0 ? this.state.locationImages : this.image}
+            renderItem={data => this.renderView(data)}
+            sliderWidth={width}
+            sliderHeight={height}
+            itemWidth={width}
+            onSnapToItem={index => this.setState({ activeSlide: index })}
+          />
           <View style={infoDescriptionStyles.mainContainer}>
             <View
               style={[
@@ -252,7 +227,7 @@ class LocationDetailWindow extends Component {
               </View>
               <View style={containerStyles.infoContainer}>
                 <Text style={infoDescriptionStyles.locationNameStyles}>
-                  {this.state.locationData && this.state.locationData.mark.markName}
+                  {this.state.locationData && this.state.locationData.markName}
                 </Text>
               </View>
             </View>
@@ -278,7 +253,7 @@ class LocationDetailWindow extends Component {
                 <Icon name="plus" size={20} />
               </TouchableOpacity>
             </View>
-            {this.renderReview(this.state.reviewsData && this.state.reviewsData)}
+            {this.renderReview(this.state.reviewsData.length > 0 && this.state.reviewsData)}
           </View>
         </ScrollView>
       </View>

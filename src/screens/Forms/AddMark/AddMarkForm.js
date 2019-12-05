@@ -62,11 +62,11 @@ class AddMarkForm extends Component {
 
   submit = values => {
     const formValues = {
-      markName: values.markName,
+      markName: values.markName.trim(),
       markLocations: {
         locationAddress: values.locationAddress,
         loactionPriceRange: this.state.priceRange,
-        additionalInformation: values.additionalInformation,
+        additionalInformation: values.additionalInformation.trim(),
         locationImageData: this.state.photo && this.state.photo.data
       },
       geometry: { coordinates: this.props.coordinates },
@@ -74,6 +74,9 @@ class AddMarkForm extends Component {
       groupId: this.props.getActiveGroup._id,
       token: this.props.logInToken
     };
+    
+    console.log(formValues.markLocations.additionalInformation.trim());
+    console.log(formValues.markLocations.additionalInformation.slice(0, 100).trim());
 
     this.props.addMarkModalWindow(false);
     this.props.addGroupMark(formValues);
@@ -150,7 +153,6 @@ class AddMarkForm extends Component {
 
 const validate = values => {
   const errors = {};
-  console.log('values: ', values);
 
   errors.markName = validator('markName', values.markName);
 
