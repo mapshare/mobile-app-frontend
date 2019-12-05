@@ -63,7 +63,7 @@ class LocationReviewForm extends Component {
 
   submit = values => {
     const review = {
-      reviewContent: values.reviewContent,
+      reviewContent: values.reviewContent.trim(),
       reviewCreatedBy: this.props.getUserData._id,
     }
     let markLocations = this.props.getCurrentOnClickMarkData.markLocations

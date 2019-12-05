@@ -64,7 +64,7 @@ class AddMarkForm extends Component {
     const formValues = {
       markName: values.markName.trim(),
       markLocations: {
-        locationAddress: values.locationAddress,
+        locationAddress: values.locationAddress.trim(),
         loactionPriceRange: this.state.priceRange,
         additionalInformation: values.additionalInformation.trim(),
         locationImageData: this.state.photo && this.state.photo.data
@@ -74,9 +74,6 @@ class AddMarkForm extends Component {
       groupId: this.props.getActiveGroup._id,
       token: this.props.logInToken
     };
-    
-    console.log(formValues.markLocations.additionalInformation.trim());
-    console.log(formValues.markLocations.additionalInformation.slice(0, 100).trim());
 
     this.props.addMarkModalWindow(false);
     this.props.addGroupMark(formValues);

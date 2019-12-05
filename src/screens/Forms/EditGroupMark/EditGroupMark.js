@@ -62,7 +62,7 @@ class EditGroupMark extends Component {
     this.state.photo.data && markLocations.locationImageSet.push(this.state.photo.data)
 
     const formValues = {
-      markName: values.markName,
+      markName: values.markName.trim(),
       markLocations: markLocations,
       groupId: this.props.getActiveGroupData._id,
       token: this.props.token,
