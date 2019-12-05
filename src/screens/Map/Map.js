@@ -11,7 +11,8 @@ import { MAPBOX } from 'react-native-dotenv';
 import { addMarkModalWindow } from '../../actions/modalWindowAction';
 import {
   getGroupAllMarks,
-  geocodingLocation
+  geocodingLocation,
+  addGroupMarkOnClick
 } from '../../actions/groupMarkAction';
 import { getGroupById } from '../../actions/groupActions';
 
@@ -49,6 +50,8 @@ class Map extends Component {
 
   componentDidMount() {
     this.findCoordinates();
+    this.props.addGroupMarkOnClick(true);
+    setTimeout(() => { this.props.addGroupMarkOnClick(false); }, 2000);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -240,7 +243,8 @@ const mapDispatchToProps = dispatch => {
     addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
     getGroupById: data => dispatch(getGroupById(data)),
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
-    geocodingLocation: data => dispatch(geocodingLocation(data))
+    geocodingLocation: data => dispatch(geocodingLocation(data)),
+    addGroupMarkOnClick: bool => dispatch(addGroupMarkOnClick(bool))
   };
 };
 

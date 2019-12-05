@@ -34,11 +34,11 @@ class CategoryOptions extends Component {
   getDefaultCategory = (data, index) => {
     const ref = `defaultCategoryId-${index}`;
     let iconColor = this.state.selectedDefaultCategories[index].isSelected
-      ? 'red'
-      : 'green';
+      ? 'green'
+      : 'red';
     let iconName = this.state.selectedDefaultCategories[index].isSelected
-      ? 'minus'
-      : 'plus';
+      ? 'plus'
+      : 'minus';
 
     return (
       <TouchableOpacity
@@ -63,11 +63,11 @@ class CategoryOptions extends Component {
   getCustomCategory = (data, index) => {
     const ref = `customCategoryId-${index}`;
     let iconColor = this.state.selectedCustomCategories[index].isSelected
-      ? 'red'
-      : 'green';
+      ? 'green'
+      : 'red';
     let iconName = this.state.selectedCustomCategories[index].isSelected
-      ? 'minus'
-      : 'plus';
+      ? 'plus'
+      : 'minus';
 
     return (
       <View key={ref} style={containerStyles.categoryContainer}>

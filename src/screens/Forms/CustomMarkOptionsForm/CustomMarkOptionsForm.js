@@ -75,6 +75,7 @@ class CustomMarkOptionsForm extends Component {
           component={RenderField}
           type="addCustomMark"
           label="Edit Custom Mark"
+          maxLength={10}
         />
         <Text style={containerStyles.colorPickerText}>
           *Tap on the circle to save the color for the category
