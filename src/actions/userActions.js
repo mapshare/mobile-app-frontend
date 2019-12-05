@@ -136,3 +136,21 @@ export const deleteUser = data => {
             });
     };
 };
+
+export const comparePasswordResult = data => {
+    return {
+        type: keys.COMPARE_PASSWORD_RESULTS,
+        comparePasswordResult: comparePasswordResult
+    };
+};
+
+export const comparePassword = data => {
+    return async dispatch => {
+        try {
+            const res = await axios.post(API_URL + '/comparePassword', data.oldPassword, { headers: { 'authentication': data.token } });
+            dispatch(comparePasswordResult(res.data));
+        } catch (err) {
+            dispatch(comparePasswordResult(false));
+        }
+    };
+};

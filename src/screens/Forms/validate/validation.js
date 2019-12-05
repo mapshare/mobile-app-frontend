@@ -68,6 +68,13 @@ const validation = {
     }
   },
 
+  categoryId: {
+    presence: {
+      message: '^Category is required',
+      allowEmpty: false
+    }
+  },
+
   additionalInformation: {
     presence: {
       message: '^Description is required',
@@ -91,7 +98,22 @@ const validation = {
     length: {
       maximum: 100,
       message: '^Maximum of 100 characters'
+    }
+  },
+
+  customMarkCategoryName: {
+    presence: {
+      message: '^Empty is not allowed',
+      allowEmpty: false
     },
+    length: {
+      maximum: 10,
+      message: '^Maximum of 10 characters'
+    },
+    format: {
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
+    }
   },
 
   chatMessage: {
@@ -102,41 +124,41 @@ const validation = {
     length: {
       maximum: 100,
       message: '^Maximum of 100 characters'
-    },
+    }
   },
 
   groupNamePresent: {
     presence: {
       message: '^A Group Name is required',
       allowEmpty: false
-    },
+    }
   },
 
   groupNameMinLength: {
     length: {
       minimum: 3,
-      message: '^Group Name must be at least 3 characters',
+      message: '^Group Name must be at least 3 characters'
     }
   },
 
   groupNameMaxLength: {
     length: {
       maximum: 15,
-      message: '^Group Name must be less than 15 characters',
+      message: '^Group Name must be less than 15 characters'
     }
   },
 
-  groupDescriptionPresent:{
+  groupDescriptionPresent: {
     presence: {
       message: '^A Group Description is required',
       allowEmpty: false
-    },
+    }
   },
 
-  groupDescriptionMaxLength:{
+  groupDescriptionMaxLength: {
     length: {
       maximum: 50,
-      message: '^Group Description must be less than 50 characters',
+      message: '^Group Description must be less than 50 characters'
     }
   },
 

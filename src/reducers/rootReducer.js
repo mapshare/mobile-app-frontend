@@ -13,9 +13,10 @@ import { addGroupFormReducer } from "./AddGroupFromReducer";
 import { groupMenuReducer } from "./GroupMenuReducer";
 import { addPostReducer } from "./addPostReducer";
 import { groupFeedReducer } from "./groupFeedReducer";
-import {userReducer} from "./userReducer"
+import { groupDefaultMarkCategoryReducer } from './groupDefaultMarkCategoryReducer';
+import { userReducer } from "./userReducer"
 // for future form implementation
-import { reducer as formReducer } from "redux-form";
+import { reducer as formReducer } from 'redux-form';
 
 export default combineReducers({
   logInReducer,
@@ -32,6 +33,7 @@ export default combineReducers({
   groupMenuReducer,
   addPostReducer,
   groupFeedReducer,
-  form: formReducer,
-  userReducer
+  groupDefaultMarkCategoryReducer,
+  userReducer,
+  form: formReducer
 });

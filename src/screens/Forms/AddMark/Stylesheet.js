@@ -19,14 +19,19 @@ const containerStyles = StyleSheet.create({
     fontWeight: '700'
   },
 
-  priceRangeContainer: {
+  pickerContainer: {
     borderWidth: 1,
     borderColor: 'gray'
   },
 
-  priceRangeList: {
-    width: reponsiveStyle.wp('85%'),
-    height: reponsiveStyle.hp('5%')
+  inputAndroid: {
+    fontSize: 16,
+    color: 'black'
+  },
+
+  inputIOS: {
+    fontSize: 16,
+    color: 'black'
   },
 
   imageUpload: {
