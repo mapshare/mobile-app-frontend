@@ -1,13 +1,13 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image, Picker } from 'react-native';
+import { Text, View, TouchableOpacity, Keyboard  } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
-import { addGroupMark, newMarkAdded } from '../../../actions/groupMarkAction';
+import { updateGroupMark } from '../../../actions/groupMarkAction';
 import { addMarkModalWindow } from '../../../actions/modalWindowAction';
 import { reviewBottomWindow } from '../../../actions/bottomWindowAction';
 
@@ -62,14 +62,22 @@ class LocationReviewForm extends Component {
   };
 
   submit = values => {
-    const formValues = {
+    const review = {
       reviewContent: values.reviewContent,
       reviewCreatedBy: this.props.getUserData._id,
-      groupId: this.props.getActiveGroup._id,
-      token: this.props.logInToken
-    };
+    }
+    let markLocations = this.props.getCurrentOnClickMarkData.markLocations
+    markLocations.locationReviewSet.push(review)
 
+    const formValues = {
+      markLocations: markLocations,
+      groupId: this.props.getActiveGroupData._id,
+      token: this.props.logInToken,
+      markId: this.props.getGroupMarkData.mark._id
+    };
+    Keyboard.dismiss()
     this.props.reviewBottomWindow(false);
+    this.props.updateGroupMark(formValues);
   };
 
   cancelOnClick() {
@@ -86,6 +94,7 @@ class LocationReviewForm extends Component {
           component={RenderField}
           type="text"
           label="Review"
+          maxLength={50}
         />
         <View style={containerStyles.buttonContainer}>
           <TouchableOpacity
@@ -125,8 +134,10 @@ const mapStateToProps = state => {
     coordinates: state.groupMarkReducer.coordinates,
     getUserData: state.logInReducer.userData,
     logInToken: state.logInReducer.token,
-    getActiveGroup: state.groupReducer.getActiveGroupData,
+    getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
     newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
+    getActiveGroupData: state.groupReducer.getActiveGroupData,
+    getGroupMarkData: state.groupMarkReducer.getGroupMarkData
     // initialValues: {
     //   locationAddress: state.groupMarkReducer.getGeocodingLocation
     // }
@@ -136,10 +147,8 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    addGroupMark: data => dispatch(addGroupMark(data)),
-    addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
-    newMarkAdded: bool => dispatch(newMarkAdded(bool)),
-    reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool))
+    updateGroupMark: data => dispatch(updateGroupMark(data)),
+    reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool)),
   };
 };
 

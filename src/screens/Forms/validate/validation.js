@@ -41,7 +41,7 @@ const validation = {
     },
     length: {
       maximum: 20,
-      message: '^Maximum of 30 characters'
+      message: '^Maximum of 20 characters'
     },
     format: {
       pattern: '.*[^ ].*',
@@ -53,6 +53,10 @@ const validation = {
     presence: {
       message: '^Location Address is required',
       allowEmpty: false
+    },
+    length: {
+      maximum: 60,
+      message: '^Maximum of 60 characters'
     },
     format: {
       pattern: '.*[^ ].*',

@@ -90,14 +90,15 @@ class AddMarkForm extends Component {
           component={RenderField}
           type="text"
           label="Location Name"
+          maxLength={20}
         />
         <Field
           name="locationAddress"
           component={RenderField}
           type="text"
           label="Location Address"
+          maxLength={60}
         />
-
         <Text style={containerStyles.textStyle}>Price Range</Text>
         <View style={containerStyles.priceRangeContainer}>
           <Picker
@@ -118,6 +119,7 @@ class AddMarkForm extends Component {
           component={RenderField}
           type="textarea"
           label="Description"
+          maxLength={150}
         />
         <Text style={containerStyles.textStyle}>Upload an image</Text>
         <View>

@@ -15,6 +15,7 @@ import { containerStyles } from './Stylesheet';
 
 import validator from '../validate/validation_wrapper';
 import RenderField from '../RenderField/RenderField';
+import { reponsiveStyle } from '../../../util/sharedStyles';
 
 // Creating Component
 class EditGroupMark extends Component {
@@ -23,7 +24,8 @@ class EditGroupMark extends Component {
 
     this.state = {
       photo: null,
-      empty: false
+      empty: false,
+      markLocations: this.props.getGroupMarkData.mark.markLocations
     };
   }
 
@@ -55,9 +57,13 @@ class EditGroupMark extends Component {
   };
 
   submit = values => {
+    let markLocations = this.props.getCurrentOnClickMarkData.markLocations
+
+    this.state.photo.data && markLocations.locationImageSet.push(this.state.photo.data)
+
     const formValues = {
       markName: values.markName,
-      locationImageData: this.state.photo && this.state.photo.data,
+      markLocations: markLocations,
       groupId: this.props.getActiveGroupData._id,
       token: this.props.token,
       markId: this.props.getGroupMarkData.mark._id
@@ -77,6 +83,7 @@ class EditGroupMark extends Component {
           component={RenderField}
           type="text"
           label="Location Name"
+          maxLength={20}
         />
         <Text style={containerStyles.textStyle}>Upload an image</Text>
         <View>
@@ -123,6 +130,7 @@ const mapStateToProps = state => {
     coordinates: state.groupMarkReducer.coordinates,
     getGroupMarkData: state.groupMarkReducer.getGroupMarkData,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
+    getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
     token: state.logInReducer.token,
     initialValues: {
       markName: state.groupMarkReducer.getGroupMarkData.mark.markName

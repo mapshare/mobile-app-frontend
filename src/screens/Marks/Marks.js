@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import {
   getCurrentOnClickMark,
   getGroupAllMarks,
-  getGroupMarkById
+  getGroupMarkById,
+  getLocationReviews
 } from '../../actions/groupMarkAction';
 import { clickMarkModalWindow } from '../../actions/modalWindowAction';
 
@@ -29,6 +30,7 @@ class Marks extends Component {
         markId: data._id
       }
       this.props.getGroupMarkById(getMarkData)
+      this.props.getLocationReviews(getMarkData)
       this.props.getCurrentOnClickMark(data);
       this.props.clickMarkModalWindow(true);
     }
@@ -87,7 +89,8 @@ const mapDispatchToProps = dispatch => {
     getCurrentOnClickMark: data => dispatch(getCurrentOnClickMark(data)),
     clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool)),
     getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
-    getGroupMarkById: data => dispatch(getGroupMarkById(data))
+    getGroupMarkById: data => dispatch(getGroupMarkById(data)),
+    getLocationReviews: data => dispatch(getLocationReviews(data))
   };
 };
 
