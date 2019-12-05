@@ -164,7 +164,7 @@ class LocationDetailWindow extends Component {
       reviewSet.map((data, index) => {
         reviewViews.push(
           <View style={locationReviewStyles.mainContainer}>
-            <Image style={locationReviewStyles.profilePic} source={data.userProfilePic ? { uri: 'data:image/png;base64,' + data.userProfilePic } : { uri: this.avatar }} />
+            {/* <Image style={locationReviewStyles.profilePic} source={data.userProfilePic ? { uri: 'data:image/png;base64,' + data.userProfilePic } : { uri: this.avatar }} /> */}
             <View style={locationReviewStyles.contentContainer}>
               <View style={locationReviewStyles.reviewHeaderContainer}>
                 <Text style={locationReviewStyles.usernameText}>

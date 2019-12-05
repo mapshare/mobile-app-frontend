@@ -7,8 +7,8 @@ const containerStyles = StyleSheet.create({
   mainContainer: {
     justifyContent: 'flex-end',
     alignItems: 'center',
-    elevation: 20001,
-    zIndex: 20001,
+    elevation: 30000,
+    zIndex: 30000,
   },
 
   contentContainer: {
