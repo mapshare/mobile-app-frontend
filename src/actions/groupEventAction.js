@@ -140,6 +140,32 @@ export const getGroupEvent = data => {
 };
 
 /*
+*   GET ALL GROUP EVENTs
+*/
+export const getAllGroupEventDataSuccess = data => {
+    return {
+        type: keys.GET_ALL_GROUP_EVENT_DATA_SUCCESS,
+        getAllGroupEventData: data,
+    };
+};
+
+export const getAllGroupEventError = data => {
+    return {
+        type: keys.GET_ALL_GROUP_EVENT_ERROR,
+        getAllGroupEventError: data,
+    };
+};
+
+export const getGroupEvent = data => {
+    try {
+        const res = await axios.get(API_URL + '/groups/' + data.groupId + '/allEvents', { headers: { 'authentication': data.token } });
+        dispatch(getAllGroupEventDataSuccess(res.data));
+    } catch (error) {
+        dispatch(getAllGroupEventError(error));
+    }
+};
+
+/*
 *   UPDATE GROUP EVENT
 */
 export const updateGroupEventSuccess = bool => {
