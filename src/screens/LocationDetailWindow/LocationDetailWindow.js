@@ -1,6 +1,6 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { ScrollView, View, Text, Image, Dimensions } from 'react-native';
+import { ScrollView, View, Text, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import moment from 'moment';
@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 
 //Redux actions
 import { addGroupMark } from '../../actions/groupMarkAction';
+import { deleteLocationModalWindow } from "../../actions/modalWindowAction";
+import { reviewBottomWindow } from '../../actions/bottomWindowAction'
 
 // Componenets Style
 import {
@@ -25,47 +27,43 @@ class LocationDetailWindow extends Component {
 
     this.state = {
       activeSlide: 0,
-      screenViewPosition: false
+      screenViewPosition: false,
+      locationImages: [],
+      locationData: {},
+      reviewsData: []
     };
 
     this.avatar = 'https://source.unsplash.com/60x60/?random';
-
-    this.images = [
-      { uri: 'https://source.unsplash.com/1024x768/?nature' },
-      { uri: 'https://source.unsplash.com/1024x768/?water' },
-      { uri: 'https://source.unsplash.com/1024x768/?girl' },
-      { uri: 'https://source.unsplash.com/1024x768/?tree' }
-    ];
-
-    this.reviews = [
+    this.image = [
       {
-        username: 'Erika',
-        date: Date.now(),
-        content: 'this is a not bad location',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
-      },
-      {
-        username: 'Zafar',
-        date: Date.now(),
-        content: 'nice location',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
-      },
-      {
-        username: 'Corey',
-        date: Date.now(),
-        content: 'pretty good!',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
-      },
-      {
-        username: 'Kc',
-        date: Date.now(),
-        content: 'nice price good amount and tasty',
-        pic: { uri: 'https://source.unsplash.com/60x60/?random' }
+        path: '../../assests/images/pin-map-icon.jpg'
       }
-    ];
+    ]
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.getGroupMarkData !== prevProps.getGroupMarkData) {
+      this.setState({
+        locationImages: this.props.getGroupMarkData.markImages,
+      });
+    }
+
+    if (this.state.locationImages !== prevState.locationImages) {
+      this.setState({
+        locationData: this.props.getGroupMarkData.mark
+      })
+    }
+
+    if (this.props.getLocationReviewsData !== prevProps.getLocationReviewsData) {
+      this.setState({
+        reviewsData: this.props.getLocationReviewsData
+      })
+    }
+  }
 
   getPosition = scrollPosition => {
     if (scrollPosition > 250) {
@@ -79,25 +77,40 @@ class LocationDetailWindow extends Component {
     }
   };
 
-  renderView(data) {
-    return (
-      <View style={containerStyles.imageContainer}>
-        <View style={imageCarouselStyles.imageOptionStyle}>
-          <Text style={imageCarouselStyles.textStyles}>
-            {data.index + 1}/{this.images.length}
-          </Text>
-          <Icon name="options-vertical" size={25} color="#2196F3" />
-        </View>
-        <Image style={imageCarouselStyles.imageContent} source={data.item} />
-      </View>
-    );
+  renderView = data => {
+    if (data) {
+      return (
+        <TouchableWithoutFeedback onPress={() => this.setState({ ...this.state, imageOption: false })}>
+          <View style={containerStyles.imageContainer}>
+            <View style={imageCarouselStyles.imageOptionStyle}>
+              <Text style={imageCarouselStyles.textStyles}>
+                {data.index + 1}/{this.state.locationImages.length}
+              </Text>
+              {this.props.permisionLevel > 2 &&
+                <TouchableOpacity onPress={() => this.props.deleteLocationModalWindow({ type: 'image', status: true })}>
+                  <View style={imageCarouselStyles.imageOptionBackground} />
+                  <Icon name="options-vertical" size={25} color="#2196F3" />
+                </TouchableOpacity>
+              }
+            </View>
+            <Image style={imageCarouselStyles.imageContent} source={data.item.locationImage ? { uri: 'data:image/png;base64,' + data.item.locationImage } : require('../../assests/images/pin-map-icon.jpg')} />
+          </View>
+        </TouchableWithoutFeedback>
+      );
+    }
   }
+
 
   renderAddress = data => {
     let parseData = data.split(', ');
 
     return (
       <View>
+        {this.props.permisionLevel > 2 &&
+          <TouchableOpacity style={locationDetailStyles.optionContainer} onPress={() => { this.props.deleteLocationModalWindow({ type: 'location', status: true }) }}>
+            <Icon name="trash" size={20} />
+          </TouchableOpacity>
+        }
         <View style={locationDetailStyles.infoContainer}>
           <Icon name="location-pin" size={20} />
           <Text style={locationDetailStyles.textStyle}>{parseData[0]}</Text>
@@ -144,99 +157,106 @@ class LocationDetailWindow extends Component {
     }
   };
 
-  renderReview = () => {
-    let reviewViews = [];
+  renderReview = reviewSet => {
+    if (reviewSet) {
+      let reviewViews = [];
 
-    this.reviews.map((data, index) => {
-      reviewViews.push(
-        <View style={locationReviewStyles.mainContainer}>
-          <Image style={locationReviewStyles.profilePic} source={data.pic} />
-          <View style={locationReviewStyles.contentContainer}>
-            <View style={locationReviewStyles.reviewHeaderContainer}>
-              <Text style={locationReviewStyles.usernameText}>
-                {data.username}
+      reviewSet.map((data, index) => {
+        reviewViews.push(
+          <View style={locationReviewStyles.mainContainer}>
+            <Image style={locationReviewStyles.profilePic} source={data.userProfilePic ? { uri: 'data:image/png;base64,' + data.userProfilePic } : { uri: this.avatar }} />
+            <View style={locationReviewStyles.contentContainer}>
+              <View style={locationReviewStyles.reviewHeaderContainer}>
+                <Text style={locationReviewStyles.usernameText}>
+                  {data.userFirstName + ' ' + data.userLastName}
+                </Text>
+                {/* {(this.props.permisionLevel > 2 | this.props.getGroupMemberData == data.reviewCreatedBy) &&
+                  <TouchableOpacity onPress={() => { this.props.reviewBottomWindow({status: true, actionType: 'edit', content: data.reviewContent}) }}>
+                    <Icon name="wrench" size={18} />
+                  </TouchableOpacity>
+                } */}
+              </View>
+              <Text style={locationReviewStyles.contentText}>{data.reviewContent}</Text>
+              <Text style={locationReviewStyles.reviewDateStyle}>
+                {moment(data.reviewCreatedAt).fromNow()}
               </Text>
-              <Icon name="wrench" size={18} />
             </View>
-            <Text style={locationReviewStyles.contentText}>{data.content}</Text>
-            <Text style={locationReviewStyles.reviewDateStyle}>
-              {moment(parseInt(data.date)).fromNow()}
-            </Text>
           </View>
-        </View>
-      );
-    });
-
-    return reviewViews;
+        );
+      });
+  
+      return reviewViews;
+    }
   };
 
   render() {
     const { width, height } = Dimensions.get('window');
 
     return (
-      <ScrollView
-        style={containerStyles.mainContainer}
-        showsVerticalScrollIndicator={false}
-        onScrollEndDrag={event => {
-          this.getPosition(event.nativeEvent.contentOffset.y);
-        }}
-        scrollEventThrottle={16}
-        stickyHeaderIndices={this.state.screenViewPosition && [1]}
-      >
-        <Carousel
-          layout={'default'}
-          data={this.images}
-          renderItem={data => this.renderView(data)}
-          sliderWidth={width}
-          sliderHeight={height}
-          itemWidth={width}
-          onSnapToItem={index => this.setState({ activeSlide: index })}
-        />
-        <View style={infoDescriptionStyles.mainContainer}>
-          <View
-            style={[
-              infoDescriptionStyles.contentContainer,
-              this.state.screenViewPosition && infoDescriptionStyles.stickyWidth
-            ]}
-          >
-            <View style={containerStyles.avatarContainer}>
-              <Image
-                style={containerStyles.avatarContainer}
-                source={{ uri: this.avatar }}
-              />
-            </View>
-            <View style={containerStyles.infoContainer}>
-              <Text style={infoDescriptionStyles.locationNameStyles}>
-                {this.props.getCurrentOnClickMarkData.markName}
-              </Text>
-              <Text style={infoDescriptionStyles.textStyles}>
-                {this.props.getCurrentOnClickMarkData.groupMarkCreatedBy}
-              </Text>
+      <View>
+        <ScrollView
+          style={containerStyles.mainContainer}
+          showsVerticalScrollIndicator={false}
+          onScrollEndDrag={event => {
+            this.getPosition(event.nativeEvent.contentOffset.y);
+          }}
+          scrollEventThrottle={16}
+          stickyHeaderIndices={this.state.screenViewPosition && [1]}
+        >
+          <Carousel
+            layout={'default'}
+            data={this.state.locationImages.length > 0 ? this.state.locationImages : this.image}
+            renderItem={data => this.renderView(data)}
+            sliderWidth={width}
+            sliderHeight={height}
+            itemWidth={width}
+            onSnapToItem={index => this.setState({ activeSlide: index })}
+          />
+          <View style={infoDescriptionStyles.mainContainer}>
+            <View
+              style={[
+                infoDescriptionStyles.contentContainer,
+                this.state.screenViewPosition && infoDescriptionStyles.stickyWidth
+              ]}
+            >
+              <View style={containerStyles.avatarContainer}>
+                <Image
+                  style={containerStyles.avatarContainer}
+                  source={{ uri: this.avatar }}
+                />
+              </View>
+              <View style={containerStyles.infoContainer}>
+                <Text style={infoDescriptionStyles.locationNameStyles}>
+                  {this.state.locationData && this.state.locationData.markName}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View style={locationDetailStyles.mainContainer}>
-          {this.renderAddress(
-            this.props.getCurrentOnClickMarkData.markLocations.locationAddress
-          )}
-          <View style={locationDetailStyles.infoContainer}>
-            {this.renderPriceRange(
+          <View style={locationDetailStyles.mainContainer}>
+            {this.renderAddress(
+              this.props.getCurrentOnClickMarkData.markLocations.locationAddress
+            )}
+            <View style={locationDetailStyles.infoContainer}>
+              {this.renderPriceRange(
+                this.props.getCurrentOnClickMarkData.markLocations
+                  .loactionPriceRange
+              )}
+            </View>
+            {this.renderAdditionalInfo(
               this.props.getCurrentOnClickMarkData.markLocations
-                .loactionPriceRange
             )}
           </View>
-          {this.renderAdditionalInfo(
-            this.props.getCurrentOnClickMarkData.markLocations
-          )}
-        </View>
-        <View style={containerStyles.reviewContainer}>
-          <View style={locationReviewStyles.titleContainer}>
-            <Icon name="note" size={20} />
-            <Text style={locationDetailStyles.textStyle}>Location Reviews</Text>
+          <View style={containerStyles.reviewContainer}>
+            <View style={locationReviewStyles.titleContainer}>
+              <Text style={locationDetailStyles.textStyle}>Location Reviews</Text>
+              <TouchableOpacity onPress={() => { this.props.reviewBottomWindow({status: true, actionType: 'add'}) }}>
+                <Icon name="plus" size={20} />
+              </TouchableOpacity>
+            </View>
+            {this.renderReview(this.state.reviewsData.length > 0 && this.state.reviewsData)}
           </View>
-          {this.renderReview()}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -248,14 +268,20 @@ const mapStateToProps = state => {
     getUserData: state.logInReducer.userData,
     logInToken: state.logInReducer.token,
     getActiveGroup: state.groupReducer.getActiveGroupData,
-    getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData
+    getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
+    getGroupMarkData: state.groupMarkReducer.getGroupMarkData,
+    permisionLevel: state.groupReducer.getGroupMemberData.memberRole.groupRolePermisionLevel,
+    getLocationReviewsData: state.groupMarkReducer.getLocationReviewsData,
+    getGroupMemberData: state.groupReducer.getGroupMemberData,
   };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    addGroupMark: bool => dispatch(addGroupMark(bool))
+    addGroupMark: bool => dispatch(addGroupMark(bool)),
+    deleteLocationModalWindow: data => dispatch(deleteLocationModalWindow(data)),
+    reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool))
   };
 };
 

@@ -7,7 +7,9 @@ import { connect } from 'react-redux';
 //Redux actions
 import {
   getCurrentOnClickMark,
-  getGroupAllMarks
+  getGroupAllMarks,
+  getGroupMarkById,
+  getLocationReviews
 } from '../../actions/groupMarkAction';
 import { clickMarkModalWindow } from '../../actions/modalWindowAction';
 
@@ -35,6 +37,13 @@ class Marks extends Component {
 
   onClickMark = (data, event) => {
     if (!this.props.addGroupMarkOnClickStatus) {
+      const getMarkData = {
+        groupId: this.props.getActiveGroupData._id,
+        token: this.props.token,
+        markId: data._id
+      }
+      this.props.getGroupMarkById(getMarkData)
+      this.props.getLocationReviews(getMarkData)
       this.props.getCurrentOnClickMark(data);
       this.props.clickMarkModalWindow(true);
     }
@@ -103,10 +112,11 @@ class Marks extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
-    getActiveGroup: state.groupReducer.getActiveGroupData,
+    getActiveGroupData: state.groupReducer.getActiveGroupData,
     addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
     getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData,
     addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
+    token: state.logInReducer.token,
     sortGroupMarkData: state.groupMarkReducer.sortGroupMarkData,
     sortGroupMarkOnClickFlag: state.groupMarkReducer.sortGroupMarkOnClickFlag,
     getGroupDefaultMarkCategoryData:
@@ -121,7 +131,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getCurrentOnClickMark: data => dispatch(getCurrentOnClickMark(data)),
     clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool)),
-    getGroupAllMarks: data => dispatch(getGroupAllMarks(data))
+    getGroupAllMarks: data => dispatch(getGroupAllMarks(data)),
+    getGroupMarkById: data => dispatch(getGroupMarkById(data)),
+    getLocationReviews: data => dispatch(getLocationReviews(data))
   };
 };
 

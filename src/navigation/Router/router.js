@@ -33,6 +33,7 @@ import EditPostModal from '../../screens/Groups/GroupFeed/EditPostModal';
 import EditPostForm from '../../screens/Forms/EditPost/EditPost';
 import LoadingScreen from '../../screens/Loading/Loading';
 import ModalWindow from '../../screens/ModalWindow/ModalWindow';
+import BottomWindow from "../../screens/BottomWindow/BottomWindow";
 import AddCustomMark from '../../screens/AddCustomMark/AddCustomMark';
 import CustomMarkOptions from '../../screens/CustomMarkOptions/CustomMarkOptions';
 import ActiveMemberList from "../../screens/Groups/GroupChat/activeMemberList";
@@ -181,6 +182,7 @@ class App extends Component {
               name="initialSearchGroup"
               hideNavBar
             />
+
           </Stack>
 
           {/* MAIN NAVIGATION */}
@@ -307,6 +309,7 @@ class App extends Component {
           <Scene key="editPostModal" component={EditPostModal} />
           <Scene key="modalWindow" component={ModalWindow} />
           <Scene key="editPostForm" component={EditPostForm} />
+          <Scene key="bottomWindow" component={BottomWindow} />
           <Scene key="addCustomMark" component={AddCustomMark} />
           <Scene key="customMarkOptions" component={CustomMarkOptions} />
         </Lightbox>

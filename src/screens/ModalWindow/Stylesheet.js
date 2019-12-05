@@ -27,6 +27,19 @@ const containerStyles = StyleSheet.create({
 
   contentContainer: {
     width: reponsiveStyle.wp('95%')
+  },
+
+  deleteTypeContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: reponsiveStyle.wp('100%'),
+    height: reponsiveStyle.hp('100%'),
+    position: 'absolute',
+    padding: 10,
+    backgroundColor: 'black',
+    zIndex: 10,
+    opacity: .5
   }
 });
 

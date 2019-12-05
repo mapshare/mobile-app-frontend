@@ -14,6 +14,7 @@ import { containerStyles } from './Stylesheet';
 
 import AddMarkForm from '../Forms/AddMark/AddMarkForm';
 import LocationDetailWindow from '../LocationDetailWindow/LocationDetailWindow';
+import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 
 class ModalWindow extends Component {
   constructor(props) {
@@ -41,24 +42,31 @@ class ModalWindow extends Component {
 
   render() {
     return (
-      <View style={containerStyles.mainContainer}>
-        <TouchableOpacity
-          style={containerStyles.closeButtonContainer}
-          onPress={this.closeButtonOnClick}
-        >
-          <Icon name="close" size={30} />
-        </TouchableOpacity>
-        <ScrollView style={containerStyles.contentContainer}>
-          {this.content(this.props.modalContent)}
-        </ScrollView>
+      <View>
+        {this.props.deleteLocation.status && <ConfirmDelete type={this.props.deleteLocation.type} />}
+        <View style={containerStyles.mainContainer}>
+          <TouchableOpacity
+            style={containerStyles.closeButtonContainer}
+            onPress={this.closeButtonOnClick}
+          >
+            <Icon name="close" size={30} />
+          </TouchableOpacity>
+          <ScrollView style={containerStyles.contentContainer}>
+            {this.content(this.props.modalContent)}
+          </ScrollView>
+        </View>
       </View>
+
     );
   }
 }
 
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
-  return {};
+  return {
+    modalWindowStatus: state.modalWindowReducer.status,
+    deleteLocation: state.modalWindowReducer.deleteLocation
+  };
 };
 
 // Redux Setter to use: this.props.(name of any return)

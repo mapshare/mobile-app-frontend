@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import ImagePicker from 'react-native-image-picker';
-import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
@@ -76,13 +75,13 @@ class AddMarkForm extends Component {
 
   submit = values => {
     const formValues = {
-      markName: values.markName,
+      markName: values.markName.trim(),
       categoryId: values.categoryId,
       markLocations: {
-        locationAddress: values.locationAddress,
-        loactionPriceRange: values.loactionPriceRange,
-        additionalInformation: values.additionalInformation,
-        locationImageSet: [{ locationImageData: this.state.photo }]
+        locationAddress: values.locationAddress.trim(),
+        loactionPriceRange: this.state.priceRange,
+        additionalInformation: values.additionalInformation.trim(),
+        locationImageData: this.state.photo && this.state.photo.data
       },
       geometry: { coordinates: this.props.coordinates },
       groupMarkCreatedBy: this.props.getUserData._id,
@@ -91,6 +90,7 @@ class AddMarkForm extends Component {
     };
 
     this.props.addMarkModalWindow(false);
+    this.props.addGroupMarkOnClick(false);
     this.props.addGroupMark(formValues);
     this.props.newMarkAdded(!this.props.newMarkAddedFlag);
   };
@@ -105,14 +105,15 @@ class AddMarkForm extends Component {
           component={RenderField}
           type="text"
           label="Location Name"
+          maxLength={20}
         />
         <Field
           name="locationAddress"
           component={RenderField}
           type="text"
           label="Location Address"
+          maxLength={60}
         />
-
         <Field
           name="loactionPriceRange"
           component={RenderField}
@@ -132,6 +133,7 @@ class AddMarkForm extends Component {
           component={RenderField}
           type="textarea"
           label="Description"
+          maxLength={150}
         />
         <Text style={containerStyles.textStyle}>Upload an image</Text>
         <View>
@@ -141,13 +143,13 @@ class AddMarkForm extends Component {
               style={containerStyles.imageStyle}
             />
           ) : (
-            <TouchableOpacity
-              style={containerStyles.imageUpload}
-              onPress={this.choosePhoto}
-            >
-              <Icon name="plus" size={30}></Icon>
-            </TouchableOpacity>
-          )}
+              <TouchableOpacity
+                style={containerStyles.imageUpload}
+                onPress={this.choosePhoto}
+              >
+                <Icon name="plus" size={30}></Icon>
+              </TouchableOpacity>
+            )}
         </View>
         <TouchableOpacity
           style={containerStyles.buttonContainer}
@@ -162,7 +164,6 @@ class AddMarkForm extends Component {
 
 const validate = values => {
   const errors = {};
-  console.log('validate: ', values);
 
   errors.markName = validator('markName', values.markName);
 
@@ -210,7 +211,8 @@ const mapDispatchToProps = dispatch => {
   return {
     addGroupMark: data => dispatch(addGroupMark(data)),
     addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
-    newMarkAdded: bool => dispatch(newMarkAdded(bool))
+    newMarkAdded: bool => dispatch(newMarkAdded(bool)),
+    addGroupMarkOnClick: bool => dispatch(addGroupMarkOnClick(bool))
   };
 };
 
