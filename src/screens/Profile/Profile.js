@@ -63,14 +63,16 @@ class Profile extends Component {
     };
   }
 
-  state = {
-    modalVisible: false,
-  };
-
   profileModalOpen() {
     this.state.user.userFirstName = this.props.getUserData.userFirstName;
     this.state.user.userLastName = this.props.getUserData.userLastName;
-    this.state.user.userImages = this.props.getUserData.userImages;
+
+    if (Object.keys(this.props.getUserData.userImages).length !== 0) {
+      this.state.user.userImages = { uri: 'data:image/png;base64,' + this.props.getUserData.userImages}
+    } else {
+      this.state.user.userImages = require('../../assests/images/default-profile.png');
+    }
+
     this.setState({modalVisible:true});
   }
 
@@ -99,7 +101,7 @@ class Profile extends Component {
                 console.log('ImagePicker Error: ', response.error);
             } else {
 
-              this.state.user.userImages = response.data;
+              this.state.user.userImages = response;
 
             }
         });
@@ -120,6 +122,7 @@ class Profile extends Component {
 
   update = async () => {
 
+    let userImageSource = require('../../assests/images/default-profile.png');
     let updateRecord = false;
 
     let userFirstNameError = validator(
@@ -151,6 +154,10 @@ class Profile extends Component {
       updateRecord = true;
     }
 
+    if (this.state.user.userImages === userImageSource) {
+      updateRecord = false;
+    }
+
     this.setState(
       {
         userFirstNameError: userFirstNameError,
@@ -166,7 +173,7 @@ class Profile extends Component {
             const data = {
               userFirstName: this.state.user.userFirstName,
               userLastName: this.state.user.userLastName,
-              userImages: this.state.user.userImages,
+              userImages: this.state.user.userImages.data,
               token: this.props.token
             }
             console.log(data)
@@ -185,10 +192,23 @@ class Profile extends Component {
   };
 
   render() {
+    let userImageSource = require('../../assests/images/default-profile.png');
+    try {
+      if (Object.keys(this.props.getUserData.userImages).length !== 0) {
+        userImageSource = this.props.getUserData.userImages ? {
+          uri: 'data:image/png;base64,' + this.props.getUserData.userImages
+        }
+          : require('../../assests/images/default-profile.png');
+      }else {
+        userImageSource = require('../../assests/images/default-profile.png');
+      }
+    } catch (error) {
+      userImageSource = require('../../assests/images/default-profile.png');
+    }
     return (
       <ScrollView style={styles.container}>
         <View style={styles.header}></View>
-        <Image style={styles.avatar} source={{ uri: 'data:image/jpeg;base64,' + this.props.getUserData.userImages }}/>
+        <Image style={styles.avatar} source={userImageSource}/>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>{this.props.getUserData.userFirstName} {this.props.getUserData.userLastName}</Text>
@@ -205,7 +225,7 @@ class Profile extends Component {
           >
             <View style={styles.modalWindow} ScrollView>
               <Text style={styles.modalText}>Update Profile</Text>
-              <Image style={styles.image} source={{ uri: 'data:image/jpeg;base64,' + this.state.user.userImages }} />
+              <Image style={styles.image} source={this.state.user.userImages} />
               <TouchableOpacity style={styles.center} onPress={() => this.choosePhoto()}><Text style={styles.Text}>Change Image</Text></TouchableOpacity>
               <TextInput style={styles.inputBox}
                         onChangeText={FirstName =>

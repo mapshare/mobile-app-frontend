@@ -84,17 +84,21 @@ constructor(){
     super();
     this.state={
         isloggedin: false,
-        backPressed: 1
+        backPressed: 0
     }
 }
 
-handleBackButton(){
+handleBackButton(){  
+
+    if(backPressed == 0) {
+      Actions.pop();
+    } 
     if(backPressed > 0){
             BackHandler.exitApp();
             backPressed = 0;
         }else {
             backPressed++;
-            ToastAndroid.show("Press back again To Exit", ToastAndroid.SHORT);
+            ToastAndroid.show("Press back again To exit!", ToastAndroid.SHORT);
             setTimeout( () => { backPressed = 0}, 2000);
             return true;
     }

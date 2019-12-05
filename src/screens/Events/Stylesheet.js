@@ -56,4 +56,54 @@ export default StyleSheet.create({
       marginRight: 5,
       //top: 2,
     },
+    modalWindow: {
+    
+      justifyContent:'center',
+      marginTop: 20
+    },
+    modalText: {
+      alignSelf: 'center',
+      fontSize: 30,
+      marginBottom:20
+    },
+    errorMessage: {
+      color: "red"
+    },
+    inputBox: {
+      backgroundColor: '#F5F5F5',
+      paddingHorizontal: 10,
+      marginLeft: 10,
+      marginRight: 10,
+      borderRadius: 10,
+      marginBottom: 10,
+    },
+    center: {
+      alignSelf: 'center',
+    },
+    Text: {
+      fontSize:18,
+      marginBottom:20
+    },
+    buttonContainer: {
+      marginTop: 10,
+      height: 45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+      width: 250,
+      borderRadius: 30,
+      backgroundColor: "#00BFFF",
+    },
+    logoutButton: {
+      marginTop: 10,
+      height: 45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+      width: 250,
+      borderRadius: 30,
+      backgroundColor: "#ff0000",
+    },
   });

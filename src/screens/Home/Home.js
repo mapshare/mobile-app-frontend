@@ -10,8 +10,7 @@ import {
   DeviceEventEmitter,
   AsyncStorage
 } from 'react-native';
-import Mapbox from '@react-native-mapbox-gl/maps';
-import Geolocation from '@react-native-community/geolocation';
+
 import GroupMenu from './GroupMenu/GroupMenu';
 import CreatePostButton from '../Groups/GroupFeed/CreatePostButton';
 import GroupFeed from '../Groups/GroupFeed/GroupFeed';
@@ -19,7 +18,7 @@ import GroupFeed from '../Groups/GroupFeed/GroupFeed';
 // Componenets Style
 import styles from './Stylesheet';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+
 import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
 
 //Redux actions

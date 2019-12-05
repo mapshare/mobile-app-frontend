@@ -138,6 +138,17 @@ const validation = {
       message: '^Group Description must be less than 50 characters',
     }
   },
+
+  eventNamePresent: {
+    presence: {
+      message: '^Event Name is required',
+      allowEmpty: false
+    },
+    format: {
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
+    }
+  },
 };
 
 export default validation;
