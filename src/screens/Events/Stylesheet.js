@@ -45,7 +45,15 @@ export default StyleSheet.create({
       fontSize:18,
       color:"#151515",
     },
+    eventName:{
+      fontSize:18,
+      color:"#151515",
+    },
     userName:{
+      fontSize:16,
+      color:"#151515",
+    },
+    eventLocation:{
       fontSize:16,
       color:"#151515",
     },

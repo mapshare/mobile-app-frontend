@@ -79,14 +79,16 @@ class EventsView extends Component {
             eventName: this.state.user.eventName,
             eventDescription: this.state.user.eventDescription,
             eventMark: this.state.user.eventMark,
+            groupId: this.props.getActiveGroupData._id,
             token: this.props.token
           }
 
           this.props.addGroupEvent(data);
-
+          console.log(data)
           this.eventModalClose();
 
-          console.log(data)
+          console.log(this.props.getGroupEventData)
+          
 
         } 
       }
@@ -196,9 +198,9 @@ class EventsView extends Component {
               <TouchableOpacity /*onPress={() => this.eventClickListener("row")}*/ onLongPress={() => this.test()}>
                 <View style={styles.eventBox} >
                   <View style={styles.eventContent}>
-                    <Text  style={styles.eventTime}>3:26 AM</Text>
-                    <Text  style={styles.userName}>Organizer: Wahab Zafar</Text>
-                    <Text  style={styles.description}>85 RobinStone Drive</Text>
+                    <Text  style={styles.eventName}>Birthday</Text>
+                    <Text  style={styles.eventLocation}>Location: Toronto</Text>
+                    <Text  style={styles.description}>Free Food</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -214,6 +216,7 @@ class EventsView extends Component {
 const mapStateToProps = state => {
   return {
     getActiveGroupData: state.groupReducer.getActiveGroupData,
+    getGroupEventData: state.groupEventReducer.getGroupEventData,
     token: state.logInReducer.token,
   };
 };
