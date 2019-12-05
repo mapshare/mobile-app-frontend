@@ -58,9 +58,7 @@ class ModalWindow extends Component {
 
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
-  return {
-    modalWindowStatus: state.modalWindowReducer.status
-  };
+  return {};
 };
 
 // Redux Setter to use: this.props.(name of any return)
