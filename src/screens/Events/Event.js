@@ -17,10 +17,7 @@ import validator from "../Forms/validate/validation_wrapper";
 //Redux actions
 import { connect } from 'react-redux';
 
-import {addGroupEvent,
-addGroupEventSuccess,
-getGroupEvent,
-updateGroupEvent} from "../../actions/groupEventAction"
+import {getAllGroupEvent,} from "../../actions/groupEventAction"
 
 import {getActiveGroup} from "../../actions/groupActions"
 
@@ -46,62 +43,37 @@ class EventsView extends Component {
 
   eventModalOpen() {
     this.setState({modalVisible:true});
+
+    const data = {
+      token: this.props.token,
+      groupId: this.props.getActiveGroupData._id
+    }
+
+    let temp = this.props.getAllGroupEvent(data);
+
+    console.log(this.props.getAllGroupEventData)
+    
   }
 
   eventModalClose() {
     this.setState({modalVisible:false});
-    this.state.eventNameError = null;
-    this.state.eventDescriptionError = null;
-    this.state.eventMarkError = null;
   }
 
-  // Creating New Event
-  creatEvent = async () => {
-
-    const eventNameError = validator ("eventNamePresent", this.state.user.eventName);
-    const eventDescriptionError = validator ("additionalInformation", this.state.user.eventDescription);
-    const eventMarkError = validator ("markName", this.state.user.eventMark);
-    
-    this.setState(
-      {
-        eventNameError: eventNameError,
-        eventDescriptionError: eventDescriptionError,
-        eventMarkError: eventMarkError,
-      },
-      () => {
-        if (
-          !eventNameError &&
-          !eventDescriptionError &&
-          !eventMarkError
-        ) {
-          
-          const data = {
-            eventName: this.state.user.eventName,
-            eventDescription: this.state.user.eventDescription,
-            eventMark: this.state.user.eventMark,
-            groupId: this.props.getActiveGroupData._id,
-            token: this.props.token
-          }
-
-          this.props.addGroupEvent(data);
-          console.log(data)
-          this.eventModalClose();
-
-          console.log(this.props.getGroupEventData)
-          
-
-        } 
-      }
-    );
-
+  eventModal() {
+    return(
+      <Modal visible={this.state.modalVisible}
+             onRequestClose={() => this.eventModalClose()}>
+        <Text>This is Detail Modal</Text>
+      </Modal>
+    )
   }
 
-  test() {
-    console.log('Long Press')
-  }
+  updateEvent() {
 
+  }
 
   render() {
+    console.log(this.props.getAllGroupEventData)
     return (
       <View style={styles.container}>
         <FlatList enableEmptySections={true}
@@ -111,87 +83,8 @@ class EventsView extends Component {
           renderItem={(event) => {
             return (
               <View>
-              <TouchableOpacity onPress={() => this.eventModalOpen()}>
-              <Text
-              style={styles.addButton}
-              >Add Event</Text>
-              </TouchableOpacity>
-              <Modal
-              visible={this.state.modalVisible}
-              animationType={'slide'}
-              onRequestClose={() => this.eventModalClose()}
-              >
-            <View style={styles.modalWindow} ScrollView>
-              <Text style={styles.modalText}>Create Event</Text>
-              <TextInput style={styles.inputBox}
-                        onChangeText={eventName =>
-                          this.setState({
-                            user: { ...this.state.user, eventName: eventName }
-                          })
-                        }
-                        placeholder="Event Name"
-                        maxLength={15}
-                        placeholderTextColor="rgba(0,0,0,0.7)"
-                        selectionColor="#fff"
-                        autoCorrect={false}
-                        returnKeyType="next"
-                        autoCapitalize="none"
-                        onSubmitEditing={() => this.eventMark.focus()}
-                        />
-              {this.state.eventNameError ? (
-                <Text style={styles.errorMessage}>{this.state.eventNameError}</Text>
-              ) : null}
-
-              <TextInput style={styles.inputBox}
-                        onChangeText={eventMark =>
-                          this.setState({
-                            user: { ...this.state.user,eventMark: eventMark }
-                          })
-                        }
-                        placeholder="Event Location"
-                        maxLength={15}
-                        placeholderTextColor="rgba(0,0,0,0.7)"
-                        selectionColor="#fff"
-                        autoCorrect={false}
-                        returnKeyType="next"
-                        autoCapitalize="none"
-                        ref={input => (this.eventMark = input)}
-                        onSubmitEditing={() => this.eventDescription.focus()}
-                        />
-              {this.state.eventMarkError ? (
-                <Text style={styles.errorMessage}>{this.state.eventMarkError}</Text>
-              ) : null}
-
-              <TextInput style={[styles.inputBox, styles.inputBoxDescription]}
-                        onChangeText={eventDescription =>
-                          this.setState({
-                            user: { ...this.state.user, eventDescription: eventDescription }
-                          })
-                        }
-                        placeholder="Event Description"
-                        //multiline = {true}
-                        numberOfLines={4}
-                        maxLength={150}
-                        placeholderTextColor="rgba(0,0,0,0.7)"
-                        selectionColor="#fff"
-                        autoCorrect={false}
-                        returnKeyType="next"
-                        autoCapitalize="none"
-                        ref={input => (this.eventDescription = input)}
-                        onSubmitEditing={() => this.updateEvent()}
-                        />
-              {this.state.eventDescriptionError ? (
-                <Text style={styles.errorMessage}>{this.state.eventDescriptionError}</Text>
-              ) : null}
-              <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => {this.updateEvent()}} >
-                <Text>Update</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => { this.eventModalClose() }}>
-                <Text>Cancel</Text>
-            </TouchableOpacity>
-            </View>
-          </Modal>
-              <TouchableOpacity /*onPress={() => this.eventClickListener("row")}*/ onLongPress={() => this.test()}>
+              <TouchableOpacity onLongPress={() => console.log(this.props.getAllGroupEventData)} onPress={() => this.eventModalOpen()}>
+                {this.eventModal()}
                 <View style={styles.eventBox} >
                   <View style={styles.eventContent}>
                     <Text  style={styles.eventName}>Birthday</Text>
@@ -212,7 +105,7 @@ class EventsView extends Component {
 const mapStateToProps = state => {
   return {
     getActiveGroupData: state.groupReducer.getActiveGroupData,
-    getGroupEventData: state.groupEventReducer.getGroupEventData,
+    getAllGroupEventData: state.groupEventReducer.getAllGroupEventData,
     token: state.logInReducer.token,
   };
 };
@@ -220,7 +113,7 @@ const mapStateToProps = state => {
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    addGroupEvent: data => dispatch(addGroupEvent(data)),
+    getAllGroupEvent: data => dispatch(getAllGroupEvent(data)),
     getActiveGroup: data => dispatch(getActiveGroup(data)),
   };
 }

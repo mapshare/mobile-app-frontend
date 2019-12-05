@@ -80,13 +80,13 @@ class ModalWindow extends Component {
           const data = {
             eventName: this.state.user.eventName,
             eventDescription: this.state.user.eventDescription,
-            eventMark: this.state.user.eventMark,
+            eventMark: this.props.getCurrentOnClickMarkData._id,
             groupId: this.props.getActiveGroupData._id,
             token: this.props.token
           }
 
           this.props.addGroupEvent(data);
-          console.log(data)
+          console.log(this.props.getActiveGroupData._id)
           this.eventModalClose();
 
           //console.log(this.props.getGroupEventData)

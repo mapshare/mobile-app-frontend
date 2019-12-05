@@ -64,6 +64,10 @@ class GroupFeed extends Component {
                             return (
                                 <View style={styles.groupPost}>
                                     <View style={styles.groupPostHeader}>
+                                        <View style={styles.headerColOne}>
+                                            
+
+                                        </View>
                                         <View style={styles.headerColTwo}>
                                             <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>
                                         </View>

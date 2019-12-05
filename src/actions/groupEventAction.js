@@ -166,6 +166,7 @@ export const getAllGroupEvent = data => {
             const res = await axios.get(API_URL + '/groups/' + data.groupId + '/allEvents', { headers: { 'authentication': data.token } });
             dispatch(getAllGroupEventDataSuccess(res.data));
         } catch (error) {
+            console.log(error.response.data)
             dispatch(getAllGroupEventError(error));
         }
     }
