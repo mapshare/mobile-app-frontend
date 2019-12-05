@@ -26,7 +26,10 @@ export const userReducer = (state = INITIAL_USER_STATE, action) => {
       case keys.DELETE_USER_DATA_SUCCESS:
         return {...state, deleteUserData: action.deleteUserData};
       case keys.DELETE_USER_ERROR:
-        return {...state, deleteUserError: action.deleteUserError};
+      return {...state, deleteUserError: action.deleteUserError};
+    // COMPARE PASSWORD
+    case keys.COMPARE_PASSWORD_RESULTS:
+      return { ...state, comparePasswordResult: action.comparePasswordResult };
     default:
       return state;
   }
