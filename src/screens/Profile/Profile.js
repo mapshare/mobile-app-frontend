@@ -16,6 +16,7 @@ import styles from "./Stylesheet"
 import { Actions, ActionConst } from "react-native-router-flux";
 import validator from "../Forms/validate/validation_wrapper";
 import ImagePicker from 'react-native-image-picker';
+import bcrypt from 'react-native-bcrypt'
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -44,7 +45,6 @@ import {
   updateUserError
 } from '../../actions/userActions';
 
-
 class Profile extends Component {
 
 
@@ -54,12 +54,22 @@ class Profile extends Component {
       user: {
         userFirstName: "",
         userLastName: "",
+        userOldPasword: "",
+        userNewPassword: "",
+        userCNewPassword: "",
         userImages: ""
       },
       userFirstNameError: "",
       userLastNameError: "",
       passwordError: "",
-      modalVisible: false
+      userNewPasswordError: "",
+      userCNewPasswordError: "",
+      modalVisible: false,
+      pwdModalVisible: false,
+
+      //Variables to Change the Group
+      updateButtonState: "Update",
+
     };
   }
 
@@ -67,8 +77,8 @@ class Profile extends Component {
     this.state.user.userFirstName = this.props.getUserData.userFirstName;
     this.state.user.userLastName = this.props.getUserData.userLastName;
 
-    if (Object.keys(this.props.getUserData.userImages).length !== 0) {
-      this.state.user.userImages = { uri: 'data:image/png;base64,' + this.props.getUserData.userImages}
+    if (Object.keys(this.props.getUserData.userProfilePic).length !== 0) {
+      this.state.user.userImages = { uri: 'data:image/png;base64,' + this.props.getUserData.userProfilePic}
     } else {
       this.state.user.userImages = require('../../assests/images/default-profile.png');
     }
@@ -81,6 +91,16 @@ class Profile extends Component {
     this.state.userFirstNameError = null;
     this.state.userLastNameError = null;
     this.state.user.userImages = null;
+  }
+
+  pwdModalClose() {
+    this.setState({pwdModalVisible:false});
+    this.state.userNewPasswordError = null;
+    this.state.userCNewPasswordError = null;
+  }
+
+  pwdModalOpen() {
+    this.setState({pwdModalVisible:true})
   }
 
   choosePhoto() {
@@ -122,7 +142,6 @@ class Profile extends Component {
 
   update = async () => {
 
-    let userImageSource = require('../../assests/images/default-profile.png');
     let updateRecord = false;
 
     let userFirstNameError = validator(
@@ -133,8 +152,6 @@ class Profile extends Component {
       "lastName",
       this.state.user.userLastName
     );
-    console.log(this.state.user.userFirstName, '=',this.props.getUserData.userFirstName)
-   // const passwordError = validator("password", this.state.user.userPassword);
 
    if (this.state.user.userFirstName === this.props.getUserData.userFirstName ) {
       userFirstNameError = null
@@ -142,20 +159,15 @@ class Profile extends Component {
       updateRecord = true;
     }
 
+    console.log(this.state.user.userFirstName, this.props.getUserData.userFirstName)
     if (this.state.user.userFirstName === this.props.getUserData.userFirstName) {
       userLastNameError = null  
     }else {
       updateRecord = true;
     }
 
-    console.log (this.props.getUserData.userImages , '=', this.state.user.userImages)
-
-    if (this.props.getUserData.userImages !== this.state.user.userImages) {
+    if (this.props.getUserData.userProfilePic !== this.state.user.userImages) {
       updateRecord = true;
-    }
-
-    if (this.state.user.userImages === userImageSource) {
-      updateRecord = false;
     }
 
     this.setState(
@@ -168,15 +180,15 @@ class Profile extends Component {
           !userFirstNameError &&
           !userLastNameError
         ) {
-          
+    
           if (updateRecord === true) {
             const data = {
               userFirstName: this.state.user.userFirstName,
               userLastName: this.state.user.userLastName,
-              userImages: this.state.user.userImages.data,
+              userProfilePic: this.state.user.userImages.data,
               token: this.props.token
             }
-            console.log(data)
+          
             this.props.updateUser(data);
   
             Alert.alert(
@@ -191,12 +203,61 @@ class Profile extends Component {
     );
   };
 
+  //Updating User Password
+  updatePasword = async () => {
+
+    this.setState({
+      updateButtonState:"Please Wait.."
+    })
+
+    const userNewPasswordError = validator("password", this.state.user.userNewPassword);
+    const userCNewPasswordError = validator("password", this.state.user.userCNewPassword);
+    
+    //Validate Old Password
+
+    const validPassword = await bcrypt.compareSync(
+      this.state.user.userOldPasword,
+      this.props.getUserData.userPassword
+    );
+
+    this.setState(
+      {
+        userNewPasswordError: userNewPasswordError,
+        userCNewPasswordError: userCNewPasswordError
+      },
+      () => {
+        if (
+          !userNewPasswordError &&
+          !userCNewPasswordError && validPassword
+        ) {
+          if (this.state.user.userNewPassword === this.state.user.userCNewPassword) {
+            const data = {
+              userPassword: this.state.user.userNewPassword,
+              token: this.props.token
+            }
+
+            //this.props.updateUser(data);
+            Alert.alert(
+              "Password Updated"
+            );
+            //this.profileModalClose();
+            //this.goLogin();
+          } else {
+            this.setState({
+              userCNewPasswordError: "The Password didn't match. Please try again"
+            })
+          }
+        } 
+      }
+    );
+  }
+
   render() {
     let userImageSource = require('../../assests/images/default-profile.png');
     try {
-      if (Object.keys(this.props.getUserData.userImages).length !== 0) {
-        userImageSource = this.props.getUserData.userImages ? {
-          uri: 'data:image/png;base64,' + this.props.getUserData.userImages
+      if (Object.keys(this.props.getUserData.userProfilePic).length !== 0) {
+        userImageSource = this.props.getUserData.userProfilePic ? {
+          uri: 'data:image/png;base64,' + this.props.getUserData.userProfilePic
         }
           : require('../../assests/images/default-profile.png');
       }else {
@@ -218,6 +279,79 @@ class Profile extends Component {
             <TouchableOpacity style={styles.buttonContainer} onPress={() => { this.profileModalOpen() }}>
               <Text>Edit Profile</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.pwdModalOpen()}>
+                <Text>Change Password</Text>
+            </TouchableOpacity>
+
+
+            <Modal
+              visible={this.state.pwdModalVisible}
+              animationType={'slide'}
+              onRequestClose={() => this.pwdModalClose()}
+            ><View style={styles.modalWindow}>
+              <Text style={styles.modalText}>Change Password</Text>
+              <TextInput style={styles.inputBox}
+                        placeholder="Old Password"
+                        onChangeText={OldPassword =>
+                          this.setState({
+                            user: { ...this.state.user, userOldPasword: OldPassword }
+                          })
+                        }
+                        //defaultValue={this.props.getUserData.userPassword}
+                        placeholderTextColor="rgba(0,0,0,0.7)"
+                        selectionColor="#fff"
+                        maxLength={256}
+                        autoCorrect={false}
+                        returnKeyType="next"
+                        autoCapitalize="none"
+                        secureTextEntry={true}
+                        />
+              <TextInput style={styles.inputBox}
+                        onChangeText={NewPassword =>
+                          this.setState({
+                            user: { ...this.state.user, userNewPassword: NewPassword }
+                          })
+                        }
+                        placeholder="New Password"
+                        placeholderTextColor="rgba(0,0,0,0.7)"
+                        selectionColor="#fff"
+                        autoCorrect={false}
+                        returnKeyType="next"
+                        autoCapitalize="none"
+                        onSubmitEditing={() => this.ConfirmNewPassword.focus()}
+                        />
+              {this.state.userNewPasswordError ? (
+                <Text style={styles.errorMessage}>{this.state.userNewPasswordError}</Text>
+              ) : null}
+              <TextInput style={styles.inputBox}
+                        onChangeText={CNewPassword =>
+                          this.setState({
+                            user: { ...this.state.user, userCNewPassword: CNewPassword }
+                          })
+                        }
+                        placeholder="Confirm New Password"
+                        placeholderTextColor="rgba(0,0,0,0.7)"
+                        selectionColor="#fff"
+                        maxLength={256}
+                        autoCorrect={false}
+                        returnKeyType="next"
+                        autoCapitalize="none"
+                        ref={input => (this.ConfirmNewPassword = input)}
+                        onSubmitEditing={() => this.updatePasword()}
+                        />
+              {this.state.userCNewPasswordError ? (
+                <Text style={styles.errorMessage}>{this.state.userCNewPasswordError}</Text>
+              ) : null}
+              <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.state.updateButtonState}>
+                <Text>{this.state.updateButtonState}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => { this.pwdModalClose() }}>
+                <Text>Cancel</Text>
+            </TouchableOpacity>
+              </View>
+              </Modal>
+
+
             <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
@@ -267,6 +401,16 @@ class Profile extends Component {
               {this.state.userLastNameError ? (
                 <Text style={styles.errorMessage}>{this.state.userLastNameError}</Text>
               ) : null}
+              <TextInput style={styles.inputBox}
+                        placeholder="Email"
+                        defaultValue={this.props.getUserData.userEmail}
+                        placeholderTextColor="rgba(0,0,0,0.7)"
+                        selectionColor="#fff"
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        editable={false}
+                        />
+              <Text style={styles.message}>**Email Address cannot be modified</Text>
               <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.update()}>
                 <Text>Update</Text>
               </TouchableOpacity>
@@ -275,6 +419,8 @@ class Profile extends Component {
             </TouchableOpacity>
             </View>
           </Modal>
+
+
             <TouchableOpacity style={styles.logoutButton} onPress={() => { this.goLogin() }}>
               <Text>Log Out</Text>
             </TouchableOpacity>

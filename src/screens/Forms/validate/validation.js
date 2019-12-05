@@ -30,7 +30,8 @@ const validation = {
     },
     length: {
       minimum: 5,
-      message: '^Your password must be at least 5 characters'
+      maximum: 256, 
+      message: '^Your password must be at least 5 characters and Less than 256 characters'
     }
   },
 

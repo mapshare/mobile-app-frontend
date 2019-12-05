@@ -95,6 +95,7 @@ export default StyleSheet.create({
     marginBottom:20
   },
   errorMessage: {
+    marginLeft:15,
     color: "red"
   },
   inputBox: {
@@ -121,4 +122,8 @@ export default StyleSheet.create({
     marginBottom: 10,
     alignSelf:'center'
   },
+  message:{
+    fontSize:12,
+    marginLeft:15
+  }
 });

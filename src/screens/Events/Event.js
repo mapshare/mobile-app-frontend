@@ -100,10 +100,6 @@ class EventsView extends Component {
     console.log('Long Press')
   }
 
-  // Updating Existing Event
-  update = async () => {
-
-  };
 
   render() {
     return (
@@ -175,20 +171,20 @@ class EventsView extends Component {
                         placeholder="Event Description"
                         //multiline = {true}
                         numberOfLines={4}
-                        maxLength={30}
+                        maxLength={150}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         selectionColor="#fff"
                         autoCorrect={false}
                         returnKeyType="next"
                         autoCapitalize="none"
                         ref={input => (this.eventDescription = input)}
-                        onSubmitEditing={() => this.creatEvent()}
+                        onSubmitEditing={() => this.updateEvent()}
                         />
               {this.state.eventDescriptionError ? (
                 <Text style={styles.errorMessage}>{this.state.eventDescriptionError}</Text>
               ) : null}
-              <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => {this.creatEvent()}} >
-                <Text>Create</Text>
+              <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => {this.updateEvent()}} >
+                <Text>Update</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => { this.eventModalClose() }}>
                 <Text>Cancel</Text>

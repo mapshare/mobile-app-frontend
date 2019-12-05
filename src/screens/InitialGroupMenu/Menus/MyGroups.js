@@ -161,7 +161,7 @@ class MyGroups extends Component {
                             <Icon style={styles.closeIcon} name="plus" size={30} />
                         </TouchableOpacity>
 
-                        {/* LOGOUT FUNCTION 
+                        
                         <TouchableOpacity
                             disabled={this.state.singleActivation}
                             style={styles.logOutButton}
@@ -176,9 +176,9 @@ class MyGroups extends Component {
                                     }, 1000)
                                 });
                             }}>
-                            <Icon style={styles.logOutIcon} name="logout" size={30} />
+                            <Icon style={styles.logOutIcon} name="menu" size={30} />
                         </TouchableOpacity>
-                        */}
+                        
 
                         <SafeAreaView style={styles.content} >
                             <TouchableWithoutFeedback
