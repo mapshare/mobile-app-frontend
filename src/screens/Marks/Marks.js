@@ -18,6 +18,19 @@ import { containerStyles } from './Stylesheet';
 class Marks extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      sortMarkArray: this.props.sortGroupMarkData
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.sortGroupMarkOnClickFlag !== prevProps.sortGroupMarkOnClickFlag
+    ) {
+      this.setState({
+        sortMarkArray: this.props.sortGroupMarkData
+      });
+    }
   }
 
   onClickMark = (data, event) => {
@@ -31,6 +44,21 @@ class Marks extends Component {
     const ref = `markId-${index}`;
     const coordinate = this.props.getGroupAllMarksData[index].geometry
       .coordinates;
+    let markColor;
+
+    if (data.defaultMarkCategory) {
+      this.props.getGroupDefaultMarkCategoryData.map((category, index) => {
+        if (data.defaultMarkCategory === category._id) {
+          markColor = category.categoryColor;
+        }
+      });
+    } else if (data.customMarkCategory) {
+      this.props.getGroupAllCustomMarkCategoryData.map((category, index) => {
+        if (data.customMarkCategory === category._id) {
+          markColor = category.categoryColor;
+        }
+      });
+    }
 
     return (
       <Mapbox.PointAnnotation
@@ -40,7 +68,9 @@ class Marks extends Component {
         onSelected={event => this.onClickMark(data, event)}
       >
         <View key={ref} style={containerStyles.container}>
-          <View style={containerStyles.fill} />
+          <View
+            style={[containerStyles.fill, { backgroundColor: `${markColor}` }]}
+          />
         </View>
       </Mapbox.PointAnnotation>
     );
@@ -50,7 +80,14 @@ class Marks extends Component {
     const marksView = [];
 
     data.map((data, index) => {
-      marksView.push(this.renderMark(data, index));
+      if (
+        !(
+          this.state.sortMarkArray.includes(data.defaultMarkCategory) ||
+          this.state.sortMarkArray.includes(data.customMarkCategory)
+        )
+      ) {
+        marksView.push(this.renderMark(data, index));
+      }
     });
 
     return marksView;
@@ -69,7 +106,13 @@ const mapStateToProps = state => {
     getActiveGroup: state.groupReducer.getActiveGroupData,
     addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus,
     getGroupAllMarksData: state.groupMarkReducer.getGroupAllMarksData,
-    addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus
+    addGroupMarkStatus: state.groupMarkReducer.addGroupMarkStatus,
+    sortGroupMarkData: state.groupMarkReducer.sortGroupMarkData,
+    sortGroupMarkOnClickFlag: state.groupMarkReducer.sortGroupMarkOnClickFlag,
+    getGroupDefaultMarkCategoryData:
+      state.groupDefaultMarkCategoryReducer.getGroupDefaultMarkCategoryData,
+    getGroupAllCustomMarkCategoryData:
+      state.groupCustomMarkCategoryReducer.getGroupAllCustomMarkCategoryData
   };
 };
 

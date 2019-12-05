@@ -4,22 +4,24 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //Redux actions
-import { addGroupMarkOnClick } from '../../actions/groupMarkAction';
+import { categoriesOptionOnClick } from '../../actions/groupDefaultMarkCategory';
 
 // Componenets Style
 import { containerStyles } from './Stylesheet';
 
-class AddMark extends Component {
-  addLocationOnClick = () => {
-    this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
+class Categories extends Component {
+  categoriesOnClick = () => {
+    this.props.categoriesOptionOnClick(
+      !this.props.categoriesOptionOnClickStatus
+    );
   };
 
   render() {
     return (
       <View style={containerStyles.mainContainer}>
-        <TouchableHighlight onPress={this.addLocationOnClick}>
+        <TouchableHighlight onPress={this.categoriesOnClick}>
           <View style={containerStyles.contentContainer}>
-            <Icon name="plus" size={25} color="white" />
+            <Icon name="location-pin" size={25} color="white" />
           </View>
         </TouchableHighlight>
       </View>
@@ -30,15 +32,16 @@ class AddMark extends Component {
 // Redux Getter to use: this.props.(name of any return)
 const mapStateToProps = state => {
   return {
-    addGroupMarkOnClickStatus: state.groupMarkReducer.addGroupMarkOnClickStatus
+    categoriesOptionOnClickStatus:
+      state.groupDefaultMarkCategoryReducer.categoriesOptionOnClickStatus
   };
 };
 
 // Redux Setter to use: this.props.(name of any return)
 const mapDispatchToProps = dispatch => {
   return {
-    addGroupMarkOnClick: bool => dispatch(addGroupMarkOnClick(bool))
+    categoriesOptionOnClick: bool => dispatch(categoriesOptionOnClick(bool))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddMark);
+export default connect(mapStateToProps, mapDispatchToProps)(Categories);

@@ -1,28 +1,21 @@
 // Import Libraries
 import { StyleSheet } from 'react-native';
-import { reponsiveStyle, closeButtonStyle } from '../../util/sharedStyles';
+import { reponsiveStyle } from '../../util/sharedStyles';
 
-// Componenets Style
 const containerStyles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: reponsiveStyle.wp('100%'),
+    backgroundColor: 'black',
     height: reponsiveStyle.hp('100%'),
-    position: 'absolute',
-    padding: 10,
-    backgroundColor: 'white',
-    zIndex: 20000,
-    elevation:20000,
+    opacity: 0.8
   },
 
   closeButtonContainer: {
     alignSelf: 'flex-end',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 5,
-    width: reponsiveStyle.wp('8%')
+    margin: 15,
+    width: reponsiveStyle.wp('8%'),
+    opacity: 1
   },
 
   contentContainer: {
