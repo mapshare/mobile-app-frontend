@@ -49,6 +49,7 @@ import {
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 import { getGroupDefaultMarkCategory } from '../../actions/groupDefaultMarkCategory';
 import { getGroupAllCustomMarkCategory } from '../../actions/groupCustomMarkCategory';
+import WelcomeLanding from '../WelcomeLanding/WelcomeLanding';
 
 class Home extends Component {
   constructor(props) {
