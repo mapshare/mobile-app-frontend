@@ -239,8 +239,8 @@ class Map extends Component {
                       }}
                       
           ></Icon>
-          {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         </View>
+        {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         {this.props.categoriesOptionOnClickStatus && (
           <View style={containerStyles.categoryContainer}>
             <CategoryOptions />

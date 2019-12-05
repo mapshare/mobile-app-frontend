@@ -79,7 +79,7 @@ class AddMarkForm extends Component {
       categoryId: values.categoryId,
       markLocations: {
         locationAddress: values.locationAddress.trim(),
-        loactionPriceRange: this.state.priceRange,
+        loactionPriceRange: values.loactionPriceRange,
         additionalInformation: values.additionalInformation.trim(),
         locationImageData: this.state.photo && this.state.photo.data
       },
