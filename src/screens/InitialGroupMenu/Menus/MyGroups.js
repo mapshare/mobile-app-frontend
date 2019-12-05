@@ -160,24 +160,9 @@ class MyGroups extends Component {
                                     }, 1000)
                                 });
                             }}
-                            key={'addgroup'}
-                            ref={ref => {
-                                if (!ref) return
-
-                                let props = {
-                                    order: 1,
-                                    title: 'Add Group',
-                                    description: 'This options allows you to create new Groups',
-                                    outerCircleColor: '#3f52ae'
-                                }
-                                
-                            }}
-
-                            {...this.props.addAppTourTarget &&
-                                this.props.addAppTourTarget(AppTourView.for(ref, { ...props }))}
-
                             >
-                            <Icon style={styles.closeIcon} name="plus" size={30} />
+                            <Icon style={styles.closeIcon} name="plus" size={30} 
+                            />
                         </TouchableOpacity>
 
                         
@@ -194,8 +179,10 @@ class MyGroups extends Component {
                                         this.setState({ singleActivation: false });
                                     }, 1000)
                                 });
-                            }}>
-                            <Icon style={styles.logOutIcon} name="logout" size={30} />
+                            }}
+                            >
+                            <Icon style={styles.logOutIcon} name="logout" size={30} 
+                            />
                         </TouchableOpacity>
                         
 

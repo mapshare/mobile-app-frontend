@@ -57,23 +57,23 @@ class ModalWindow extends Component {
     this.state.eventMarkError = null;
   }
 
-  creatEvent = async () => {
+  createEvent = async () => {
 
     const eventNameError = validator ("eventNamePresent", this.state.user.eventName);
     const eventDescriptionError = validator ("additionalInformation", this.state.user.eventDescription);
-    const eventMarkError = validator ("markName", this.state.user.eventMark);
+    //const eventMarkError = validator ("markName", this.state.user.eventMark);
     
     this.setState(
       {
         eventNameError: eventNameError,
         eventDescriptionError: eventDescriptionError,
-        eventMarkError: eventMarkError,
+        //eventMarkError: eventMarkError,
       },
       () => {
         if (
           !eventNameError &&
-          !eventDescriptionError &&
-          !eventMarkError
+          !eventDescriptionError //&&
+          //!eventMarkError
         ) {
           
           const data = {
@@ -84,9 +84,9 @@ class ModalWindow extends Component {
             token: this.props.token
           }
 
-          //this.props.addGroupEvent(data);
+          this.props.addGroupEvent(data);
           console.log(data)
-          //this.eventModalClose();
+          this.eventModalClose();
 
           //console.log(this.props.getGroupEventData)
           
@@ -194,12 +194,12 @@ class ModalWindow extends Component {
                         returnKeyType="next"
                         autoCapitalize="none"
                         ref={input => (this.eventDescription = input)}
-                        onSubmitEditing={() => this.updateEvent()}
+                        onSubmitEditing={() => this.createEvent()}
                         />
               {this.state.eventDescriptionError ? (
                 <Text style={eventModalWindow.errorMessage}>{this.state.eventDescriptionError}</Text>
               ) : null}
-              <TouchableOpacity style={[eventModalWindow.buttonContainer, eventModalWindow.center]} onPress={() => {this.updateEvent()}} >
+              <TouchableOpacity style={[eventModalWindow.buttonContainer, eventModalWindow.center]} onPress={() => {this.createEvent()}} >
                 <Text>Create</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[eventModalWindow.cancelButton, eventModalWindow.center]} onPress={() => { this.eventModalClose() }}>
@@ -219,6 +219,7 @@ class ModalWindow extends Component {
 const mapStateToProps = state => {
   return {
     getActiveGroupData: state.groupReducer.getActiveGroupData,
+    token: state.logInReducer.token,
     modalWindowStatus: state.modalWindowReducer.status,
     getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData
   };

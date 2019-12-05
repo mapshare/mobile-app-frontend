@@ -11,6 +11,7 @@ import {
   Actions
 } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
 
 import SignUp from '../../screens/SignUp/SignUp';
 import LogIn from '../../screens/Login/Login';
@@ -207,7 +208,7 @@ handleBackButton(){
               component={Map}
               icon={TabIcon}
               name="compass"
-              hideNavBar
+              hideNavBar        
             />
 
             <Scene

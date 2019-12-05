@@ -239,6 +239,7 @@ class Profile extends Component {
 
   render() {
     let userImageSource = require('../../assests/images/default-profile.png');
+    //console.log(this.props.getUserData.userProfilePic)
     try {
       if (this.props.getUserData.userProfilePic.data.toString('base64')) {
         userImageSource = this.props.getUserData.userProfilePic.data.toString('base64') ? {

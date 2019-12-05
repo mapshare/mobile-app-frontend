@@ -53,8 +53,10 @@ export const addGroupEvent = data => {
             .then(res => {
                 dispatch(addGroupEventDataSuccess(res.data));
                 dispatch(addGroupEventSuccess(true));
+                console.log(res.data)
             })
             .catch(err => {
+                console.log(err.response.data)
                 dispatch(addGroupEventSuccess(false));
                 dispatch(addGroupEventError(err.response.data));
             });
