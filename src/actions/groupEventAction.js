@@ -124,6 +124,7 @@ export const getGroupEventError = data => {
     };
 };
 
+
 export const getGroupEvent = data => {
     return dispatch => {
         axios
@@ -138,6 +139,7 @@ export const getGroupEvent = data => {
             });
     };
 };
+
 
 /*
 *   GET ALL GROUP EVENTs
@@ -156,12 +158,14 @@ export const getAllGroupEventError = data => {
     };
 };
 
-export const getGroupEvent = data => {
-    try {
-        const res = await axios.get(API_URL + '/groups/' + data.groupId + '/allEvents', { headers: { 'authentication': data.token } });
-        dispatch(getAllGroupEventDataSuccess(res.data));
-    } catch (error) {
-        dispatch(getAllGroupEventError(error));
+export const getAllGroupEvent = data => {
+    return async dispatch => {
+        try {
+            const res = await axios.get(API_URL + '/groups/' + data.groupId + '/allEvents', { headers: { 'authentication': data.token } });
+            dispatch(getAllGroupEventDataSuccess(res.data));
+        } catch (error) {
+            dispatch(getAllGroupEventError(error));
+        }
     }
 };
 

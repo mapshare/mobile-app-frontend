@@ -76,22 +76,24 @@ export const updateUserError = data => {
 };
 
 export const updateUser = data => {
-    userData = {
-        userEmail: data.userEmail,
+    let userData = {  
         userFirstName: data.userFirstName,
         userLastName: data.userLastName,
-        userImages: data.userImages,
-        userEmail: data.userEmail,
+        userProfilePic: data.userProfilePic,
+        userPassword: data.userPassword,       
     }
 
+    console.log (userData)
     return dispatch => {
         axios
             .put(API_URL + '/user', userData, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(updateUserDataSuccess(res.data));
                 dispatch(updateUserSuccess(true));
+                console.log(res.data)
             })
             .catch(err => {
+                console.log(err.response.data);
                 dispatch(updateUserSuccess(false));
                 dispatch(updateUserError(err.response.data));
             });

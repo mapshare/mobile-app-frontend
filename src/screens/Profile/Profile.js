@@ -16,7 +16,6 @@ import styles from "./Stylesheet"
 import { Actions, ActionConst } from "react-native-router-flux";
 import validator from "../Forms/validate/validation_wrapper";
 import ImagePicker from 'react-native-image-picker';
-import bcrypt from 'react-native-bcrypt'
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -67,9 +66,6 @@ class Profile extends Component {
       modalVisible: false,
       pwdModalVisible: false,
 
-      //Variables to Change the Group
-      updateButtonState: "Update",
-
     };
   }
 
@@ -77,7 +73,7 @@ class Profile extends Component {
     this.state.user.userFirstName = this.props.getUserData.userFirstName;
     this.state.user.userLastName = this.props.getUserData.userLastName;
 
-    if (Object.keys(this.props.getUserData.userProfilePic).length !== 0) {
+    if (this.props.getUserData.userProfilePic) {
       this.state.user.userImages = { uri: 'data:image/png;base64,' + this.props.getUserData.userProfilePic}
     } else {
       this.state.user.userImages = require('../../assests/images/default-profile.png');
@@ -188,7 +184,6 @@ class Profile extends Component {
               userProfilePic: this.state.user.userImages.data,
               token: this.props.token
             }
-          
             this.props.updateUser(data);
   
             Alert.alert(
@@ -206,20 +201,9 @@ class Profile extends Component {
   //Updating User Password
   updatePasword = async () => {
 
-    this.setState({
-      updateButtonState:"Please Wait.."
-    })
-
     const userNewPasswordError = validator("password", this.state.user.userNewPassword);
     const userCNewPasswordError = validator("password", this.state.user.userCNewPassword);
-    
-    //Validate Old Password
-
-    const validPassword = await bcrypt.compareSync(
-      this.state.user.userOldPasword,
-      this.props.getUserData.userPassword
-    );
-
+    console.log('data')
     this.setState(
       {
         userNewPasswordError: userNewPasswordError,
@@ -228,7 +212,7 @@ class Profile extends Component {
       () => {
         if (
           !userNewPasswordError &&
-          !userCNewPasswordError && validPassword
+          !userCNewPasswordError
         ) {
           if (this.state.user.userNewPassword === this.state.user.userCNewPassword) {
             const data = {
@@ -236,12 +220,13 @@ class Profile extends Component {
               token: this.props.token
             }
 
-            //this.props.updateUser(data);
+            this.props.updateUser(data);
             Alert.alert(
               "Password Updated"
             );
-            //this.profileModalClose();
-            //this.goLogin();
+            console.log(data)
+            this.profileModalClose();
+            this.goLogin();
           } else {
             this.setState({
               userCNewPasswordError: "The Password didn't match. Please try again"
@@ -255,9 +240,9 @@ class Profile extends Component {
   render() {
     let userImageSource = require('../../assests/images/default-profile.png');
     try {
-      if (Object.keys(this.props.getUserData.userProfilePic).length !== 0) {
-        userImageSource = this.props.getUserData.userProfilePic ? {
-          uri: 'data:image/png;base64,' + this.props.getUserData.userProfilePic
+      if (this.props.getUserData.userProfilePic.data.toString('base64')) {
+        userImageSource = this.props.getUserData.userProfilePic.data.toString('base64') ? {
+          uri: 'data:image/png;base64,' + this.props.getUserData.userProfilePic.data.toString('base64') 
         }
           : require('../../assests/images/default-profile.png');
       }else {
@@ -342,8 +327,8 @@ class Profile extends Component {
               {this.state.userCNewPasswordError ? (
                 <Text style={styles.errorMessage}>{this.state.userCNewPasswordError}</Text>
               ) : null}
-              <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.state.updateButtonState}>
-                <Text>{this.state.updateButtonState}</Text>
+              <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.updatePasword()}>
+                <Text>Update</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => { this.pwdModalClose() }}>
                 <Text>Cancel</Text>
