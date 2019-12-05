@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import ImagePicker from 'react-native-image-picker';
-import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { reduxForm, Field, reset } from 'redux-form';
 
@@ -91,6 +90,7 @@ class AddMarkForm extends Component {
     };
 
     this.props.addMarkModalWindow(false);
+    this.props.addGroupMarkOnClick(false);
     this.props.addGroupMark(formValues);
     this.props.newMarkAdded(!this.props.newMarkAddedFlag);
   };
@@ -211,7 +211,8 @@ const mapDispatchToProps = dispatch => {
   return {
     addGroupMark: data => dispatch(addGroupMark(data)),
     addMarkModalWindow: bool => dispatch(addMarkModalWindow(bool)),
-    newMarkAdded: bool => dispatch(newMarkAdded(bool))
+    newMarkAdded: bool => dispatch(newMarkAdded(bool)),
+    addGroupMarkOnClick: bool => dispatch(addGroupMarkOnClick(bool))
   };
 };
 
