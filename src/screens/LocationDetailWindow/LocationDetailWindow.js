@@ -128,13 +128,13 @@ class LocationDetailWindow extends Component {
   renderPriceRange = data => {
     let priceRange = 'N/A';
     if (data === 0) {
-      priceRange = '$';
-    } else if (data === 1) {
-      priceRange = '$$';
-    } else if (data === 2) {
-      priceRange = '$$$';
-    } else if (data === 3) {
       priceRange = 'Free';
+    } else if (data === 1) {
+      priceRange = '$'
+    } else if (data === 2) {
+      priceRange = '$$';
+    } else if (data === 3) {
+      priceRange = '$$$';
     }
 
     return (
