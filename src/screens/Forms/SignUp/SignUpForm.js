@@ -173,6 +173,7 @@ class SignUpForm extends Component {
             })
           }
           placeholder="Password"
+          maxLength={256}
           secureTextEntry={true}
           placeholderTextColor="rgba(0,0,0,0.7)"
           returnKeyType="go"

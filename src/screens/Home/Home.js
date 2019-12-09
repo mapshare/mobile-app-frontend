@@ -7,10 +7,10 @@ import {
   Alert,
   ScrollView,
   SafeAreaView,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  AsyncStorage
 } from 'react-native';
-import Mapbox from '@react-native-mapbox-gl/maps';
-import Geolocation from '@react-native-community/geolocation';
+
 import GroupMenu from './GroupMenu/GroupMenu';
 import CreatePostButton from '../Groups/GroupFeed/CreatePostButton';
 import GroupFeed from '../Groups/GroupFeed/GroupFeed';
@@ -18,7 +18,7 @@ import GroupFeed from '../Groups/GroupFeed/GroupFeed';
 // Componenets Style
 import styles from './Stylesheet';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+
 import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
 
 //Redux actions
@@ -49,6 +49,7 @@ import {
 import { getGroupAllMarks } from '../../actions/groupMarkAction';
 import { getGroupDefaultMarkCategory } from '../../actions/groupDefaultMarkCategory';
 import { getGroupAllCustomMarkCategory } from '../../actions/groupCustomMarkCategory';
+import { getAllGroupEvent } from "../../actions/groupEventAction"
 
 class Home extends Component {
   constructor(props) {
@@ -62,6 +63,7 @@ class Home extends Component {
       groupImg: ''
     };
     this.appTourTargets = []
+    this.firstLaunch = false
   }
 
   componentWillMount() {
@@ -82,11 +84,17 @@ class Home extends Component {
         groupId: this.props.getActiveGroupData._id,
         token: this.props.token
       });
+
+      this.props.getAllGroupEvent({
+        groupId: this.props.getActiveGroupData._id,
+        token: this.props.token
+      });
+
     } catch (error) {
       console.log("Home component mount Error: " + error);
     }
 
-    // update every 5 seconds
+    // update every 25 seconds
     this.setState({
       interval: setInterval(() => {
         try {
@@ -113,6 +121,11 @@ class Home extends Component {
             token: this.props.token
           });
 
+          this.props.getAllGroupEvent({
+            groupId: this.props.getActiveGroupData._id,
+            token: this.props.token
+          });
+
           const data = {
             groupMarkId: this.props.getActiveGroupData.groupMarks,
             groupCategoryId: this.props.getActiveGroupData
@@ -125,17 +138,31 @@ class Home extends Component {
         } catch (error) {
           console.log("Home Interval Error: " + error);
         }
-      }, 25000)
+      }, 11000)
     });
 
-    setTimeout(() => {
-      let appTourSequence = new AppTourSequence()
-      this.appTourTargets.forEach(appTourTarget => {
-        appTourSequence.add(appTourTarget)
-      })
-
-      AppTour.ShowSequence(appTourSequence)
-    }, 1000)
+    // Check First Launch and store state in launched using AsyncStorage
+    AsyncStorage.getItem('Launched').then((result) => {
+      console.log(result)
+      if (result === null){
+        AsyncStorage.setItem('Launched', JSON.stringify('true')).then(() => AsyncStorage.getItem('Launched')
+        .then((result)=>console.log('Launched:',result)))
+        this.firstLaunch = true;
+      } else {
+        this.firstLaunch = false;
+      }
+    }).then(() => {
+      if (this.firstLaunch) {
+        setTimeout(() => {
+          let appTourSequence = new AppTourSequence()
+          this.appTourTargets.forEach(appTourTarget => {
+            appTourSequence.add(appTourTarget)
+          })
+    
+          AppTour.ShowSequence(appTourSequence)
+        }, 1000)
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -277,7 +304,8 @@ const mapDispatchToProps = dispatch => {
     getGroupDefaultMarkCategory: data =>
       dispatch(getGroupDefaultMarkCategory(data)),
     getGroupAllCustomMarkCategory: data =>
-      dispatch(getGroupAllCustomMarkCategory(data))
+      dispatch(getGroupAllCustomMarkCategory(data)),
+    getAllGroupEvent: data => dispatch(getAllGroupEvent(data)),
   };
 };
 

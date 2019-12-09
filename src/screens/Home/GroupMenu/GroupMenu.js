@@ -96,7 +96,7 @@ class GroupMenu extends Component {
                         if (!ref) return
             
                         let props = {
-                          order: 1,
+                          order: 2,
                           title: 'Group Menu',
                           description: 'This menu allows you to manage your groups, join or create groups',
                           outerCircleColor: '#3f52ae'

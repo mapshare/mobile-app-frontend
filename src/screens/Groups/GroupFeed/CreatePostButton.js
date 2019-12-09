@@ -83,7 +83,7 @@ class CreatePostButton extends Component {
                         if (!ref) return
             
                         let props = {
-                          order: 2,
+                          order: 3,
                           title: 'Camera Button',
                           description: 'This is used to create new Group Feed to share amoung group members',
                           outerCircleColor: '#3f52ae'

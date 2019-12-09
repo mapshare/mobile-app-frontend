@@ -9,13 +9,9 @@ import styles from "./Stylesheet";
 
 export default class Loading extends Component {
 
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            visible: true,
-        };
-    }
+    state = {
+        visible: true,
+    };
 
     render() {
         return (

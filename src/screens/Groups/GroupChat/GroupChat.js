@@ -123,7 +123,9 @@ class GroupChat extends Component {
             <Image source={{ uri: "https://png.icons8.com/small/75/ffffff/filled-sent.png" }} style={styles.iconSend} />
           </TouchableOpacity>
         </View>
+        
       </View>
+      
     );
   }
 }

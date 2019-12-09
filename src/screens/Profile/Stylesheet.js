@@ -20,7 +20,7 @@ export default StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'center',
     position: 'absolute',
-    marginTop: 130
+    marginTop: 130,
   },
   name: {
     fontSize: 22,
@@ -57,7 +57,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     width: 250,
     borderRadius: 30,
     backgroundColor: "#00BFFF",
@@ -68,7 +68,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     width: 250,
     borderRadius: 30,
     backgroundColor: "#ff0000",
@@ -84,4 +84,46 @@ export default StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#FFBF00",
   },
+  modalWindow: {
+    
+    justifyContent:'center',
+    marginTop: 20
+  },
+  modalText: {
+    alignSelf: 'center',
+    fontSize: 30,
+    marginBottom:20
+  },
+  errorMessage: {
+    marginLeft:15,
+    color: "red"
+  },
+  inputBox: {
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  center: {
+    alignSelf: 'center',
+  },
+  Text: {
+    fontSize:18,
+    marginBottom:20
+  },
+  image: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: "white",
+    marginBottom: 10,
+    alignSelf:'center'
+  },
+  message:{
+    fontSize:12,
+    marginLeft:15
+  }
 });

@@ -30,7 +30,8 @@ const validation = {
     },
     length: {
       minimum: 5,
-      message: '^Your password must be at least 5 characters'
+      maximum: 256, 
+      message: '^Your password must be at least 5 characters and Less than 256 characters'
     }
   },
 
@@ -178,7 +179,18 @@ const validation = {
       maximum: 50,
       message: '^Group Description must be less than 50 characters'
     }
-  }
+  },
+
+  eventNamePresent: {
+    presence: {
+      message: '^Event Name is required',
+      allowEmpty: false
+    },
+    format: {
+      pattern: '.*[^ ].*',
+      message: '^only white space is not allowed'
+    }
+  },
 };
 
 export default validation;

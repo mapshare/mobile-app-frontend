@@ -14,6 +14,7 @@ import {
   geocodingLocation
 } from '../../actions/groupMarkAction';
 import { getGroupById } from '../../actions/groupActions';
+import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
 
 // Componenets Style
 import { containerStyles, mapStyles, annotationStyles } from './Stylesheet';
@@ -46,10 +47,19 @@ class Map extends Component {
       zoomLocation: false,
       findLocation: false
     };
+    this.appTourTargets = []
   }
 
   componentDidMount() {
     this.findCoordinates();
+    setTimeout(() => {
+      let appTourSequence = new AppTourSequence()
+      this.appTourTargets.forEach(appTourTarget => {
+        appTourSequence.add(appTourTarget)
+      })
+      console.log(this.appTourTargets)
+      AppTour.ShowSequence(appTourSequence)
+    }, 1000)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -121,6 +131,7 @@ class Map extends Component {
       console.log("zoom");
       this.location.zoomLocation = false;
       return (
+        
         <Mapbox.PointAnnotation
           key="pointAnnotation"
           id="pointAnnotation"
@@ -154,7 +165,7 @@ class Map extends Component {
           <View style={annotationStyles.container}>
             <View style={annotationStyles.fill} />
           </View>
-          <Mapbox.Callout title={this.location.address} />
+          <Mapbox.Callout title={this.location.address}  onPress/>
         </Mapbox.PointAnnotation>
       );
     }
@@ -208,6 +219,25 @@ class Map extends Component {
             name="location-pin"
             size={30}
             onPress={this.zoomCoordinates}
+            key={'zoomButton'}
+                    title={'Move to Current User Location'}
+                    ref={ref => {
+                        if (!ref) return
+
+                        this.zbutton = ref
+
+                        let props = {
+                          order: 4,
+                          title: 'Move to Current User Location',
+                          description: 'This zooms the map to user location** {/n} **Please note that GPS must be ebaled for this feature to work',
+                          outerCircleColor: '#3f52ae'
+                        }
+            
+                        this.props.addAppTourTarget &&
+              this.props.addAppTourTarget(AppTourView.for(ref, { ...props }))
+                        
+                      }}
+                      
           ></Icon>
         </View>
         {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}

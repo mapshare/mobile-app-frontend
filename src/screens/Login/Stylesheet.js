@@ -9,7 +9,8 @@ export default StyleSheet.create({
     title: {
         textAlign: 'center',
         color: 'white',
-        fontSize: 25
+        fontSize: 35,
+        marginBottom:10
     },
     text: {
         textAlign: 'center',

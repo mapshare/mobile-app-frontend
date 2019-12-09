@@ -11,6 +11,7 @@ import {
   Actions
 } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
 
 import SignUp from '../../screens/SignUp/SignUp';
 import LogIn from '../../screens/Login/Login';
@@ -55,8 +56,6 @@ import ChangeGroupNameMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupN
 import ChangeGroupDescriptionMenu from '../../screens/Home/GroupMenu/Menus/ChangeGroupDescription';
 import BanedUsersList from '../../screens/Home/GroupMenu/Menus/BanedUsersList';
 
-// Profile Update Menu
-import updateProfile from "../../screens/Profile/Updator/UpdateProfile"
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
@@ -85,21 +84,25 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = {
-      isloggedin: false,
-      backPressed: 1
+    this.state={
+        isloggedin: false,
+        backPressed: 0
     }
   }
 
-  handleBackButton() {
-    if (backPressed > 0) {
-      BackHandler.exitApp();
-      backPressed = 0;
-    } else {
-      backPressed++;
-      ToastAndroid.show("Press Again To Exit", ToastAndroid.SHORT);
-      setTimeout(() => { backPressed = 0 }, 2000);
-      return true;
+handleBackButton(){  
+
+    if(backPressed == 0) {
+      Actions.pop();
+    } 
+    if(backPressed > 0){
+            BackHandler.exitApp();
+            backPressed = 0;
+        }else {
+            backPressed++;
+            ToastAndroid.show("Press back again To exit!", ToastAndroid.SHORT);
+            setTimeout( () => { backPressed = 0}, 2000);
+            return true;
     }
   }
 
@@ -207,7 +210,7 @@ class App extends Component {
               component={Map}
               icon={TabIcon}
               name="compass"
-              hideNavBar
+              hideNavBar        
             />
 
             <Scene
@@ -238,8 +241,6 @@ class App extends Component {
             />
           </Stack>
 
-          {/* MANAGE PROFILE NAVIGATION */}
-          <Scene key='updateProfile' hideNavBar hideTabBar component={updateProfile} />
           {/* MANAGE GROUP NAVIGATION */}
           <Scene
             key="myGroupsMenu"

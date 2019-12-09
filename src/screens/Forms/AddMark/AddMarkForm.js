@@ -89,6 +89,7 @@ class AddMarkForm extends Component {
       token: this.props.logInToken
     };
 
+    console.log(formValues)
     this.props.addMarkModalWindow(false);
     this.props.addGroupMarkOnClick(false);
     this.props.addGroupMark(formValues);

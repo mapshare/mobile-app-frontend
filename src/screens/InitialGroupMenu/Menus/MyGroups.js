@@ -15,6 +15,8 @@ import {
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import SearchGroupForm from '../../Forms/SearchGroup/SearchGroupFormDummy';
+import { AppTour, AppTourSequence, AppTourView } from 'react-native-app-tour'
+
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -157,11 +159,13 @@ class MyGroups extends Component {
                                         this.setState({ singleActivation: false });
                                     }, 1000)
                                 });
-                            }}>
-                            <Icon style={styles.closeIcon} name="plus" size={30} />
+                            }}
+                            >
+                            <Icon style={styles.closeIcon} name="plus" size={30} 
+                            />
                         </TouchableOpacity>
 
-                        {/* LOGOUT FUNCTION 
+                        
                         <TouchableOpacity
                             disabled={this.state.singleActivation}
                             style={styles.logOutButton}
@@ -175,10 +179,12 @@ class MyGroups extends Component {
                                         this.setState({ singleActivation: false });
                                     }, 1000)
                                 });
-                            }}>
-                            <Icon style={styles.logOutIcon} name="logout" size={30} />
+                            }}
+                            >
+                            <Icon style={styles.logOutIcon} name="logout" size={30} 
+                            />
                         </TouchableOpacity>
-                        */}
+                        
 
                         <SafeAreaView style={styles.content} >
                             <TouchableWithoutFeedback
