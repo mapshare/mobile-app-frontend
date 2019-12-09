@@ -11,8 +11,8 @@ const containerStyles = StyleSheet.create({
     height: reponsiveStyle.hp('100%'),
     position: 'absolute',
     padding: 10,
+    elevation: 25000,
     zIndex: 25000,
-    elevation: 25000
   },
 
   contentLocation: {
