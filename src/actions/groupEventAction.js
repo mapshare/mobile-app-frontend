@@ -225,6 +225,50 @@ export const updateGroupEvent = data => {
 };
 
 /*
+*   KICK USER FROM GROUP EVENT
+*/
+export const kickUserEventSuccess = bool => {
+    return {
+        type: keys.KICK_USER_GROUP_EVENT_SUCCESS,
+        kickUserGroupEventStatus: bool,
+    };
+};
+
+export const kickUserEventDataSuccess = data => {
+    return {
+        type: keys.KICK_USER_GROUP_DATA_SUCCESS,
+        kickUserGroupEventData: data,
+    };
+};
+
+export const kickUserEventError = data => {
+    return {
+        type: keys.KICK_USER_GROUP_EVENT_ERROR,
+        kickUserGroupEventError: data,
+    };
+};
+
+export const kickUserGroupEvent = data => {
+    return async (dispatch) => {
+        try {
+            const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/event/' + data.eventId + '/kick/' + data.usrId, { headers: { 'authentication': data.token } });
+            await dispatch(getAllGroupEvent({
+                groupId: data.groupId,
+                token: data.token
+            }));
+            dispatch(kickUserEventDataSuccess(res.data));
+            dispatch(kickUserEventSuccess(true));
+            
+        } catch (err) {
+            console.log(err)
+            dispatch(kickUserEventSuccess(false));
+            dispatch(kickUserEventError(err.response.data));
+        }
+    };
+};
+
+
+/*
 *   LEAVE GROUP EVENT
 */
 export const leaveGroupEventSuccess = bool => {
@@ -260,7 +304,7 @@ export const leaveGroupEvent = data => {
             dispatch(leaveGroupEventSuccess(true));
             
         } catch (err) {
-            
+            console.log(err.response.data)
             dispatch(leaveGroupEventSuccess(false));
             dispatch(leaveGroupEventError(err.response.data));
         }

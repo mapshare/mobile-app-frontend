@@ -165,7 +165,7 @@ class Map extends Component {
           <View style={annotationStyles.container}>
             <View style={annotationStyles.fill} />
           </View>
-          <Mapbox.Callout title={this.location.address}  onPress/>
+          <Mapbox.Callout title={this.location.address} />
         </Mapbox.PointAnnotation>
       );
     }

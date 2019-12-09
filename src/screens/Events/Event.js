@@ -17,7 +17,9 @@ import {getAllGroupEvent,
         joinGroupEvent, 
         updateGroupEvent, 
         leaveGroupEvent, 
-        deleteGroupEvent,} from "../../actions/groupEventAction"
+        deleteGroupEvent,
+        KickUserEvent,
+        kickUserGroupEvent} from "../../actions/groupEventAction"
 
 import {getActiveGroup} from "../../actions/groupActions"
 
@@ -63,10 +65,14 @@ class EventsView extends Component {
       eventModalVisible:true,
       selectEvent:data
     })
+    this.state.user.eventName = data.eventName;
+    this.state.user.eventDescription = data.eventDescription;
   }
 
   eventModalClose() {
     this.setState({
+      eventName: "",
+      eventDescription: "",
       eventModalVisible:false, 
       selectedEvent: []
     });
@@ -78,14 +84,20 @@ class EventsView extends Component {
   }
 
   eventUpdateModalClose() {
-    this.setState({eventUpdateModalVisible:false});
+    this.setState({
+      eventUpdateModalVisible:false,
+      eventNameError: null,
+      eventDescriptionError: null,
+    });
   }
 
 
   eventModal() {
     if (this.state.eventModalVisible) {
       
+      
     let data = this.state.selectEvent;
+
     let counter = 0;
     let createdby = ""
     let alreadyMember = false;
@@ -111,6 +123,7 @@ class EventsView extends Component {
     return(
       <Modal visible={this.state.eventModalVisible}
              onRequestClose={() => [this.eventModalClose(), alreadyMember = false]}>
+        <ScrollView>
         <View style={eventModalWindow.modalWindow}>
               <Text style={eventModalWindow.modalText}>Event Details</Text>
               {(data.eventCreatedBy === this.props.getGroupMemberData._id || permission >= 3) &&
@@ -130,14 +143,16 @@ class EventsView extends Component {
                         defaultValue={data.markLocations.locationAddress}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         editable={false}
+                        multiline={true}
                         />
               <Text style={eventModalWindow.mText}>Event Description:</Text>
               <TextInput style={[eventModalWindow.inputBox, eventModalWindow.inputBoxDescription]}
                         defaultValue={data.eventDescription}
-                        numberOfLines={4}
+                        //numberOfLines={4}
                         maxLength={150}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         editable={false}
+                        multiline={true}
                         />
               
                 <Text style={eventModalWindow.mText}>Current Members:</Text>
@@ -146,16 +161,23 @@ class EventsView extends Component {
                 {
                   counter = counter + 1
                 return (
+                  <Text style={eventModalWindow.memberList}>
                   <Text style={eventModalWindow.memberList}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         editable={false}
                         numberOfLines={4}
                         ScrollView
-                        >{counter + ": " + item.userFirstName + " " + item.userLastName}</Text>
+                >{counter + ": " + item.userFirstName + " " + item.userLastName}
+                </Text>
+                {(data.eventCreatedBy === this.props.getGroupMemberData._id || permission >= 3) && 
+                  <Text style={eventModalWindow.KickUserEvent} onPress={()=>this.removeUserFromEvent(data,item.usrId) }>Kick User</Text>}
+                </Text>
                 )
                 })}
               </ScrollView>
+              {createdby !== "" &&
               <Text style={eventModalWindow.mText}>{'\n'}Event Hosted By: {createdby}</Text>
+              }
 
               <TouchableOpacity 
               style={[(alreadyMember === true ? eventModalWindow.leaveButton : eventModalWindow.joinButton), eventModalWindow.center]} onPress={() => {alreadyMember === true ? this.leaveEvent(data) : this.joinEvent(data)}}>
@@ -172,7 +194,9 @@ class EventsView extends Component {
              </TouchableOpacity>
             </View>
         {this.eventUpdateModal(data)}
+        </ScrollView>
       </Modal>
+      
     )
     }
   }
@@ -186,6 +210,11 @@ class EventsView extends Component {
               <Text style={eventModalWindow.modalText}>Update Event Details</Text>
               <Text style={eventModalWindow.mText}>Event Name:</Text>
               <TextInput style={eventModalWindow.inputBox}
+                        onChangeText={eventName =>
+                          this.setState({
+                            user: { ...this.state.user, eventName: eventName }
+                          })
+                        }
                         defaultValue={data.eventName}
                         placeholder="Event Name"
                         maxLength={15}
@@ -194,8 +223,11 @@ class EventsView extends Component {
                         autoCorrect={false}
                         returnKeyType="next"
                         autoCapitalize="none"
-                        //editable={false}
+                        onSubmitEditing={() => this.eventDescription.focus()}
                         />
+              {this.state.eventNameError ? (
+                <Text style={eventModalWindow.errorMessage}>{this.state.eventNameError}</Text>
+              ) : null}
               <Text style={eventModalWindow.mText}>Event Location:</Text>
               <TextInput style={eventModalWindow.inputBox}
                         defaultValue={data.markLocations.locationAddress}
@@ -206,22 +238,32 @@ class EventsView extends Component {
                         returnKeyType="next"
                         autoCapitalize="none"
                         editable={false}
+                        multiline={true}
                         />
               <Text style={eventModalWindow.mText}>Event Description:</Text>
               <TextInput style={[eventModalWindow.inputBox, eventModalWindow.inputBoxDescription]}
+                        onChangeText={eventDescription =>
+                          this.setState({
+                            user: { ...this.state.user, eventDescription: eventDescription }
+                          })
+                        }
                         defaultValue={data.eventDescription}
                         placeholder="Event Description"
                         multiline = {true}
-                        numberOfLines={4}
+                        //numberOfLines={4}
                         maxLength={150}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         selectionColor="#fff"
                         autoCorrect={false}
                         returnKeyType="next"
                         autoCapitalize="none"
-                        //editable={false}
+                        ref={input => (this.eventDescription = input)}
+                        onSubmitEditing={() => this.updateEvent(data)}
                         />
-              <TouchableOpacity style={[eventModalWindow.buttonContainer, eventModalWindow.center]} >
+              {this.state.eventDescriptionError ? (
+                <Text style={eventModalWindow.errorMessage}>{this.state.eventDescriptionError}</Text>
+              ) : null}
+              <TouchableOpacity style={[eventModalWindow.buttonContainer, eventModalWindow.center]} onPress={() => this.updateEvent(data)}>
                 <Text>Save</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[eventModalWindow.cancelButton, eventModalWindow.center]} onPress={() => { this.eventUpdateModalClose() }}>
@@ -230,6 +272,70 @@ class EventsView extends Component {
             </View>
       </Modal>
     )
+  }
+
+  updateEvent(data) {
+
+    let updateRecord = false;
+
+    let eventNameError = validator ("eventNamePresent", this.state.user.eventName);
+    let eventDescriptionError = validator ("additionalInformation", this.state.user.eventDescription);
+    console.log(this.state.user.eventName)
+    if (this.state.user.eventName === data.eventName ) {
+      eventNameError = null
+    }else {
+      updateRecord = true;
+    }
+
+    console.log(this.state.user.eventDescription)
+    if (this.state.user.eventDescription === data.eventDescription) {
+      eventDescriptionError = null  
+    }else {
+      updateRecord = true;
+    }
+
+    this.setState(
+      {
+        eventNameError: eventNameError,
+        eventDescriptionError: eventDescriptionError,
+      },
+      () => {
+        if (
+          !eventNameError &&
+          !eventDescriptionError
+        ) {
+          if (updateRecord === true) {
+            const selectEvent = {
+              eventName: this.state.user.eventName,
+              eventDescription: this.state.user.eventDescription,
+              eventId: data._id,
+              groupId: this.props.getActiveGroupData._id,
+              token: this.props.token
+            }
+            console.log("Update Event Function")
+            this.props.updateGroupEvent(selectEvent);
+            this.eventUpdateModalClose();
+            this.eventModalClose();
+          } else {
+            this.setState({
+              eventDescriptionError: "Please Update Record to Save Changes!"
+            })
+          }
+        } 
+      }
+    );
+  }
+
+  removeUserFromEvent(data,user) {
+    const selectEvent = {
+      token: this.props.token,
+      groupId: this.props.getActiveGroupData._id,
+      usrId: user,
+      eventId: data._id,
+    }
+    console.log(selectEvent)
+    this.props.KickUserEvent(selectEvent);
+    this.eventModalClose();
   }
 
   eventDelete(data) {
@@ -243,7 +349,6 @@ class EventsView extends Component {
   }
 
   leaveEvent(data) {
-    console.log("leave");
     const selectEvent = {
       token: this.props.token,
       groupId: this.props.getActiveGroupData._id,
@@ -254,7 +359,6 @@ class EventsView extends Component {
   }
 
   joinEvent(data) {
-    console.log("join");
     const selectEvent = {
       token: this.props.token,
       groupId: this.props.getActiveGroupData._id,
@@ -310,6 +414,7 @@ const mapDispatchToProps = dispatch => {
     deleteGroupEvent: data => dispatch(deleteGroupEvent(data)),
     joinGroupEvent: data => dispatch(joinGroupEvent(data)),
     leaveGroupEvent: data => dispatch(leaveGroupEvent(data)),
+    KickUserEvent: data => dispatch(kickUserGroupEvent(data))
   };
 }
 

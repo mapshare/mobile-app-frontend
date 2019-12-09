@@ -136,7 +136,8 @@ const eventModalWindow = StyleSheet.create({
       marginBottom: 10,
     },
     errorMessage: {
-      color: "red"
+      color: "red",
+      marginLeft: 10
     },
     inputBox: {
       backgroundColor: '#F5F5F5',
@@ -206,8 +207,14 @@ const eventModalWindow = StyleSheet.create({
       marginLeft:10,
     },
     memberList: {
-      marginLeft:10,
-    }
+      marginLeft:40,
+      marginBottom: 5
+    },
+    KickUserEvent: {
+      marginLeft: 60,
+      color: "red",
+      flexDirection: 'row'
+    },
   })
 
   export { styles, eventModalWindow };

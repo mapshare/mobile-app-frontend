@@ -41,6 +41,13 @@ export const groupEventReducer = (state = INITIAL_GROUP_STATE, action) => {
             return { ...state, updateGroupEventData: action.updateGroupEventData };
         case keys.UPDATE_GROUP_EVENT_ERROR:
             return { ...state, updateGroupEventError: action.updateGroupEventError };
+        // KICK USER EVENT
+        case keys.KICK_USER_GROUP_EVENT_SUCCESS:
+            return { ...state, kickUserGroupEventStatus: action.kickUserGroupEventStatus };
+        case keys.KICK_USER_GROUP_EVENT_DATA_SUCCESS:
+            return { ...state, kickUserGroupEventData: action.kickUserGroupEventData };
+        case keys.KICK_USER_GROUP_EVENT_ERROR:
+            return { ...state, kickUserGroupEventError: action.kickUserGroupEventError };
         // LEAVE GROUP EVENT
         case keys.LEAVE_GROUP_EVENT_SUCCESS:
             return { ...state, leaveGroupEventStatus: action.leaveGroupEventStatus };
