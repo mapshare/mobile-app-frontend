@@ -84,8 +84,10 @@ class EventsView extends Component {
 
   eventModal() {
     if (this.state.eventModalVisible) {
-      let data = this.state.selectEvent
+      
+    let data = this.state.selectEvent;
     let counter = 0;
+    let createdby = ""
     let alreadyMember = false;
     let permission = 0;
     try {
@@ -97,6 +99,12 @@ class EventsView extends Component {
     data.eventMembers.forEach(element => {
       if (element.mbrId === this.props.getGroupMemberData._id) {
         alreadyMember = true
+      }
+    });
+
+    data.eventMembers.forEach(element => {
+      if (element.mbrId === data.eventCreatedBy) {
+        createdby = element.userFirstName + " " + element.userLastName;
       }
     });
 
@@ -147,6 +155,7 @@ class EventsView extends Component {
                 )
                 })}
               </ScrollView>
+              <Text style={eventModalWindow.mText}>{'\n'}Event Hosted By: {createdby}</Text>
 
               <TouchableOpacity 
               style={[(alreadyMember === true ? eventModalWindow.leaveButton : eventModalWindow.joinButton), eventModalWindow.center]} onPress={() => {alreadyMember === true ? this.leaveEvent(data) : this.joinEvent(data)}}>
