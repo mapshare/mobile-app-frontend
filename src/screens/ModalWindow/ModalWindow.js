@@ -25,6 +25,7 @@ import { containerStyles, eventModalWindow } from './Stylesheet';
 import AddMarkForm from '../Forms/AddMark/AddMarkForm';
 import LocationDetailWindow from '../LocationDetailWindow/LocationDetailWindow';
 import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
+import { Actions, ActionConst } from 'react-native-router-flux';
 
 class ModalWindow extends Component {
   constructor(props) {
@@ -58,81 +59,9 @@ class ModalWindow extends Component {
     this.state.eventMarkError = null;
   }
 
-  createEvent = async () => {
-
-    const eventNameError = validator ("eventNamePresent", this.state.user.eventName);
-    const eventDescriptionError = validator ("additionalInformation", this.state.user.eventDescription);
-    //const eventMarkError = validator ("markName", this.state.user.eventMark);
-    
-    this.setState(
-      {
-        eventNameError: eventNameError,
-        eventDescriptionError: eventDescriptionError,
-        //eventMarkError: eventMarkError,
-      },
-      () => {
-        if (
-          !eventNameError &&
-          !eventDescriptionError //&&
-          //!eventMarkError
-        ) {
-          
-          const data = {
-            eventName: this.state.user.eventName,
-            eventDescription: this.state.user.eventDescription,
-            eventMark: this.props.getCurrentOnClickMarkData._id,
-            groupId: this.props.getActiveGroupData._id,
-            token: this.props.token
-          }
-
-          this.props.addGroupEvent(data);
-          console.log(this.props.getActiveGroupData._id)
-          this.eventModalClose();
-
-          //console.log(this.props.getGroupEventData)
-          
-
-        } 
-      }
-    );
-
-  }
-
-  content = type => {
-    switch (type) {
-      case 'addMark':
-        return <AddMarkForm />;
-      case 'onClickMark':
-        return <LocationDetailWindow />;
-      default:
-        return console.error('pass an existing modalWindowType');
-    }
-  };
-
-  closeButtonOnClick = () => {
-    if (this.props.modalContent === 'addMark') {
-      this.props.addMarkModalWindow(false);
-    } else if (this.props.modalContent === 'onClickMark') {
-      this.props.clickMarkModalWindow(false);
-    }
-  };
-
-  render() {
+  eventModal() {
     return (
-      <View style={containerStyles.mainContainer}>
-        <TouchableOpacity
-          style={containerStyles.closeButtonContainer}
-          onPress={this.closeButtonOnClick}
-        >
-          <Icon name="close" size={30} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={containerStyles.AddEventButtonContainer}
-          onPress={() => this.eventModalOpen()}
-        >
-          <Text style={containerStyles.Text}>Add Event</Text>
-        </TouchableOpacity>
-        <Modal
+      <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
               onRequestClose={() => this.eventModalClose()}
@@ -208,6 +137,82 @@ class ModalWindow extends Component {
             </TouchableOpacity>
             </View>
           </Modal>
+    )
+  }
+
+  createEvent = async () => {
+
+    const eventNameError = validator ("eventNamePresent", this.state.user.eventName);
+    const eventDescriptionError = validator ("additionalInformation", this.state.user.eventDescription);
+    //const eventMarkError = validator ("markName", this.state.user.eventMark);
+    
+    this.setState(
+      {
+        eventNameError: eventNameError,
+        eventDescriptionError: eventDescriptionError,
+        //eventMarkError: eventMarkError,
+      },
+      () => {
+        if (
+          !eventNameError &&
+          !eventDescriptionError //&&
+          //!eventMarkError
+        ) {
+          
+          const data = {
+            eventName: this.state.user.eventName,
+            eventDescription: this.state.user.eventDescription,
+            eventMark: this.props.getCurrentOnClickMarkData._id,
+            groupId: this.props.getActiveGroupData._id,
+            token: this.props.token
+          }
+
+          this.props.addGroupEvent(data);
+          this.eventModalClose();
+          this.closeButtonOnClick();
+          
+
+        } 
+      }
+    );
+
+  }
+
+  content = type => {
+    switch (type) {
+      case 'addMark':
+        return <AddMarkForm />;
+      case 'onClickMark':
+        return <LocationDetailWindow />;
+      default:
+        return console.error('pass an existing modalWindowType');
+    }
+  };
+
+  closeButtonOnClick = () => {
+    if (this.props.modalContent === 'addMark') {
+      this.props.addMarkModalWindow(false);
+    } else if (this.props.modalContent === 'onClickMark') {
+      this.props.clickMarkModalWindow(false);
+    }
+  };
+
+  render() {
+    return (
+      <View style={containerStyles.mainContainer}>
+        <TouchableOpacity
+          style={containerStyles.closeButtonContainer}
+          onPress={this.closeButtonOnClick}
+        >
+          <Icon name="close" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={containerStyles.AddEventButtonContainer}
+          onPress={() => this.eventModalOpen()}
+        >
+          <Text style={containerStyles.Text}>Add Event</Text>
+        </TouchableOpacity>
+        {this.eventModal()}
         <ScrollView style={containerStyles.contentContainer}>
           {this.content(this.props.modalContent)}
         </ScrollView>

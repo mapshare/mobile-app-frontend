@@ -47,19 +47,21 @@ export const addGroupEvent = data => {
         eventMark: data.eventMark
     };
 
-    return dispatch => {
-        axios
-            .post(API_URL + '/groups/' + data.groupId + '/event', eventData, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(addGroupEventDataSuccess(res.data));
-                dispatch(addGroupEventSuccess(true));
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.log(err.response.data)
-                dispatch(addGroupEventSuccess(false));
-                dispatch(addGroupEventError(err.response.data));
-            });
+    return async (dispatch) => {
+        try {
+            const res = axios.post(API_URL + '/groups/' + data.groupId + '/event', eventData, { headers: { 'authentication': data.token } });
+            await dispatch(getAllGroupEvent({
+                groupId: data.groupId,
+                token: data.token
+            }));
+
+            dispatch(addGroupEventDataSuccess(res.data));
+            dispatch(addGroupEventSuccess(true));
+        } catch (err) {
+            
+            dispatch(addGroupEventSuccess(false));
+            dispatch(addGroupEventError(err.response.data));
+        }
     };
 };
 
@@ -88,17 +90,20 @@ export const joinGroupEventError = data => {
 };
 
 export const joinGroupEvent = data => {
-    return dispatch => {
-        axios
-            .post(API_URL + '/groups/' + data.groupId + '/event/' + data.groupEventId, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(joinGroupEventDataSuccess(res.data));
-                dispatch(joinGroupEventSuccess(true));
-            })
-            .catch(err => {
-                dispatch(joinGroupEventSuccess(false));
-                dispatch(joinGroupEventError(err.response.data));
-            });
+    return async (dispatch) => {
+        try {
+            const res = await axios.post(API_URL + '/groups/' + data.groupId + '/event/' + data.eventId, {}, { headers: { 'authentication': data.token } });
+            await dispatch(getAllGroupEvent({
+                groupId: data.groupId,
+                token: data.token
+            }));
+            dispatch(joinGroupEventDataSuccess(res.data));
+            dispatch(joinGroupEventSuccess(true));
+        } catch (err) {
+            
+            dispatch(joinGroupEventSuccess(false));
+            dispatch(joinGroupEventError(err.response.data));
+        }
     };
 };
 
@@ -166,7 +171,7 @@ export const getAllGroupEvent = data => {
             const res = await axios.get(API_URL + '/groups/' + data.groupId + '/allEvents', { headers: { 'authentication': data.token } });
             dispatch(getAllGroupEventDataSuccess(res.data));
         } catch (error) {
-            console.log(error.response.data)
+            
             dispatch(getAllGroupEventError(error));
         }
     }
@@ -202,17 +207,20 @@ export const updateGroupEvent = data => {
         eventDescription: data.eventDescription,
     };
 
-    return dispatch => {
-        axios
-            .put(API_URL + '/groups/' + data.groupId + '/event/' + data.eventId, eventData, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(updateGroupEventDataSuccess(res.data));
-                dispatch(updateGroupEventSuccess(true));
-            })
-            .catch(err => {
-                dispatch(updateGroupEventSuccess(false));
-                dispatch(updateGroupEventError(err.response.data));
-            });
+    return async (dispatch) => {
+        try {
+            const res = await axios.put(API_URL + '/groups/' + data.groupId + '/event/' + data.eventId, eventData, { headers: { 'authentication': data.token } });
+            await dispatch(getAllGroupEvent({
+                groupId: data.groupId,
+                token: data.token
+            }));
+            dispatch(updateGroupEventDataSuccess(res.data));
+            dispatch(updateGroupEventSuccess(true));
+        } catch (err) {
+            
+            dispatch(updateGroupEventSuccess(false));
+            dispatch(updateGroupEventError(err.response.data));
+        }
     };
 };
 
@@ -241,17 +249,21 @@ export const leaveGroupEventError = data => {
 };
 
 export const leaveGroupEvent = data => {
-    return dispatch => {
-        axios
-            .delete(API_URL + '/groups/' + data.groupId + '/event/' + data.groupEventId + 'leave', { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(leaveGroupEventDataSuccess(res.data));
-                dispatch(leaveGroupEventSuccess(true));
-            })
-            .catch(err => {
-                dispatch(leaveGroupEventSuccess(false));
-                dispatch(leaveGroupEventError(err.response.data));
-            });
+    return async (dispatch) => {
+        try {
+            const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/event/' + data.eventId + '/leave', { headers: { 'authentication': data.token } });
+            await dispatch(getAllGroupEvent({
+                groupId: data.groupId,
+                token: data.token
+            }));
+            dispatch(leaveGroupEventDataSuccess(res.data));
+            dispatch(leaveGroupEventSuccess(true));
+            
+        } catch (err) {
+            
+            dispatch(leaveGroupEventSuccess(false));
+            dispatch(leaveGroupEventError(err.response.data));
+        }
     };
 };
 
@@ -280,16 +292,20 @@ export const deleteGroupEventError = data => {
 };
 
 export const deleteGroupEvent = data => {
-    return dispatch => {
-        axios
-            .post(API_URL + '/groups/' + data.groupId + '/event/' + data.eventId, { headers: { 'authentication': data.token } })
-            .then(res => {
-                dispatch(deleteGroupEventDataSuccess(res.data));
-                dispatch(deleteGroupEventSuccess(true));
-            })
-            .catch(err => {
-                dispatch(deleteGroupEventSuccess(false));
-                dispatch(deleteGroupEventError(err.response.data));
-            });
+    return async (dispatch) => {
+        try {
+            const res = await axios.delete(API_URL + '/groups/' + data.groupId + '/event/' + data.eventId, { headers: { 'authentication': data.token } });
+            await dispatch(getAllGroupEvent({
+                groupId: data.groupId,
+                token: data.token
+            }));
+            console.log(res.data)
+            dispatch(deleteGroupEventDataSuccess(res.data));
+            dispatch(deleteGroupEventSuccess(true));
+        } catch (err) {
+            console.log(err.response.data)
+            dispatch(deleteGroupEventSuccess(false));
+            dispatch(deleteGroupEventError(err.response.data));
+        }
     };
 };

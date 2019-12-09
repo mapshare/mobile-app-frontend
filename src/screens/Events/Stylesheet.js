@@ -2,7 +2,7 @@
 import { StyleSheet } from 'react-native';
 
 // Componenets Style
-export default StyleSheet.create({
+const styles = StyleSheet.create({
     container:{
       backgroundColor: "#DCDCDC",
     },
@@ -115,3 +115,99 @@ export default StyleSheet.create({
       backgroundColor: "#ff0000",
     },
   });
+
+const eventModalWindow = StyleSheet.create({
+    modalWindow: {
+      
+      justifyContent:'center',
+      marginTop: 20
+    },
+    modalText: {
+      alignSelf: 'center',
+      fontSize: 25,
+      marginBottom:10
+    },
+    inputBox: {
+      backgroundColor: '#F5F5F5',
+      paddingHorizontal: 10,
+      marginLeft: 10,
+      marginRight: 10,
+      borderRadius: 10,
+      marginBottom: 10,
+    },
+    errorMessage: {
+      color: "red"
+    },
+    inputBox: {
+      backgroundColor: '#F5F5F5',
+      paddingHorizontal: 10,
+      marginLeft: 10,
+      marginRight: 10,
+      borderRadius: 10,
+      marginBottom: 10,
+    },
+    center: {
+      alignSelf: 'center',
+    },
+    buttonContainer: {
+      marginTop: 10,
+      height: 45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+      width: 250,
+      borderRadius: 30,
+      backgroundColor: "#00BFFF",
+    },
+    cancelButton: {
+      marginTop: 10,
+      height: 45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+      width: 250,
+      borderRadius: 30,
+      backgroundColor: "#ff0000",
+    },
+    leaveButton: {
+      marginTop: 10,
+      height: 45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+      width: 250,
+      borderRadius: 30,
+      backgroundColor: "#ffab00",
+    },
+    joinButton: {
+      marginTop: 10,
+      height: 45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+      width: 250,
+      borderRadius: 30,
+      backgroundColor: "#00ff00",
+    },
+    editEventButtonContainer: {
+      alignItems:'flex-end',
+      marginRight: 20,
+      marginBottom:10
+    },
+    Text: {
+      fontSize:15
+    },
+    mText: {
+      fontSize:13,
+      marginLeft:10,
+    },
+    memberList: {
+      marginLeft:10,
+    }
+  })
+
+  export { styles, eventModalWindow };
