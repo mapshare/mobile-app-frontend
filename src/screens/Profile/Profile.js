@@ -302,6 +302,7 @@ class Profile extends Component {
     [
       {text: 'Yes', onPress: () => this.deleteUserAccount()},
       {text: 'No', style: 'cancel'},
+      
     ])
   }
 
@@ -427,7 +428,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={FirstName =>
                           this.setState({
-                            user: { ...this.state.user, userFirstName: FirstName }
+                            user: { ...this.state.user, userFirstName: FirstName.trim() }
                           })
                         }
                         placeholder="First Name"
@@ -447,7 +448,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={LastName =>
                           this.setState({
-                            user: { ...this.state.user, userLastName: LastName }
+                            user: { ...this.state.user, userLastName: LastName.trim() }
                           })
                         }
                         placeholder="Last Name"
