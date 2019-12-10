@@ -5,7 +5,8 @@ const INITIAL_MODAL_WINDOW_STATE = {
   onClickMarkStatus: false,
   deleteLocation: {},
   addCustomMarkStatus: false,
-  customMarkOptionStatus: false
+  customMarkOptionStatus: false,
+  isModalWindowStatus: false
 };
 
 export const modalWindowReducer = (
@@ -20,12 +21,18 @@ export const modalWindowReducer = (
     case keys.CLICK_MARK_MODAL_WINDOW:
       return { ...state, onClickMarkStatus: action.onClickMarkStatus };
     case keys.DELETE_LOCATION_MODAL_WINDOW:
+      console.log('action: ', action.deleteLocation)
       return { ...state, deleteLocation: action.deleteLocation }
     case keys.CUSTOM_MARK_OPTION_MODAL_WINDOW:
       return {
         ...state,
         customMarkOptionStatus: action.customMarkOptionStatus
       };
+    case keys.IS_MODAL_WINDOW:
+      return {
+        ...state,
+        isModalWindowStatus: action.isModalWindowStatus
+      }
     default:
       return state;
   }

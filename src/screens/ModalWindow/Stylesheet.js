@@ -9,7 +9,7 @@ const containerStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: reponsiveStyle.wp('100%'),
-    height: reponsiveStyle.hp('100%'),
+    height: reponsiveStyle.hp('90%'),
     position: 'absolute',
     padding: 10,
     backgroundColor: 'white',

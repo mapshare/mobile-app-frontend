@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { connect } from "react-redux";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 //Redux actions
-import { deleteLocationModalWindow, clickMarkModalWindow } from "../../actions/modalWindowAction";
+import { deleteLocationModalWindow, clickMarkModalWindow, isModalWindowStatus } from "../../actions/modalWindowAction";
 import { deleteGroupMark } from "../../actions/groupMarkAction";
 
 // Componenets Style
@@ -24,6 +23,7 @@ class ConfirmDelete extends Component {
 
   cancelOnClick = () => {
     this.props.deleteLocationModalWindow({ status: false });
+    this.props.isModalWindowStatus(false)
   };
 
   deleteOnClick = type => {
@@ -39,6 +39,7 @@ class ConfirmDelete extends Component {
     } else if (type === 'image') {
       console.log('type image')
       this.props.deleteLocationModalWindow({ status: false });
+      this.props.isModalWindowStatus(false)
     }
   };
 
@@ -124,6 +125,7 @@ const mapStateToProps = state => {
     getGroupMarkData: state.groupMarkReducer.getGroupMarkData,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     token: state.logInReducer.token,
+    type: state.modalWindowReducer.deleteLocation.type
   };
 };
 
@@ -132,7 +134,8 @@ const mapDispatchToProps = dispatch => {
   return {
     deleteLocationModalWindow: bool => dispatch(deleteLocationModalWindow(bool)),
     deleteGroupMark: data => dispatch(deleteGroupMark(data)),
-    clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool))
+    clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool)),
+    isModalWindowStatus: bool => dispatch(isModalWindowStatus(bool))
   };
 };
 
