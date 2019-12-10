@@ -194,12 +194,14 @@ class ModalWindow extends Component {
         >
           <Icon name="close" size={30} />
         </TouchableOpacity>
+      {this.props.onClickMarkStatus && 
         <TouchableOpacity
           style={containerStyles.AddEventButtonContainer}
           onPress={() => this.eventModalOpen()}
         >
           <Text style={containerStyles.Text}>Add Event</Text>
         </TouchableOpacity>
+      }
         {this.eventModal()}
         <ScrollView style={containerStyles.contentContainer}>
           {this.content(this.props.modalContent)}
@@ -215,7 +217,7 @@ const mapStateToProps = state => {
   return {
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     token: state.logInReducer.token,
-    modalWindowStatus: state.modalWindowReducer.status,
+    onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
     getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
     deleteLocation: state.modalWindowReducer.deleteLocation
 
