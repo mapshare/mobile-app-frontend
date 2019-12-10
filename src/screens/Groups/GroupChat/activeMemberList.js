@@ -32,28 +32,34 @@ class ActiveMemberMenuBtn extends Component {
     separator = () => <View style={styles.flatListItemSeporator} />
 
     render() {
-        // Filter out duplicate Members
         let uniqueActiveMembersData = []
-        for (let i = 0; i < this.props.activeMembersData.length; i++) {
-            let found = uniqueActiveMembersData.find((element) => {
-                return (this.props.activeMembersData[i]._id == element._id);
-            });
-            if (!found) {
-                uniqueActiveMembersData.push(this.props.activeMembersData[i]);
-            }
-        }
-
-        // Filter online and offline Members
         let oflineMembersData = [];
-        for (let i = 0; i < this.props.getAllGroupMemberData.length; i++) {
-            let found = uniqueActiveMembersData.find((element) => {
-                return (this.props.getAllGroupMemberData[i]._id == element.memberId);
-            });
-            if (!found) {
-                oflineMembersData.push(this.props.getAllGroupMemberData[i]);
+        try {
+            // Filter out duplicate Members
+            for (let i = 0; i < this.props.activeMembersData.length; i++) {
+                let found = uniqueActiveMembersData.find((element) => {
+                    return (this.props.activeMembersData[i].memberId == element.memberId);
+                });
+                if (!found) {
+                    uniqueActiveMembersData.push(this.props.activeMembersData[i]);
+                }
             }
-        }
 
+            // Filter online and offline Members
+            for (let i = 0; i < this.props.getAllGroupMemberData.length; i++) {
+                let found = uniqueActiveMembersData.find((element) => {
+                    return (this.props.getAllGroupMemberData[i]._id == element.memberId);
+                });
+                if (!found) {
+                    oflineMembersData.push(this.props.getAllGroupMemberData[i]);
+                }
+            }
+
+        } catch (error) {
+            uniqueActiveMembersData = []
+            oflineMembersData = [];
+            console.log("Problem while loading active Member list");
+        }
         return (
             <Modal
                 animationType="fade"

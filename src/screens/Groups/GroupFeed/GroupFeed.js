@@ -49,6 +49,8 @@ class GroupFeed extends Component {
         } catch (error) {
             permission = 0;
         }
+
+
         return (
             <SafeAreaView style={styles.groupPostContainer}>
                 <View style={styles.flatListItemSeporator} />
@@ -61,12 +63,25 @@ class GroupFeed extends Component {
                         data={this.props.getGroupFeedData}
                         keyExtractor={(item) => { return item._id; }}
                         renderItem={({ item }) => {
+                            
+                            let profilePic = require('../../../assests/images/default-profile.png');
+                            try {
+                                profilePic = item.userProfilePic ? {
+                                    uri: 'data:image/png;base64,' + item.userProfilePic
+                                }
+                                    : require('../../../assests/images/default-profile.png');
+                            } catch (error) {
+                                profilePic = require('../../../assests/images/default-profile.png');
+                            }
+
                             return (
                                 <View style={styles.groupPost}>
                                     <View style={styles.groupPostHeader}>
                                         <View style={styles.headerColOne}>
-                                            
-
+                                            <Image
+                                                style={styles.profilePicImage}
+                                                source={profilePic}
+                                            />
                                         </View>
                                         <View style={styles.headerColTwo}>
                                             <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>

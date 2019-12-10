@@ -106,6 +106,7 @@ export default StyleSheet.create({
         height: 50,
         justifyContent: "flex-start",
         alignItems: "center",
+        paddingVertical: 5
     },
     groupPostBody: {
         flex: 1,
@@ -164,5 +165,15 @@ export default StyleSheet.create({
     },
     optionsIconPadding: {
         padding: 15
-    }
+    },
+    profilePicImage: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.9)",
+        borderRadius:50,
+        resizeMode: "cover",
+        aspectRatio: 1.1,
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
+    },
 });
