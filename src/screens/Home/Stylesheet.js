@@ -22,7 +22,7 @@ export default StyleSheet.create({
         flex: 0.5,
     },
     image: {
-        flex: 1
+        flex: 1,
     },
     Overlay: {
         backgroundColor: "rgba(30,26,26,0.4)",

@@ -253,7 +253,7 @@ export const getGroupMember = data => {
 *   GET ACTIVE GROUP
 */
 import { connectToGroupChat } from "./groupChatRoomAction"
-import { connectToGroupFeed, setGroupFeedData } from "./groupFeedAction"
+import { connectToGroupFeed, setGroupFeedData, updateGroupFeed } from "./groupFeedAction"
 
 export const getActiveGroupSuccess = bool => {
   return {
@@ -361,11 +361,11 @@ export const getActiveGroupRefreshDataOnly = data => {
 
       dispatch(getActiveGroupDataSuccess(res.data));
       dispatch(getActiveGroupSuccess(true));
+      dispatch(updateGroupFeed({ groupFeedSocket: data.groupFeedSocket }));
 
       // Save Group Id to local Storage
       AsyncStorage.setItem('lastActiveGroupId', data.groupId);
     } catch (err) {
-      console.log(err.response.data)
       Actions.initial({ type: ActionConst.RESET });
       dispatch(getActiveGroupSuccess(false));
       dispatch(getActiveGroupError(err.response));

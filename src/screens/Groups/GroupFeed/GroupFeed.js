@@ -18,6 +18,7 @@ import styles from "./Stylesheet";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Moment from 'moment';
+import CreatePostButton from './CreatePostButton';
 
 //Redux actions
 import { connect } from 'react-redux';
@@ -49,6 +50,14 @@ class GroupFeed extends Component {
         } catch (error) {
             permission = 0;
         }
+
+        let groupFeedEmpty = false;
+        try {
+            groupFeedEmpty = this.props.getGroupFeedData.length == 0;
+        } catch (error) {
+            groupFeedEmpty = false;
+        }
+
         return (
             <SafeAreaView style={styles.groupPostContainer}>
                 <View style={styles.flatListItemSeporator} />
@@ -56,17 +65,39 @@ class GroupFeed extends Component {
 
                     <ActivityIndicator style={styles.spinnerStyle} size="large" color="#000" />
                 }
+                {groupFeedEmpty &&
+                    <View>
+                        <Text style={styles.emptyFeedText}> {"\n"} There is currently no posts for this group. {"\n"} Create the first post Now! {"\n"} {"\n"} </Text>
+                        <CreatePostButton
+                            inline={true}
+                            size={60}
+                            style={styles.createPostButtonInline} />
+                    </View>
+                }
                 {Array.isArray(this.props.getGroupFeedData) &&
                     <FlatList style={styles.list}
                         data={this.props.getGroupFeedData}
                         keyExtractor={(item) => { return item._id; }}
                         renderItem={({ item }) => {
+
+                            let profilePic = require('../../../assests/images/default-profile.png');
+                            try {
+                                profilePic = item.userProfilePic ? {
+                                    uri: 'data:image/png;base64,' + item.userProfilePic
+                                }
+                                    : require('../../../assests/images/default-profile.png');
+                            } catch (error) {
+                                profilePic = require('../../../assests/images/default-profile.png');
+                            }
+
                             return (
                                 <View style={styles.groupPost}>
                                     <View style={styles.groupPostHeader}>
                                         <View style={styles.headerColOne}>
-                                            
-
+                                            <Image
+                                                style={styles.profilePicImage}
+                                                source={profilePic}
+                                            />
                                         </View>
                                         <View style={styles.headerColTwo}>
                                             <Text style={styles.postText}>{item.userFirstName + " " + item.userLastName}</Text>

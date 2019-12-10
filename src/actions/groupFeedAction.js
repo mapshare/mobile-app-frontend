@@ -59,13 +59,18 @@ export const connectToGroupFeed = data => {
                         dispatch(groupFeedStatus(true));
                     })
                     .on('unauthorized', (msg) => {
-                        throw ("Unauthorized to connect to server: " + JSON.stringify(msg));
+                        dispatch(setGroupFeedData([]));
+                        dispatch(groupFeedStatus(false));
                     })
                     .on('new post', (data) => {
                         dispatch(setGroupFeedData(data));
                         dispatch(groupFeedStatus(true));
                     })
                     .on('update post', (data) => {
+                        dispatch(setGroupFeedData(data));
+                        dispatch(groupFeedStatus(true));
+                    })
+                    .on('update feed', (data) => {
                         dispatch(setGroupFeedData(data));
                         dispatch(groupFeedStatus(true));
                     })
@@ -177,6 +182,20 @@ export const updatePostInGroupFeed = data => {
         } catch (error) {
             dispatch(updatePostInGroupFeedStatus(false));
             dispatch(updatePostInGroupFeedError(error));
+        }
+    };
+};
+
+/*
+*   UPDATE GROUP FEED
+*/
+export const updateGroupFeed = data => {
+    return dispatch => {
+        try {
+            data.groupFeedSocket.emit('update feed');
+            dispatch(groupFeedStatus(true));
+        } catch (error) {
+            console.log(error);
         }
     };
 };
