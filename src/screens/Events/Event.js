@@ -11,6 +11,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 import validator from "../Forms/validate/validation_wrapper";
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+
 //Redux actions
 import { connect } from 'react-redux';
 
@@ -26,6 +28,7 @@ import {getActiveGroup} from "../../actions/groupActions"
 
 // Componenets Style
 import {styles, eventModalWindow} from "./Stylesheet"
+import { Actions } from 'react-native-router-flux';
 
 class EventsView extends Component {
 
@@ -179,7 +182,7 @@ class EventsView extends Component {
                 >{counter + ": " + item.userFirstName + " " + item.userLastName}
                 </Text>
                 {((data.eventCreatedBy === this.props.getGroupMemberData._id || permission >= 3) && (this.props.getGroupMemberData._id !== item.mbrId)) && 
-                  <Text style={eventModalWindow.KickUserEvent} onPress={()=>this.removeUserFromEvent(data,item.usrId) }>Kick User</Text>}
+                  <TouchableOpacity onPress={()=>this.removeUserFromEvent(data,item.usrId) }><Text style={eventModalWindow.KickUserEvent}>Kick User</Text></TouchableOpacity>}
                 </View>
                 )
                 })}
@@ -382,11 +385,27 @@ class EventsView extends Component {
 
   render() {
     
+    let groupEventEmpty = false;
+    try {
+      groupEventEmpty = this.props.getAllGroupEventData.length == 0;
+    } catch (error) {
+      groupEventEmpty = false;
+    }
+
     return (
       <View style={styles.container}>
         {!Array.isArray(this.props.getAllGroupEventData) &&
            <ActivityIndicator style={styles.spinnerStyle} size="large" color="#000"/>
         }
+        {groupEventEmpty &&
+          <View>
+            <Text style={styles.emptyEventText}> {"\n"} There is currently no events for this group. {"\n"} Create the first event Now! {"\n"} </Text>
+            <TouchableOpacity style={styles.emptyEventIcon} onPress={() => {Actions.map()}}>
+              <Icon name="compass" size={55}/>
+            </TouchableOpacity>
+          </View>
+        }
+
         {Array.isArray(this.props.getAllGroupEventData) &&
            <FlatList
            data={this.props.getAllGroupEventData}

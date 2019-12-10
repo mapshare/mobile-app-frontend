@@ -107,7 +107,7 @@ class LogInForm extends Component {
           value={this.state.password}
           placeholder="Password"
           secureTextEntry={true}
-          maxLength={256}
+          maxLength={32}
           placeholderTextColor="rgba(0,0,0,0.7)"
           returnKeyType="go"
           onSubmitEditing={this.LoginUser}

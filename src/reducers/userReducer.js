@@ -29,7 +29,7 @@ export const userReducer = (state = INITIAL_USER_STATE, action) => {
       return {...state, deleteUserError: action.deleteUserError};
     // COMPARE PASSWORD
     case keys.COMPARE_PASSWORD_RESULTS:
-      return { ...state, comparePasswordResult: action.comparePasswordResult };
+      return { ...state, comparePasswordResults: action.comparePasswordResults };
     default:
       return state;
   }

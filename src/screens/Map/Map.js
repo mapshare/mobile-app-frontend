@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert,Text, TouchableOpacity } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import { connect } from 'react-redux';
 import * as Geolocation from '@react-native-community/geolocation';
@@ -57,7 +57,6 @@ class Map extends Component {
       this.appTourTargets.forEach(appTourTarget => {
         appTourSequence.add(appTourTarget)
       })
-      console.log(this.appTourTargets)
       AppTour.ShowSequence(appTourSequence)
     }, 1000)
   }
@@ -77,7 +76,6 @@ class Map extends Component {
   }
 
   getCoordsFromName(loc) {
-    console.log(loc.lng, loc.lat);
 
     this.location.longitude = loc.geometry.location.lng;
     this.location.latitude = loc.geometry.location.lat;
@@ -128,7 +126,6 @@ class Map extends Component {
     //Zoom to User location
 
     if (this.location.zoomLocation == true) {
-      console.log("zoom");
       this.location.zoomLocation = false;
       return (
         
@@ -154,7 +151,6 @@ class Map extends Component {
 
     if (this.location.findLocation == true) {
       this.location.findLocation = false;
-      console.log("search")
       return (
         <Mapbox.PointAnnotation
           title={this.location.address}
@@ -214,11 +210,10 @@ class Map extends Component {
               zoomLevel={8}
             ></Mapbox.Camera>
           </Mapbox.MapView>
-          <Icon
-            style={mapStyles.locationButton}
+          <TouchableOpacity style={mapStyles.locationButton} onPress={() => this.zoomCoordinates()}>
+            <Icon
             name="location-pin"
             size={30}
-            onPress={this.zoomCoordinates}
             key={'zoomButton'}
                     title={'Move to Current User Location'}
                     ref={ref => {
@@ -238,7 +233,8 @@ class Map extends Component {
                         
                       }}
                       
-          ></Icon>
+          />
+          </TouchableOpacity>
         </View>
         {this.props.reviewWindow.status && <BottomWindow bottomWindowType="review" actionType={this.props.reviewWindow.actionType} />}
         {this.props.categoriesOptionOnClickStatus && (

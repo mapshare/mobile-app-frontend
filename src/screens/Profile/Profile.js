@@ -40,6 +40,9 @@ import {
   getUser,
   getUserDataSuccess,
   updateUser,
+  deleteUser,
+  comparePassword,
+  comparePasswordResults,
   updateUserSuccess,
   updateUserError
 } from '../../actions/userActions';
@@ -80,8 +83,8 @@ class Profile extends Component {
       this.state.user.userCurrentImage = this.props.getUserData.userProfilePic
     } else {
       this.state.user.userImages = require('../../assests/images/default-profile.png');
+      this.state.user.userCurrentImage = require('../../assests/images/default-profile.png');
     }
-
     this.setState({modalVisible:true});
   }
 
@@ -90,6 +93,7 @@ class Profile extends Component {
     this.state.userFirstNameError = null;
     this.state.userLastNameError = null;
     this.state.user.userImages = null;
+    this.state.user.userCurrentImage = null;
     this.state.generalError = null;
   }
 
@@ -97,6 +101,9 @@ class Profile extends Component {
     this.setState({pwdModalVisible:false});
     this.state.userNewPasswordError = null;
     this.state.userCNewPasswordError = null;
+    this.state.userNewPassword = null;
+    this.state.userCNewPasswordError = null;
+    this.state.userOldPassword = null;
   }
 
   pwdModalOpen() {
@@ -143,7 +150,8 @@ class Profile extends Component {
   update = async () => {
 
     let updateRecord = false;
-
+    let updateImageRecord = false;
+    
     let userFirstNameError = validator(
       "firstName",
       this.state.user.userFirstName
@@ -159,15 +167,17 @@ class Profile extends Component {
       updateRecord = true;
     }
 
-    console.log(this.state.user.userFirstName, this.props.getUserData.userFirstName)
     if (this.state.user.userFirstName === this.props.getUserData.userFirstName) {
       userLastNameError = null  
     }else {
       updateRecord = true;
     }
-
-    if (this.props.getUserData.userProfilePic !== this.state.user.userCurrentImage) {
-      updateRecord = true;
+    
+    if (this.state.user.userImages !== this.state.user.userCurrentImage) {
+      updateImageRecord = true;
+      if (this.state.user.userImages.data === this.props.getUserData.userProfilePic.data) {
+        updateImageRecord = false;
+      }
     }
 
     this.setState(
@@ -181,7 +191,7 @@ class Profile extends Component {
           !userLastNameError
         ) {
     
-          if (updateRecord === true) {
+          if (updateRecord || updateImageRecord) {
             const data = {
               userFirstName: this.state.user.userFirstName,
               userLastName: this.state.user.userLastName,
@@ -209,47 +219,104 @@ class Profile extends Component {
   //Updating User Password
   updatePasword = async () => {
 
+    let oldPasswordCorrect = false
+    let newOldPasswordSame = false
+
     const userNewPasswordError = validator("password", this.state.user.userNewPassword);
     const userCNewPasswordError = validator("password", this.state.user.userCNewPassword);
-    
-    
 
-    this.setState(
-      {
-        userNewPasswordError: userNewPasswordError,
-        userCNewPasswordError: userCNewPasswordError
-      },
-      () => {
-        if (
-          !userNewPasswordError &&
-          !userCNewPasswordError
-        ) {
-          if (this.state.user.userNewPassword === this.state.user.userCNewPassword) {
-            const data = {
-              userPassword: this.state.user.userNewPassword,
-              token: this.props.token
+    //Checking to make sure that Old Password is correct
+    const userOldPassword = {
+      oldPassword: this.state.user.userOldPasword,
+      token: this.props.token
+    }
+    await this.props.comparePassword(userOldPassword)
+    
+    try {
+      oldPasswordCorrect = this.props.comparePasswordResults.passwordMatch
+    } catch (error) {
+      oldPasswordCorrect = false
+    }
+
+    //Checking to make sure that Old Password is correct
+    const userNewPassword = {
+      oldPassword: this.state.user.userNewPassword,
+      token: this.props.token
+    }
+    await this.props.comparePassword(userNewPassword)
+    
+    try {
+      newOldPasswordSame = this.props.comparePasswordResults.passwordMatch
+    } catch (error) {
+      newOldPasswordSame = false
+    }
+
+    if (oldPasswordCorrect) {
+      this.setState(
+        {
+          userNewPasswordError: userNewPasswordError,
+          userCNewPasswordError: userCNewPasswordError
+        },
+        () => {
+          if (
+            !userNewPasswordError &&
+            !userCNewPasswordError
+          ) {
+            if (this.state.user.userNewPassword === this.state.user.userCNewPassword) {
+              if (!newOldPasswordSame) {
+                const data = {
+                  userPassword: this.state.user.userNewPassword,
+                  token: this.props.token
+                }
+    
+               //this.props.updateUser(data);
+                Alert.alert(
+                  "Password Updated"
+                );
+                
+                //this.profileModalClose();
+                //this.goLogin();
+              } else {
+                this.setState({
+                  userCNewPasswordError: "New Pasword cannot be same as Old Password. Please try again"
+                })
+              }
+            } else {
+              this.setState({
+                userCNewPasswordError: "The Password didn't match. Please try again"
+              })
             }
+          } 
+        }
+      );
+    } else {
+      this.setState({
+        userCNewPasswordError: "Incorrect Old Password. Please try again"
+      })
+    }
+  }
 
-            this.props.updateUser(data);
-            Alert.alert(
-              "Password Updated"
-            );
-            console.log(data)
-            this.profileModalClose();
-            this.goLogin();
-          } else {
-            this.setState({
-              userCNewPasswordError: "The Password didn't match. Please try again"
-            })
-          }
-        } 
-      }
-    );
+  confirmDeleteAccount = async () => {
+    Alert.alert('Delete Account', 
+    'Are you sure you want to delete this account?',
+    [
+      {text: 'Yes', onPress: () => this.deleteUserAccount()},
+      {text: 'No', style: 'cancel'},
+    ])
+  }
+
+  deleteUserAccount () {
+    const data = {
+      token: this.props.token
+    }
+    this.props.deleteUser(data);
+    this.profileModalClose();
+    this.goLogin();
   }
 
   render() {
     let userImageSource = require('../../assests/images/default-profile.png');
-    //console.log(this.props.getUserData.userProfilePic)
+    
     try {
       if (this.props.getUserData.userProfilePic) {
         userImageSource = this.props.getUserData.userProfilePic ? {
@@ -296,7 +363,7 @@ class Profile extends Component {
                         //defaultValue={this.props.getUserData.userPassword}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         selectionColor="#fff"
-                        maxLength={256}
+                        maxLength={32}
                         autoCorrect={false}
                         returnKeyType="next"
                         autoCapitalize="none"
@@ -328,7 +395,7 @@ class Profile extends Component {
                         placeholder="Confirm New Password"
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         selectionColor="#fff"
-                        maxLength={256}
+                        maxLength={32}
                         autoCorrect={false}
                         returnKeyType="next"
                         autoCapitalize="none"
@@ -413,6 +480,9 @@ class Profile extends Component {
               <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.update()}>
                 <Text>Update</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => this.confirmDeleteAccount()}>
+                <Text>Delete Account</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={[styles.logoutButton, styles.center]} onPress={() => { this.profileModalClose() }}>
                 <Text>Cancel</Text>
             </TouchableOpacity>
@@ -440,6 +510,7 @@ const mapStateToProps = state => {
     token: state.logInReducer.token,
     socket: state.groupChatRoomReducer.socket,
     groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
+    comparePasswordResults: state.userReducer.comparePasswordResults
   };
 };
 
@@ -449,6 +520,7 @@ const mapDispatchToProps = dispatch => {
     getUser: data => dispatch(getUser(data)),
     getUserDataSuccess: data => dispatch(getUserDataSuccess(data)),
     updateUser: data => dispatch(updateUser(data)),
+    deleteUser: data => dispatch(deleteUser(data)),
     getActiveGroup: data => dispatch(getActiveGroup(data)),
     getActiveGroupSuccess: data => dispatch(getActiveGroupSuccess(data)),
     getActiveGroupDataSuccess: data => dispatch(getActiveGroupDataSuccess(data)),
@@ -458,7 +530,8 @@ const mapDispatchToProps = dispatch => {
     getActiveGroupRefreshDataOnly: data => dispatch(getActiveGroupRefreshDataOnly(data)),
     getGroupMember: data => dispatch(getGroupMember(data)),
     disconnectGroupFeed: data => dispatch(disconnectGroupFeed(data)),
-    disconnectGroupChatRoom: data => dispatch(disconnectGroupChatRoom(data))
+    disconnectGroupChatRoom: data => dispatch(disconnectGroupChatRoom(data)),
+    comparePassword: data => dispatch(comparePassword(data))
   };
 }
 
