@@ -373,7 +373,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={NewPassword =>
                           this.setState({
-                            user: { ...this.state.user, userNewPassword: NewPassword }
+                            user: { ...this.state.user, userNewPassword: NewPassword.trim() }
                           })
                         }
                         placeholder="New Password"
@@ -390,7 +390,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={CNewPassword =>
                           this.setState({
-                            user: { ...this.state.user, userCNewPassword: CNewPassword }
+                            user: { ...this.state.user, userCNewPassword: CNewPassword.trim() }
                           })
                         }
                         placeholder="Confirm New Password"

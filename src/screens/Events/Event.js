@@ -228,7 +228,7 @@ class EventsView extends Component {
               <TextInput style={eventModalWindow.inputBox}
                         onChangeText={eventName =>
                           this.setState({
-                            user: { ...this.state.user, eventName: eventName }
+                            user: { ...this.state.user, eventName: eventName.trim() }
                           })
                         }
                         defaultValue={data.eventName}
@@ -260,7 +260,7 @@ class EventsView extends Component {
               <TextInput style={[eventModalWindow.inputBox, eventModalWindow.inputBoxDescription]}
                         onChangeText={eventDescription =>
                           this.setState({
-                            user: { ...this.state.user, eventDescription: eventDescription }
+                            user: { ...this.state.user, eventDescription: eventDescription.trim() }
                           })
                         }
                         defaultValue={data.eventDescription}
