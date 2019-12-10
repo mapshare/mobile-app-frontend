@@ -861,11 +861,6 @@ export const leaveGroup = data => {
   }
   return async (dispatch, getState) => {
     try {
-      // disconnect from chatRoom and groupFeed
-      let { socket } = getState().groupChatRoomReducer;
-      socket.disconnect();
-      let { groupFeedSocket } = getState().groupFeedReducer;
-      groupFeedSocket.disconnect();
 
       // Display Loading Screen
       Actions.loadingScreen({ type: ActionConst.RESET });
@@ -876,15 +871,29 @@ export const leaveGroup = data => {
       dispatch(leaveGroupDataSuccess(res.data));
       dispatch(leaveGroupSuccess(true));
 
-      if (data.activeGroupId == data.groupId) {
-        // Clear active group data
-        AsyncStorage.setItem('lastActiveGroupId', "");
-        dispatch(getActiveGroupSuccess(false));
-        dispatch(getActiveGroupDataSuccess(""));
-        dispatch(getActiveGroupError(""));
 
-        // Go to initial select group page if deleting active group
-        Actions.initial({ type: ActionConst.RESET });
+      if (!data.memberId) {
+        // disconnect from chatRoom and groupFeed
+        let { socket } = getState().groupChatRoomReducer;
+        socket.disconnect();
+        let { groupFeedSocket } = getState().groupFeedReducer;
+        groupFeedSocket.disconnect();
+
+        if (data.activeGroupId == data.groupId) {
+          // Clear active group data
+          AsyncStorage.setItem('lastActiveGroupId', "");
+          dispatch(getActiveGroupSuccess(false));
+          dispatch(getActiveGroupDataSuccess(""));
+          dispatch(getActiveGroupError(""));
+
+          // Go to initial select group page if deleting active group
+          Actions.initial({ type: ActionConst.RESET });
+        } else {
+          // Go to home after loading new group
+          Actions.navTab({ type: ActionConst.RESET });
+          // Go to myGroups
+          Actions.myGroupsMenu();
+        }
       } else {
         // Go to home after loading new group
         Actions.navTab({ type: ActionConst.RESET });

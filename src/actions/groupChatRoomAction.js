@@ -110,6 +110,9 @@ export const connectToGroupChat = data => {
                     .on('Still Connected', (data) => {
                         socket.emit('Still Connected', { connected: true });
                     })
+                    .on('update Active Members', (data) => {
+                        dispatch(activeMembersData(data));
+                    })
                     .on('User Joined or Left', (data) => {
                         dispatch(activeMembersData(data));
                     });
