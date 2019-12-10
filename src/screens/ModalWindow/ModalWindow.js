@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, TouchableOpacity, ScrollView, Modal, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, ScrollView, Modal, Text, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import validator from "../Forms/validate/validation_wrapper";
@@ -40,6 +40,7 @@ class ModalWindow extends Component {
       eventDescriptionError: "",
       eventMarkError: "",
       modalVisible: false,
+      CreatingNewEvent: false,
     };
   }
 
@@ -185,7 +186,22 @@ class ModalWindow extends Component {
     }
   };
 
-  render() {
+  async creatingNewMarker(data) {
+    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
+      if (result === null) {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }else {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }
+      this.setState({
+        creatingNewEvent: result
+      })
+    })
+  }
+
+  render() { 
+    
+    this.creatingNewMarker(false)
     return (
       <View style={containerStyles.mainContainer}>
         <TouchableOpacity
@@ -194,12 +210,14 @@ class ModalWindow extends Component {
         >
           <Icon name="close" size={30} />
         </TouchableOpacity>
+        {!this.state.creatingNewEvent &&
         <TouchableOpacity
           style={containerStyles.AddEventButtonContainer}
           onPress={() => this.eventModalOpen()}
         >
           <Text style={containerStyles.Text}>Add Event</Text>
         </TouchableOpacity>
+        }
         {this.eventModal()}
         <ScrollView style={containerStyles.contentContainer}>
           {this.content(this.props.modalContent)}

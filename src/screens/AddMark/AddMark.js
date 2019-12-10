@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View, TouchableHighlight, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
@@ -14,10 +14,21 @@ class AddMark extends Component {
     this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
   };
 
+  async creatingNewMarker(data) {
+    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
+      if (result === null) {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }else {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }
+      console.log(result);
+    })
+  }
+
   render() {
     return (
       <View style={containerStyles.mainContainer}>
-        <TouchableHighlight onPress={this.addLocationOnClick}>
+        <TouchableHighlight onPress={() => {this.addLocationOnClick(), this.creatingNewMarker(true)}}>
           <View style={containerStyles.contentContainer}>
             <Icon name="plus" size={25} color="white" />
           </View>

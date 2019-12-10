@@ -1,6 +1,6 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image } from 'react-native';
+import { Text, View, TouchableOpacity, Image, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
@@ -50,6 +50,17 @@ class AddMarkForm extends Component {
     }
   }
 
+  async creatingNewMarker(data) {
+    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
+      if (result === null) {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }else {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }
+      console.log(result);
+    })
+  }
+
   choosePhoto = () => {
     let options = {
       title: null,
@@ -94,11 +105,12 @@ class AddMarkForm extends Component {
     this.props.addGroupMarkOnClick(false);
     this.props.addGroupMark(formValues);
     this.props.newMarkAdded(!this.props.newMarkAddedFlag);
+    this.creatingNewMarker(false);
   };
 
   render() {
     const { handleSubmit } = this.props;
-
+  
     return (
       <View style={containerStyles.container}>
         <Field
