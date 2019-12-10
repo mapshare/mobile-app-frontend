@@ -182,7 +182,7 @@ class EventsView extends Component {
                 >{counter + ": " + item.userFirstName + " " + item.userLastName}
                 </Text>
                 {((data.eventCreatedBy === this.props.getGroupMemberData._id || permission >= 3) && (this.props.getGroupMemberData._id !== item.mbrId)) && 
-                  <TouchableOpacity onPress={()=>this.removeUserFromEvent(data,item.usrId) }><Text style={eventModalWindow.KickUserEvent}>Kick User</Text></TouchableOpacity>}
+                  <TouchableOpacity style={eventModalWindow.KickUserEvent} onPress={()=>this.removeUserFromEvent(data,item.usrId) }><Text style={{color:"red"}}>Kick User</Text></TouchableOpacity>}
                 </View>
                 )
                 })}
@@ -343,6 +343,7 @@ class EventsView extends Component {
   }
 
   removeUserFromEvent(data,user) {
+    console.log("Kick")
     const selectEvent = {
       token: this.props.token,
       groupId: this.props.getActiveGroupData._id,
