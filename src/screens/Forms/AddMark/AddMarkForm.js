@@ -50,17 +50,6 @@ class AddMarkForm extends Component {
     }
   }
 
-  async creatingNewMarker(data) {
-    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
-      if (result === null) {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }else {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }
-      console.log(result);
-    })
-  }
-
   choosePhoto = () => {
     let options = {
       title: null,
@@ -105,7 +94,6 @@ class AddMarkForm extends Component {
     this.props.addGroupMarkOnClick(false);
     this.props.addGroupMark(formValues);
     this.props.newMarkAdded(!this.props.newMarkAddedFlag);
-    this.creatingNewMarker(false);
   };
 
   render() {

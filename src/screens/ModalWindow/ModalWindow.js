@@ -40,7 +40,8 @@ class ModalWindow extends Component {
       eventDescriptionError: "",
       eventMarkError: "",
       modalVisible: false,
-      CreatingNewEvent: false,
+      creatingNewEvent: false,
+      eventExist: true,
     };
   }
 
@@ -186,22 +187,8 @@ class ModalWindow extends Component {
     }
   };
 
-  async creatingNewMarker(data) {
-    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
-      if (result === null) {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }else {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }
-      this.setState({
-        creatingNewEvent: result
-      })
-    })
-  }
-
   render() { 
-    
-    this.creatingNewMarker(false)
+
     return (
       <View style={containerStyles.mainContainer}>
         <TouchableOpacity
@@ -210,14 +197,12 @@ class ModalWindow extends Component {
         >
           <Icon name="close" size={30} />
         </TouchableOpacity>
-        {!this.state.creatingNewEvent &&
         <TouchableOpacity
           style={containerStyles.AddEventButtonContainer}
           onPress={() => this.eventModalOpen()}
         >
           <Text style={containerStyles.Text}>Add Event</Text>
         </TouchableOpacity>
-        }
         {this.eventModal()}
         <ScrollView style={containerStyles.contentContainer}>
           {this.content(this.props.modalContent)}

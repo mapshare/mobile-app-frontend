@@ -1,6 +1,6 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, AsyncStorage } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import { connect } from 'react-redux';
 

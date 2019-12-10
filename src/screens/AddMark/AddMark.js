@@ -14,21 +14,10 @@ class AddMark extends Component {
     this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
   };
 
-  async creatingNewMarker(data) {
-    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
-      if (result === null) {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }else {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }
-      console.log(result);
-    })
-  }
-
   render() {
     return (
       <View style={containerStyles.mainContainer}>
-        <TouchableHighlight onPress={() => {this.addLocationOnClick(), this.creatingNewMarker(true)}}>
+        <TouchableHighlight onPress={() => this.addLocationOnClick()}>
           <View style={containerStyles.contentContainer}>
             <Icon name="plus" size={25} color="white" />
           </View>
