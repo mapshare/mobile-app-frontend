@@ -67,7 +67,7 @@ class GroupFeed extends Component {
                 }
                 {groupFeedEmpty &&
                     <View>
-                        <Text style={styles.emptyFeedText}> {"\n"} There is currently no posts for this group. {"\n"} Create the first post Now! {"\n"} {"\n"} </Text>
+                        <Text style={styles.emptyFeedText}> {"\n"} There is currently no posts for this group. {"\n"} Create the first post now! {"\n"} {"\n"} </Text>
                         <CreatePostButton
                             inline={true}
                             size={60}
