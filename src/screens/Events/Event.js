@@ -7,7 +7,8 @@ import {
   FlatList,
   TouchableOpacity,
   Modal,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native';
 import validator from "../Forms/validate/validation_wrapper";
 //Redux actions
@@ -101,6 +102,14 @@ class EventsView extends Component {
     let counter = 0;
     let createdby = ""
     let alreadyMember = false;
+    let eventHasMembers = false;
+
+    try {
+      eventHasMembers = data.eventMembers.length == 0;
+    } catch (error) {
+      eventHasMembers = false
+    }
+
     let permission = 0;
     try {
       permission = this.props.getGroupMemberData.memberRole.groupRolePermisionLevel;
@@ -156,12 +165,12 @@ class EventsView extends Component {
                         />
               
                 <Text style={eventModalWindow.mText}>Current Members:</Text>
-                <ScrollView>
+                
                 {data.eventMembers.map((item) =>
                 {
                   counter = counter + 1
                 return (
-                  <Text style={eventModalWindow.memberList}>
+                  <View style={eventModalWindow.memberList}>
                   <Text style={eventModalWindow.memberList}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         editable={false}
@@ -169,12 +178,16 @@ class EventsView extends Component {
                         ScrollView
                 >{counter + ": " + item.userFirstName + " " + item.userLastName}
                 </Text>
-                {(data.eventCreatedBy === this.props.getGroupMemberData._id || permission >= 3) && 
+                {((data.eventCreatedBy === this.props.getGroupMemberData._id || permission >= 3) && (this.props.getGroupMemberData._id !== item.mbrId)) && 
                   <Text style={eventModalWindow.KickUserEvent} onPress={()=>this.removeUserFromEvent(data,item.usrId) }>Kick User</Text>}
-                </Text>
+                </View>
                 )
                 })}
-              </ScrollView>
+              
+              {eventHasMembers &&
+              <Text style={eventModalWindow.memberList}>None</Text>
+              }
+
               {createdby !== "" &&
               <Text style={eventModalWindow.mText}>{'\n'}Event Hosted By: {createdby}</Text>
               }
@@ -280,7 +293,7 @@ class EventsView extends Component {
 
     let eventNameError = validator ("eventNamePresent", this.state.user.eventName);
     let eventDescriptionError = validator ("additionalInformation", this.state.user.eventDescription);
-    console.log(this.state.user.eventName)
+    
     if (this.state.user.eventName === data.eventName ) {
       eventNameError = null
     }else {
@@ -312,7 +325,7 @@ class EventsView extends Component {
               groupId: this.props.getActiveGroupData._id,
               token: this.props.token
             }
-            console.log("Update Event Function")
+            
             this.props.updateGroupEvent(selectEvent);
             this.eventUpdateModalClose();
             this.eventModalClose();
@@ -333,7 +346,6 @@ class EventsView extends Component {
       usrId: user,
       eventId: data._id,
     }
-    console.log(selectEvent)
     this.props.KickUserEvent(selectEvent);
     this.eventModalClose();
   }
@@ -369,27 +381,33 @@ class EventsView extends Component {
   }
 
   render() {
+    
     return (
       <View style={styles.container}>
-        <FlatList
-          data={this.props.getAllGroupEventData}
-          style={styles.eventList}
-          renderItem={(data) => {
-            return (
-              <View>
-              <TouchableOpacity onPress={() => this.eventModalOpen(data.item)} >
-                {this.eventModal()}
-                <View style={styles.eventBox} >
-                  <View style={styles.eventContent}>
-                    <Text  style={styles.eventName}>Event: {data.item.eventName}</Text>
-                    <Text  style={styles.eventLocation}>Location: {data.item.markLocations.locationAddress}</Text>
-                    <Text  style={styles.description}>Description: {data.item.eventDescription}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-              </View>
-            )
-          }}/>
+        {!Array.isArray(this.props.getAllGroupEventData) &&
+           <ActivityIndicator style={styles.spinnerStyle} size="large" color="#000"/>
+        }
+        {Array.isArray(this.props.getAllGroupEventData) &&
+           <FlatList
+           data={this.props.getAllGroupEventData}
+           style={styles.eventList}
+           renderItem={(data) => {
+             return (
+               <View>
+               <TouchableOpacity onPress={() => this.eventModalOpen(data.item)} >
+                 {this.eventModal()}
+                 <View style={styles.eventBox} >
+                   <View style={styles.eventContent}>
+                     <Text  style={styles.eventName}>Event: {data.item.eventName}</Text>
+                     <Text  style={styles.eventLocation}>Location: {data.item.markLocations.locationAddress}</Text>
+                     <Text  style={styles.description}>Description: {data.item.eventDescription}</Text>
+                   </View>
+                 </View>
+               </TouchableOpacity>
+               </View>
+             )
+           }}/>
+        }
       </View>
     );
   }

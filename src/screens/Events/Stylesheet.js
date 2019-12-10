@@ -114,6 +114,9 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       backgroundColor: "#ff0000",
     },
+    spinnerStyle: {
+      paddingTop: 60
+  },
   });
 
 const eventModalWindow = StyleSheet.create({
@@ -205,15 +208,17 @@ const eventModalWindow = StyleSheet.create({
     mText: {
       fontSize:13,
       marginLeft:10,
+      marginTop: -5
     },
     memberList: {
-      marginLeft:40,
-      marginBottom: 5
+      marginLeft:20,
+      marginBottom: 5,
     },
     KickUserEvent: {
-      marginLeft: 60,
       color: "red",
-      flexDirection: 'row'
+      alignSelf:"flex-end",
+      marginRight:20,
+      marginTop: -25
     },
   })
 

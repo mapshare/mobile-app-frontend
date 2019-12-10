@@ -60,7 +60,7 @@ export const addGroupEvent = data => {
         } catch (err) {
             
             dispatch(addGroupEventSuccess(false));
-            dispatch(addGroupEventError(err.response.data));
+            dispatch(addGroupEventError(err));
         }
     };
 };
@@ -102,7 +102,7 @@ export const joinGroupEvent = data => {
         } catch (err) {
             
             dispatch(joinGroupEventSuccess(false));
-            dispatch(joinGroupEventError(err.response.data));
+            dispatch(joinGroupEventError(err));
         }
     };
 };
@@ -142,7 +142,7 @@ export const getGroupEvent = data => {
             })
             .catch(err => {
                 dispatch(getGroupEventSuccess(false));
-                dispatch(getGroupEventError(err.response.data));
+                dispatch(getGroupEventError(err));
             });
     };
 };
@@ -171,7 +171,7 @@ export const getAllGroupEvent = data => {
             const res = await axios.get(API_URL + '/groups/' + data.groupId + '/allEvents', { headers: { 'authentication': data.token } });
             dispatch(getAllGroupEventDataSuccess(res.data));
         } catch (error) {
-            
+            console.log(error)
             dispatch(getAllGroupEventError(error));
         }
     }
@@ -219,7 +219,7 @@ export const updateGroupEvent = data => {
         } catch (err) {
             
             dispatch(updateGroupEventSuccess(false));
-            dispatch(updateGroupEventError(err.response.data));
+            dispatch(updateGroupEventError(err));
         }
     };
 };
@@ -227,21 +227,21 @@ export const updateGroupEvent = data => {
 /*
 *   KICK USER FROM GROUP EVENT
 */
-export const kickUserEventSuccess = bool => {
+export const kickUserGroupEventSuccess = bool => {
     return {
         type: keys.KICK_USER_GROUP_EVENT_SUCCESS,
         kickUserGroupEventStatus: bool,
     };
 };
 
-export const kickUserEventDataSuccess = data => {
+export const kickUserGroupEventDataSuccess = data => {
     return {
         type: keys.KICK_USER_GROUP_DATA_SUCCESS,
         kickUserGroupEventData: data,
     };
 };
 
-export const kickUserEventError = data => {
+export const kickUserGroupEventError = data => {
     return {
         type: keys.KICK_USER_GROUP_EVENT_ERROR,
         kickUserGroupEventError: data,
@@ -256,13 +256,12 @@ export const kickUserGroupEvent = data => {
                 groupId: data.groupId,
                 token: data.token
             }));
-            dispatch(kickUserEventDataSuccess(res.data));
-            dispatch(kickUserEventSuccess(true));
+            dispatch(kickUserGroupEventDataSuccess(res.data));
+            dispatch(kickUserGroupEventSuccess(true));
             
         } catch (err) {
-            console.log(err)
-            dispatch(kickUserEventSuccess(false));
-            dispatch(kickUserEventError(err.response.data));
+            dispatch(kickUserGroupEventSuccess(false));
+            dispatch(kickUserGroupEventError(err));
         }
     };
 };
@@ -304,9 +303,8 @@ export const leaveGroupEvent = data => {
             dispatch(leaveGroupEventSuccess(true));
             
         } catch (err) {
-            console.log(err.response.data)
             dispatch(leaveGroupEventSuccess(false));
-            dispatch(leaveGroupEventError(err.response.data));
+            dispatch(leaveGroupEventError(err));
         }
     };
 };
@@ -343,13 +341,11 @@ export const deleteGroupEvent = data => {
                 groupId: data.groupId,
                 token: data.token
             }));
-            console.log(res.data)
             dispatch(deleteGroupEventDataSuccess(res.data));
             dispatch(deleteGroupEventSuccess(true));
         } catch (err) {
-            console.log(err.response.data)
             dispatch(deleteGroupEventSuccess(false));
-            dispatch(deleteGroupEventError(err.response.data));
+            dispatch(deleteGroupEventError(err));
         }
     };
 };
