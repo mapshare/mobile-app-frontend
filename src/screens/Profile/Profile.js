@@ -269,13 +269,13 @@ class Profile extends Component {
                   token: this.props.token
                 }
     
-               //this.props.updateUser(data);
+               this.props.updateUser(data);
                 Alert.alert(
                   "Password Updated"
                 );
                 
-                //this.profileModalClose();
-                //this.goLogin();
+                this.profileModalClose();
+                this.goLogin();
               } else {
                 this.setState({
                   userCNewPasswordError: "New Pasword cannot be same as Old Password. Please try again"
