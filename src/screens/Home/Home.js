@@ -134,6 +134,8 @@ class Home extends Component {
             token: this.props.token
           };
 
+          this.props.socket.emit('update Active Members');
+
           this.props.getGroupDefaultMarkCategory(data);
           this.props.getGroupAllCustomMarkCategory(data);
         } catch (error) {
@@ -212,8 +214,8 @@ class Home extends Component {
 
   clearActiveGroup() {
     AsyncStorage.setItem('lastActiveGroupId', "");
-    this.props.disconnectGroupChatRoom({ socket: this.props.socket });
-    this.props.disconnectGroupFeed({ groupFeedSocket: this.props.groupFeedSocket });
+    this.props.socket.disconnect();
+    this.props.groupFeedSocket.disconnect();
     this.props.getActiveGroupSuccess(false);
     this.props.getActiveGroupDataSuccess('');
     this.props.getActiveGroupError('');

@@ -65,6 +65,8 @@ class MyGroups extends Component {
     componentDidMount() {
         this.props.getUserGroupsSuccess(false);
         this.props.getUserGroups({ token: this.props.token });
+        this.props.getGroups({ token: this.props.token });
+        
         // update every 10 seconds
         this.setState({
             interval: setInterval(async () => {

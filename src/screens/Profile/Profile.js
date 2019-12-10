@@ -142,8 +142,8 @@ class Profile extends Component {
     this.props.getActiveGroupSuccess(false);
     this.props.getActiveGroupDataSuccess("");
     this.props.getActiveGroupError("");
-    this.props.disconnectGroupChatRoom({ socket: this.props.socket });
-    this.props.disconnectGroupFeed({ groupFeedSocket: this.props.groupFeedSocket });
+    this.props.socket.disconnect();
+    this.props.groupFeedSocket.disconnect();
     Actions.Auth({ type: ActionConst.RESET })
   }
 

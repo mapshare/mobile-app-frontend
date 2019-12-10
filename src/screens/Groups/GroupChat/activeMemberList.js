@@ -54,7 +54,7 @@ class ActiveMemberMenuBtn extends Component {
                     oflineMembersData.push(this.props.getAllGroupMemberData[i]);
                 }
             }
-
+            
         } catch (error) {
             uniqueActiveMembersData = []
             oflineMembersData = [];
