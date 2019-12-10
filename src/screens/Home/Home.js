@@ -145,9 +145,9 @@ class Home extends Component {
     // Check First Launch and store state in launched using AsyncStorage
     AsyncStorage.getItem('Launched').then((result) => {
       console.log(result)
-      if (result === null){
+      if (result === null) {
         AsyncStorage.setItem('Launched', JSON.stringify('true')).then(() => AsyncStorage.getItem('Launched')
-        .then((result)=>console.log('Launched:',result)))
+          .then((result) => console.log('Launched:', result)))
         this.firstLaunch = true;
       } else {
         this.firstLaunch = false;
@@ -159,7 +159,7 @@ class Home extends Component {
           this.appTourTargets.forEach(appTourTarget => {
             appTourSequence.add(appTourTarget)
           })
-    
+
           AppTour.ShowSequence(appTourSequence)
         }, 1000)
       }
@@ -240,6 +240,8 @@ class Home extends Component {
             }} />
           <CreatePostButton
             style={styles.image}
+            color={0}
+            size={30}
             addAppTourTarget={appTourTarget => {
               this.appTourTargets.push(appTourTarget)
             }} />

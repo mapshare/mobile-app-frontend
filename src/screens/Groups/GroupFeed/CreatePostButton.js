@@ -72,29 +72,29 @@ class CreatePostButton extends Component {
 
     render() {
         return (
-            <View style={styles.container} >
+            <View style={this.props.inline ? styles.inline : styles.container} >
                 <TouchableOpacity
-                    style={styles.CreatePost}
+                    style={this.props.inline ? styles.inlineCreatePost : styles.CreatePost}
                     onPress={() => this.choosePhoto()}
                     disabled={this.state.isImagePickerActive}
                     key={'crtfeed'}
                     title={'Create Group Feed'}
                     ref={ref => {
                         if (!ref) return
-            
+
                         let props = {
-                          order: 3,
-                          title: 'Camera Button',
-                          description: 'This is used to create new Group Feed to share amoung group members',
-                          outerCircleColor: '#3f52ae'
+                            order: 3,
+                            title: 'Camera Button',
+                            description: 'This is used to create new Group Feed to share amoung group members',
+                            outerCircleColor: '#3f52ae'
                         }
-            
+
                         this.props.addAppTourTarget &&
-                          this.props.addAppTourTarget(AppTourView.for(ref, { ...props }))
-                      }}
-                      
+                            this.props.addAppTourTarget(AppTourView.for(ref, { ...props }))
+                    }}
+
                 >
-                    <Icon style={styles.cameraIcon} name="camera" size={30} />
+                    <Icon style={this.props.color == 0 ? styles.cameraIcon : ""} name="camera" size={this.props.size} />
                 </TouchableOpacity>
             </View>
         );

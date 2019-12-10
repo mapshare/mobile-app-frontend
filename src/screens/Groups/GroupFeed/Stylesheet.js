@@ -14,7 +14,7 @@ export default StyleSheet.create({
         paddingTop: 60
     },
     cameraIcon: {
-        color: "#FFF",
+        color: "#FFF"
     },
     optionsIcon: {
         color: "#000",
@@ -169,11 +169,30 @@ export default StyleSheet.create({
     profilePicImage: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.9)",
-        borderRadius:50,
+        borderRadius: 50,
         resizeMode: "cover",
         aspectRatio: 1.1,
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
     },
+    emptyFeedText: {
+        fontSize: 20,
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center"
+    },
+    inline: {
+        flex: 1,
+        alignContent: "center",
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    inlineCreatePost: {
+        padding: 20,
+        paddingVertical:40,
+        justifyContent: "center",
+    }
 });
