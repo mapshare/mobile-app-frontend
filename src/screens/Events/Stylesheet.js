@@ -114,6 +114,9 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       backgroundColor: "#ff0000",
     },
+    spinnerStyle: {
+      paddingTop: 60
+  },
   });
 
 const eventModalWindow = StyleSheet.create({
@@ -136,7 +139,8 @@ const eventModalWindow = StyleSheet.create({
       marginBottom: 10,
     },
     errorMessage: {
-      color: "red"
+      color: "red",
+      marginLeft: 10
     },
     inputBox: {
       backgroundColor: '#F5F5F5',
@@ -204,10 +208,18 @@ const eventModalWindow = StyleSheet.create({
     mText: {
       fontSize:13,
       marginLeft:10,
+      marginTop: -5
     },
     memberList: {
-      marginLeft:10,
-    }
+      marginLeft:20,
+      marginBottom: 5,
+    },
+    KickUserEvent: {
+      color: "red",
+      alignSelf:"flex-end",
+      marginRight:20,
+      marginTop: -25
+    },
   })
 
   export { styles, eventModalWindow };

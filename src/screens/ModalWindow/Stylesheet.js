@@ -71,7 +71,8 @@ const eventModalWindow = StyleSheet.create({
     marginBottom: 10,
   },
   errorMessage: {
-    color: "red"
+    color: "red",
+    marginLeft: 20
   },
   inputBox: {
     backgroundColor: '#F5F5F5',

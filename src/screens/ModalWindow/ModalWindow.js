@@ -81,32 +81,23 @@ class ModalWindow extends Component {
                         autoCorrect={false}
                         returnKeyType="next"
                         autoCapitalize="none"
-                        onSubmitEditing={() => this.eventMark.focus()}
+                        onSubmitEditing={() => this.eventDescription.focus()}
                         />
               {this.state.eventNameError ? (
                 <Text style={eventModalWindow.errorMessage}>{this.state.eventNameError}</Text>
               ) : null}
 
               <TextInput style={eventModalWindow.inputBox}
-                        onChangeText={eventMark =>
-                          this.setState({
-                            user: { ...this.state.user,eventMark: eventMark }
-                          })
-                        }
                         placeholder="Event Location"
                         defaultValue={this.state.user.eventMark}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         selectionColor="#fff"
                         autoCorrect={false}
                         returnKeyType="next"
-                        autoCapitalize="none"
-                        ref={input => (this.eventMark = input)}
+                        autoCapitalize="none" 
                         editable={false}
-                        onSubmitEditing={() => this.eventDescription.focus()}
+                        multiline={true}   
                         />
-              {this.state.eventMarkError ? (
-                <Text style={eventModalWindow.errorMessage}>{this.state.eventMarkError}</Text>
-              ) : null}
 
               <TextInput style={[eventModalWindow.inputBox, eventModalWindow.inputBoxDescription]}
                         onChangeText={eventDescription =>
@@ -115,8 +106,8 @@ class ModalWindow extends Component {
                           })
                         }
                         placeholder="Event Description"
-                        //multiline = {true}
-                        numberOfLines={4}
+                        multiline = {true}
+                        //numberOfLines={4}
                         maxLength={150}
                         placeholderTextColor="rgba(0,0,0,0.7)"
                         selectionColor="#fff"
@@ -144,19 +135,16 @@ class ModalWindow extends Component {
 
     const eventNameError = validator ("eventNamePresent", this.state.user.eventName);
     const eventDescriptionError = validator ("additionalInformation", this.state.user.eventDescription);
-    //const eventMarkError = validator ("markName", this.state.user.eventMark);
     
     this.setState(
       {
         eventNameError: eventNameError,
         eventDescriptionError: eventDescriptionError,
-        //eventMarkError: eventMarkError,
       },
       () => {
         if (
           !eventNameError &&
-          !eventDescriptionError //&&
-          //!eventMarkError
+          !eventDescriptionError 
         ) {
           
           const data = {

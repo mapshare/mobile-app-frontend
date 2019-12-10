@@ -56,13 +56,15 @@ class Profile extends Component {
         userOldPasword: "",
         userNewPassword: "",
         userCNewPassword: "",
-        userImages: ""
+        userImages: "",
+        userCurrentImage: ""
       },
       userFirstNameError: "",
       userLastNameError: "",
       passwordError: "",
       userNewPasswordError: "",
       userCNewPasswordError: "",
+      generalError: "",
       modalVisible: false,
       pwdModalVisible: false,
 
@@ -75,6 +77,7 @@ class Profile extends Component {
 
     if (this.props.getUserData.userProfilePic) {
       this.state.user.userImages = { uri: 'data:image/png;base64,' + this.props.getUserData.userProfilePic}
+      this.state.user.userCurrentImage = this.props.getUserData.userProfilePic
     } else {
       this.state.user.userImages = require('../../assests/images/default-profile.png');
     }
@@ -87,6 +90,7 @@ class Profile extends Component {
     this.state.userFirstNameError = null;
     this.state.userLastNameError = null;
     this.state.user.userImages = null;
+    this.state.generalError = null;
   }
 
   pwdModalClose() {
@@ -162,7 +166,7 @@ class Profile extends Component {
       updateRecord = true;
     }
 
-    if (this.props.getUserData.userProfilePic !== this.state.user.userImages) {
+    if (this.props.getUserData.userProfilePic !== this.state.user.userCurrentImage) {
       updateRecord = true;
     }
 
@@ -191,6 +195,10 @@ class Profile extends Component {
             );
             updateRecord = false;
             this.profileModalClose();
+          } else {
+            this.setState({
+              generalError: "Please Update Record to Save Changes!"
+            })
           }
 
         } 
@@ -203,7 +211,9 @@ class Profile extends Component {
 
     const userNewPasswordError = validator("password", this.state.user.userNewPassword);
     const userCNewPasswordError = validator("password", this.state.user.userCNewPassword);
-    console.log('data')
+    
+    
+
     this.setState(
       {
         userNewPasswordError: userNewPasswordError,
@@ -397,6 +407,9 @@ class Profile extends Component {
                         editable={false}
                         />
               <Text style={styles.message}>**Email Address cannot be modified</Text>
+              {this.state.generalError ? (
+                <Text style={styles.errorMessage}>{this.state.generalError}</Text>
+              ) : null}
               <TouchableOpacity style={[styles.buttonContainer, styles.center]} onPress={() => this.update()}>
                 <Text>Update</Text>
               </TouchableOpacity>
