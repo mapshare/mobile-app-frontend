@@ -8,7 +8,7 @@ import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
 import { updateGroupMark } from '../../../actions/groupMarkAction';
-import { addMarkModalWindow } from '../../../actions/modalWindowAction';
+import { isModalWindowStatus } from '../../../actions/modalWindowAction';
 import { reviewBottomWindow } from '../../../actions/bottomWindowAction';
 
 // Componenets Style
@@ -65,10 +65,18 @@ class LocationReviewForm extends Component {
     const review = {
       reviewContent: values.reviewContent.trim(),
       reviewCreatedBy: this.props.getUserData._id,
+      reviewCreatedAt: Date.now()
     }
-    let markLocations = this.props.getCurrentOnClickMarkData.markLocations
-    markLocations.locationReviewSet.push(review)
 
+    let markLocations = this.props.getCurrentOnClickMarkData.markLocations
+    
+    if (this.props.getReviewData.actionType === 'edit') {
+      markLocations.locationReviewSet[this.props.getReviewData.index] = review
+    }
+    else {
+      markLocations.locationReviewSet.push(review)
+    }
+      
     const formValues = {
       markLocations: markLocations,
       groupId: this.props.getActiveGroupData._id,
@@ -77,6 +85,7 @@ class LocationReviewForm extends Component {
     };
     Keyboard.dismiss()
     this.props.reviewBottomWindow({status: false});
+    this.props.isModalWindowStatus(false)
     this.props.updateGroupMark(formValues);
   };
 
@@ -138,6 +147,7 @@ const mapStateToProps = state => {
     newMarkAddedFlag: state.groupMarkReducer.newMarkAddedFlag,
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     getGroupMarkData: state.groupMarkReducer.getGroupMarkData,
+    getReviewData: state.bottomWindowReducer.reviewWindow,
     initialValues: {
       reviewContent: state.bottomWindowReducer.reviewWindow.actionType == 'edit' && state.bottomWindowReducer.reviewWindow.content
     }
@@ -149,6 +159,7 @@ const mapDispatchToProps = dispatch => {
   return {
     updateGroupMark: data => dispatch(updateGroupMark(data)),
     reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool)),
+    isModalWindowStatus: bool => dispatch(isModalWindowStatus(bool))
   };
 };
 
