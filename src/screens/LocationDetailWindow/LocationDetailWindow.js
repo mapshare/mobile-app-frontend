@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 //Redux actions
 import { addGroupMark } from '../../actions/groupMarkAction';
-import { deleteLocationModalWindow, isModalWindowStatus } from "../../actions/modalWindowAction";
+import { deleteLocationModalWindow, isModalWindow } from "../../actions/modalWindowAction";
 import { reviewBottomWindow } from '../../actions/bottomWindowAction'
 
 // Componenets Style
@@ -88,11 +88,12 @@ class LocationDetailWindow extends Component {
               <Text style={imageCarouselStyles.textStyles}>
                 {data.index + 1}/{this.state.locationImages.length}
               </Text>
-              {this.props.permisionLevel > 2 &&
+              {(this.props.permisionLevel > 2 | this.props.getGroupMemberData.user == this.props.getCurrentOnClickMarkData.groupMarkCreatedBy) &&
                 <TouchableOpacity 
                   disabled={this.props.isModalWindowStatus} 
                   onPress={() => {
-                    this.props.isModalWindowStatus(true)
+                    console.log('click')
+                    this.props.isModalWindow(true)
                     this.props.deleteLocationModalWindow({ type: 'image', status: true })
                   }}
                 >
@@ -118,7 +119,7 @@ class LocationDetailWindow extends Component {
           <TouchableOpacity style={locationDetailStyles.optionContainer}
             disabled={this.props.isModalWindowStatus} 
             onPress={() => {
-              this.props.isModalWindowStatus(true)
+              this.props.isModalWindow(true)
               this.props.deleteLocationModalWindow({ type: 'location', status: true })
             }}
           >
@@ -174,21 +175,33 @@ class LocationDetailWindow extends Component {
   renderReview = reviewSet => {
     if (reviewSet) {
       let reviewViews = [];
+      let profilePic = require('../../assests/images/default-profile.png');
 
       reviewSet.map((data, index) => {
+        if (Object.keys(data.userProfilePic).length) {
+          try {
+            profilePic = data.userProfilePic ? {
+              uri: 'data:image/png;base64,' + data.userProfilePic
+            }
+              : require('../../assests/images/default-profile.png');
+          } catch (error) {
+            profilePic = require('../../assests/images/default-profile.png');
+          }
+        }
+
         reviewViews.push(
           <View style={locationReviewStyles.mainContainer}>
-            {/* <Image style={locationReviewStyles.profilePic} source={data.userProfilePic ? { uri: 'data:image/png;base64,' + data.userProfilePic } : { uri: this.avatar }} /> */}
+            <Image style={locationReviewStyles.profilePic} source={profilePic} />
             <View style={locationReviewStyles.contentContainer}>
               <View style={locationReviewStyles.reviewHeaderContainer}>
                 <Text style={locationReviewStyles.usernameText}>
                   {data.userFirstName + ' ' + data.userLastName}
                 </Text>
-                {(this.props.permisionLevel > 2 | this.props.getGroupMemberData == data.reviewCreatedBy) &&
+                {(this.props.permisionLevel > 2 | this.props.getGroupMemberData.user == data.reviewCreatedBy) &&
                   <TouchableOpacity
                     disabled={this.props.isModalWindowStatus} 
                     onPress={() => {
-                      this.props.isModalWindowStatus(true)
+                      this.props.isModalWindow(true)
                       this.props.reviewBottomWindow({ status: true, actionType: 'edit', content: data.reviewContent, index: index })
                     }} 
                   >
@@ -240,12 +253,12 @@ class LocationDetailWindow extends Component {
                 this.state.screenViewPosition && infoDescriptionStyles.stickyWidth
               ]}
             >
-              <View style={containerStyles.avatarContainer}>
+              {/* <View style={containerStyles.avatarContainer}>
                 <Image
                   style={containerStyles.avatarContainer}
                   source={{ uri: this.avatar }}
                 />
-              </View>
+              </View> */}
               <View style={containerStyles.infoContainer}>
                 <Text style={infoDescriptionStyles.locationNameStyles}>
                   {this.state.locationData && this.state.locationData.markName}
@@ -273,7 +286,7 @@ class LocationDetailWindow extends Component {
               <TouchableOpacity
                 disabled={this.props.isModalWindowStatus} 
                 onPress={() => {
-                  this.props.isModalWindowStatus(true)
+                  this.props.isModalWindow(true)
                   this.props.reviewBottomWindow({ status: true, actionType: 'add' })
                 }}  
               >
@@ -311,7 +324,7 @@ const mapDispatchToProps = dispatch => {
     addGroupMark: bool => dispatch(addGroupMark(bool)),
     deleteLocationModalWindow: data => dispatch(deleteLocationModalWindow(data)),
     reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool)),
-    isModalWindowStatus: bool => dispatch(isModalWindowStatus(bool))
+    isModalWindow: bool => dispatch(isModalWindow(bool))
   };
 };
 

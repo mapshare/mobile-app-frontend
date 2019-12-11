@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 import { connect } from "react-redux";
 
 //Redux actions
-import { deleteLocationModalWindow, clickMarkModalWindow, isModalWindowStatus } from "../../actions/modalWindowAction";
+import { deleteLocationModalWindow, clickMarkModalWindow, isModalWindow } from "../../actions/modalWindowAction";
 import { deleteGroupMark } from "../../actions/groupMarkAction";
 
 // Componenets Style
@@ -23,7 +23,7 @@ class ConfirmDelete extends Component {
 
   cancelOnClick = () => {
     this.props.deleteLocationModalWindow({ status: false });
-    this.props.isModalWindowStatus(false)
+    this.props.isModalWindow(false)
   };
 
   deleteOnClick = type => {
@@ -37,10 +37,10 @@ class ConfirmDelete extends Component {
       this.props.deleteLocationModalWindow({ status: false });
       this.props.clickMarkModalWindow(false)
     } else if (type === 'image') {
-      console.log('type image')
       this.props.deleteLocationModalWindow({ status: false });
-      this.props.isModalWindowStatus(false)
     }
+
+    this.props.isModalWindow(false)
   };
 
   choosePhoto = () => {
@@ -135,7 +135,7 @@ const mapDispatchToProps = dispatch => {
     deleteLocationModalWindow: bool => dispatch(deleteLocationModalWindow(bool)),
     deleteGroupMark: data => dispatch(deleteGroupMark(data)),
     clickMarkModalWindow: bool => dispatch(clickMarkModalWindow(bool)),
-    isModalWindowStatus: bool => dispatch(isModalWindowStatus(bool))
+    isModalWindow: bool => dispatch(isModalWindow(bool))
   };
 };
 

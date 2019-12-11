@@ -38,7 +38,7 @@ export const customMarkOptionModalWindow = bool => {
   };
 };
 
-export const isModalWindowStatus = bool => {
+export const isModalWindow = bool => {
   return {
     type: keys.IS_MODAL_WINDOW,
     isModalWindowStatus: bool
