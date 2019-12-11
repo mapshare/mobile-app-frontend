@@ -102,7 +102,6 @@ class Home extends Component {
           this.props.getActiveGroupRefreshDataOnly({
             groupId: this.props.getActiveGroupData._id,
             token: this.props.token,
-            groupFeedSocket: this.props.groupFeedSocket,
           });
 
           this.props.getUser({ token: this.props.token });
