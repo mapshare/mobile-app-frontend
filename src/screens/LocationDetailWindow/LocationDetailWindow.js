@@ -61,7 +61,6 @@ class LocationDetailWindow extends Component {
     }
 
     if (this.props.getLocationReviewsData !== prevProps.getLocationReviewsData) {
-      console.log('reviewsData')
       this.setState({
         reviewsData: this.props.getLocationReviewsData
       })

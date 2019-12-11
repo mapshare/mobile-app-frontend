@@ -176,7 +176,7 @@ export const getLocationReviews = data => {
         headers: { 'authentication': data.token }
       })
       .then(res => {
-        console.log('get reviews success!')
+        // console.log('get reviews success!')
         dispatch(getLocationReviewsDataSuccess(res.data));
       })
       .catch(err => {
@@ -214,7 +214,7 @@ export const getGroupMarkById = data => {
         headers: { 'authentication': data.token }
       })
       .then(res => {
-        console.log('get mark by id success!')
+        // console.log('get mark by id success!')
         dispatch(getGroupMarkDataSuccess(res.data));
         dispatch(getGroupMarkSuccess(true));
       })
