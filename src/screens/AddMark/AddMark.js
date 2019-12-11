@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View, TouchableHighlight, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
@@ -17,7 +17,7 @@ class AddMark extends Component {
   render() {
     return (
       <View style={containerStyles.mainContainer}>
-        <TouchableHighlight onPress={this.addLocationOnClick}>
+        <TouchableHighlight onPress={() => this.addLocationOnClick()}>
           <View style={containerStyles.contentContainer}>
             <Icon name="plus" size={25} color="white" />
           </View>

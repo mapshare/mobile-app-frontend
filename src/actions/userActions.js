@@ -82,18 +82,14 @@ export const updateUser = data => {
         userProfilePic: data.userProfilePic,
         userPassword: data.userPassword,       
     }
-
-    console.log (userData)
     return dispatch => {
         axios
             .put(API_URL + '/user', userData, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(updateUserDataSuccess(res.data));
-                dispatch(updateUserSuccess(true));
-                console.log(res.data)
+                dispatch(updateUserSuccess(true));           
             })
             .catch(err => {
-                console.log(err.response.data);
                 dispatch(updateUserSuccess(false));
                 dispatch(updateUserError(err.response.data));
             });
@@ -139,20 +135,20 @@ export const deleteUser = data => {
     };
 };
 
-export const comparePasswordResult = data => {
+export const comparePasswordResults = data => {
     return {
         type: keys.COMPARE_PASSWORD_RESULTS,
-        comparePasswordResult: comparePasswordResult
+        comparePasswordResults: data,
     };
 };
 
 export const comparePassword = data => {
     return async dispatch => {
         try {
-            const res = await axios.post(API_URL + '/comparePassword', data.oldPassword, { headers: { 'authentication': data.token } });
-            dispatch(comparePasswordResult(res.data));
+            const res = await axios.post(API_URL + '/comparePassword', {oldPassword: data.oldPassword}, { headers: { 'authentication': data.token } });
+            dispatch(comparePasswordResults(res.data));
         } catch (err) {
-            dispatch(comparePasswordResult(false));
+            dispatch(comparePasswordResults(false));
         }
     };
 };

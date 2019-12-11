@@ -117,6 +117,18 @@ const styles = StyleSheet.create({
     spinnerStyle: {
       paddingTop: 60
   },
+  emptyEventText: {
+    fontSize: 20,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    marginTop: 20
+  },
+  emptyEventIcon: {
+    marginBottom: 900,
+    alignSelf: 'center',
+  }
   });
 
 const eventModalWindow = StyleSheet.create({

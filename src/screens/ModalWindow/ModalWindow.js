@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, TouchableOpacity, ScrollView, Modal, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, ScrollView, Modal, Text, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import validator from "../Forms/validate/validation_wrapper";
@@ -40,6 +40,8 @@ class ModalWindow extends Component {
       eventDescriptionError: "",
       eventMarkError: "",
       modalVisible: false,
+      creatingNewEvent: false,
+      eventExist: true,
     };
   }
 
@@ -71,7 +73,7 @@ class ModalWindow extends Component {
               <TextInput style={eventModalWindow.inputBox}
                         onChangeText={eventName =>
                           this.setState({
-                            user: { ...this.state.user, eventName: eventName }
+                            user: { ...this.state.user, eventName: eventName.trim() }
                           })
                         }
                         placeholder="Event Name"
@@ -102,7 +104,7 @@ class ModalWindow extends Component {
               <TextInput style={[eventModalWindow.inputBox, eventModalWindow.inputBoxDescription]}
                         onChangeText={eventDescription =>
                           this.setState({
-                            user: { ...this.state.user, eventDescription: eventDescription }
+                            user: { ...this.state.user, eventDescription: eventDescription.trim() }
                           })
                         }
                         placeholder="Event Description"
@@ -185,7 +187,8 @@ class ModalWindow extends Component {
     }
   };
 
-  render() {
+  render() { 
+
     return (
       <View style={containerStyles.mainContainer}>
         <TouchableOpacity

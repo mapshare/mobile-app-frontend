@@ -1,6 +1,6 @@
 // Import Libraries
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image } from 'react-native';
+import { Text, View, TouchableOpacity, Image, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
@@ -98,7 +98,7 @@ class AddMarkForm extends Component {
 
   render() {
     const { handleSubmit } = this.props;
-
+  
     return (
       <View style={containerStyles.container}>
         <Field
