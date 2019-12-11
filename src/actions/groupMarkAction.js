@@ -270,6 +270,7 @@ export const updateGroupMark = data => {
         }
         console.log('update mark success! ')
         dispatch(getGroupMarkById(getMarkData));
+        dispatch(getLocationReviews(getMarkData))
         dispatch(updateGroupMarkDataSuccess(res.data));
         dispatch(updateGroupMarkSuccess(true));
       })

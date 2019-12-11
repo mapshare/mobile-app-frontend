@@ -21,7 +21,6 @@ export const modalWindowReducer = (
     case keys.CLICK_MARK_MODAL_WINDOW:
       return { ...state, onClickMarkStatus: action.onClickMarkStatus };
     case keys.DELETE_LOCATION_MODAL_WINDOW:
-      console.log('action: ', action.deleteLocation)
       return { ...state, deleteLocation: action.deleteLocation }
     case keys.CUSTOM_MARK_OPTION_MODAL_WINDOW:
       return {

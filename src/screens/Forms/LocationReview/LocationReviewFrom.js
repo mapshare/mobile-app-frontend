@@ -8,7 +8,7 @@ import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
 import { updateGroupMark } from '../../../actions/groupMarkAction';
-import { isModalWindowStatus } from '../../../actions/modalWindowAction';
+import { isModalWindow } from '../../../actions/modalWindowAction';
 import { reviewBottomWindow } from '../../../actions/bottomWindowAction';
 
 // Componenets Style
@@ -85,12 +85,13 @@ class LocationReviewForm extends Component {
     };
     Keyboard.dismiss()
     this.props.reviewBottomWindow({status: false});
-    this.props.isModalWindowStatus(false)
+    this.props.isModalWindow(false)
     this.props.updateGroupMark(formValues);
   };
 
   cancelOnClick() {
     this.props.reviewBottomWindow({status: false});
+    this.props.isModalWindow(false)
   }
 
   render() {
@@ -159,7 +160,7 @@ const mapDispatchToProps = dispatch => {
   return {
     updateGroupMark: data => dispatch(updateGroupMark(data)),
     reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool)),
-    isModalWindowStatus: bool => dispatch(isModalWindowStatus(bool))
+    isModalWindow: bool => dispatch(isModalWindow(bool))
   };
 };
 
