@@ -43,7 +43,7 @@ class AddPostCaption extends Component {
         this.setState({ addPostError: addPostError },
             () => {
                 if (!addPostError) {
-                    const trimedCaption = this.state.postCaption.slice(0, 100).trim();
+                    const trimedCaption = this.state.postCaption.slice(0, 100).trim().replace(/\n/g, '');
                     const data = {
                         postImage: this.props.imageData,
                         postCaption: trimedCaption,
@@ -59,7 +59,7 @@ class AddPostCaption extends Component {
 
     updatePostCaption(postCaption) {
         const addPostError = validator('postCaption', postCaption.slice(0, 100).trim());
-        const trimedCaption = postCaption.slice(0, 100).trim();
+        const trimedCaption = postCaption.slice(0, 100).replace(/\n/g, '');
         this.setState({ postCaption: trimedCaption, addPostError: addPostError ? addPostError : "" });
     }
 
@@ -92,6 +92,8 @@ class AddPostCaption extends Component {
                             autoFocus={true}
                             style={styles.addPostInputBox}
                             onChangeText={Caption => this.updatePostCaption(Caption)}
+                            value={this.state.postCaption}
+                            enablesReturnKeyAutomatically={true}
                             placeholder="Enter Caption"
                             placeholderTextColor="#B8B8B8"
                             selectionColor="#fff"

@@ -51,6 +51,8 @@ export default StyleSheet.create({
         textAlign: "center"
     },
     Message: {
+        paddingHorizontal:50,
+        textAlign:"center",
         color: "rgba(255,255,255,1)",
         fontSize: 16,
         marginTop: 22,
