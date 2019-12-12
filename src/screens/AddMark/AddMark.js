@@ -14,6 +14,17 @@ class AddMark extends Component {
     this.props.addGroupMarkOnClick(!this.props.addGroupMarkOnClickStatus);
   };
 
+  async creatingNewMarker(data) {
+    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
+      if (result === null) {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }else {
+        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
+      }
+      console.log(result);
+    })
+  }
+
   render() {
     return (
       <View style={containerStyles.mainContainer}>

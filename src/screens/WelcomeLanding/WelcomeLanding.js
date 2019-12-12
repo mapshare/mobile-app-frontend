@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
+import {
+  Actions,
+  ActionConst
+} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 // Componenets Style
@@ -8,13 +12,16 @@ import { containerStyles } from './Stylesheet';
 
 class WelcomeLanding extends Component {
   buttonOnClick = () => {
-    console.log('click start click click')
+    console.log("Gologin")
+    Actions.signup2();
   }
 
   render() {
     return (
       <View style={containerStyles.mainContainer}>
+        <ImageBackground resizeMode = "cover" style = {containerStyles.backgroundImage} source = {require('../../assests/images/logo.png')}>
         <View style={containerStyles.contentContainer}>
+        
           <View style={containerStyles.welcomeContainer}>
             <Text style={containerStyles.welcomeText}>Welcome</Text>
             <Text style={containerStyles.welcomeText}>To PinIt</Text>
@@ -27,7 +34,9 @@ class WelcomeLanding extends Component {
           <TouchableOpacity style={containerStyles.buttonContainer} onPress={() => {this.buttonOnClick()}}>
             <Text style={containerStyles.buttonText}>START</Text>
           </TouchableOpacity>
+          
         </View>
+        </ImageBackground>
       </View>
     );
   }
