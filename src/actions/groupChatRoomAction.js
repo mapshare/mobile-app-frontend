@@ -115,6 +115,12 @@ export const connectToGroupChat = data => {
                     })
                     .on('User Joined or Left', (data) => {
                         dispatch(activeMembersData(data));
+                    })
+                    .on('disconnect', () => {
+                        console.log("Disconnect Group Chat")
+                        socket.disconnect();
+                        // Reconnect
+                        dispatch(connectToGroupChat(data));
                     });
             });
         } catch (error) {

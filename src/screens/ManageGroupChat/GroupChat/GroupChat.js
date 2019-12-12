@@ -68,7 +68,7 @@ class GroupChat extends Component {
         }
         this.props.joinGroupChatRoomSuccess(false);
         this.props.connectToGroupChatSuccess(false);
-        this.props.connectToGroupChat(data);
+        //this.props.connectToGroupChat(data);
         this.props.getGroupMemberSuccess(false);
         this.props.getGroupMember(data);
         this.props.disconnectGroupChatRoomSuccess(false);
@@ -119,7 +119,7 @@ class GroupChat extends Component {
     else {
       this.props.joinGroupChatRoomSuccess(false);
       this.props.connectToGroupChatSuccess(false);
-      this.props.connectToGroupChat(data);
+      //this.props.connectToGroupChat(data);
       this.props.getGroupMemberSuccess(false);
       this.props.getGroupMember(data);
       this.props.disconnectGroupChatRoomSuccess(false);

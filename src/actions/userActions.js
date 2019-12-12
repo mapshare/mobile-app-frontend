@@ -87,6 +87,8 @@ export const updateUser = data => {
             .put(API_URL + '/user', userData, { headers: { 'authentication': data.token } })
             .then(res => {
                 dispatch(updateUserDataSuccess(res.data));
+                // refresh group Feed 
+                data.groupFeedSocket.emit('update feed', 'update');
                 dispatch(updateUserSuccess(true));           
             })
             .catch(err => {

@@ -65,7 +65,7 @@ class EditPost extends Component {
 
     updatePostCaption(postCaption) {
         const addPostError = validator('postCaption', postCaption.slice(0, 100).trim());
-        const trimedCaption = postCaption.slice(0, 100).trim();
+        const trimedCaption = postCaption.slice(0, 100).replace(/\n/g, '');
         this.setState({ postCaption: trimedCaption, addPostError: addPostError ? addPostError : "" });
     }
 

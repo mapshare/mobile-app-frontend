@@ -196,7 +196,8 @@ class Profile extends Component {
               userFirstName: this.state.user.userFirstName,
               userLastName: this.state.user.userLastName,
               userProfilePic: this.state.user.userImages.data,
-              token: this.props.token
+              token: this.props.token,
+              groupFeedSocket: this.props.groupFeedSocket,
             }
             this.props.updateUser(data);
   
@@ -511,7 +512,8 @@ const mapStateToProps = state => {
     token: state.logInReducer.token,
     socket: state.groupChatRoomReducer.socket,
     groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
-    comparePasswordResults: state.userReducer.comparePasswordResults
+    comparePasswordResults: state.userReducer.comparePasswordResults,
+    groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
   };
 };
 
