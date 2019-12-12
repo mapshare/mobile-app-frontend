@@ -88,7 +88,7 @@ class LocationDetailWindow extends Component {
               <Text style={imageCarouselStyles.textStyles}>
                 {data.index + 1}/{this.state.locationImages.length}
               </Text>
-              {(this.props.permisionLevel > 2 | this.props.getGroupMemberData.user == this.props.getCurrentOnClickMarkData.groupMarkCreatedBy) &&
+              {(this.props.permisionLevel > 2 || this.props.getGroupMemberData.user == this.props.getCurrentOnClickMarkData.groupMarkCreatedBy) &&
                 <TouchableOpacity 
                   disabled={this.props.isModalWindowStatus} 
                   onPress={() => {
@@ -115,7 +115,7 @@ class LocationDetailWindow extends Component {
 
     return (
       <View>
-        {this.props.permisionLevel > 2 &&
+        {(this.props.permisionLevel > 2 || this.props.getGroupMemberData.user == this.props.getCurrentOnClickMarkData.groupMarkCreatedBy) &&
           <TouchableOpacity style={locationDetailStyles.optionContainer}
             disabled={this.props.isModalWindowStatus} 
             onPress={() => {
@@ -197,7 +197,7 @@ class LocationDetailWindow extends Component {
                 <Text style={locationReviewStyles.usernameText}>
                   {data.userFirstName + ' ' + data.userLastName}
                 </Text>
-                {(this.props.permisionLevel > 2 | this.props.getGroupMemberData.user == data.reviewCreatedBy) &&
+                {(this.props.permisionLevel > 2 || this.props.getGroupMemberData.user == data.reviewCreatedBy) &&
                   <TouchableOpacity
                     disabled={this.props.isModalWindowStatus} 
                     onPress={() => {

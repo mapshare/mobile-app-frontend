@@ -85,12 +85,14 @@ class CategoryOptions extends Component {
             {data.customMarkCategoryName}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {this.props.permisionLevel > 2 &&
+          <TouchableOpacity
           style={customCategoryStyles.settingIcon}
           onPress={() => this.customCategoryOptionOnClick(data)}
-        >
-          <Icon name="settings" size={18} />
-        </TouchableOpacity>
+          >
+            <Icon name="settings" size={18} />
+          </TouchableOpacity>
+        }
       </View>
     );
   };
@@ -169,13 +171,15 @@ class CategoryOptions extends Component {
       <ScrollView>
         <CustomMarkOptions />
         <AddCustomMark />
-        <TouchableOpacity
-          style={containerStyles.buttonContainer}
-          onPress={() => this.props.addCustomMarkModalWindow(true)}
-        >
-          <Text>Create</Text>
-          <Text>Category</Text>
-        </TouchableOpacity>
+        {this.props.permisionLevel > 2 &&        
+          <TouchableOpacity
+            style={containerStyles.buttonContainer}
+            onPress={() => this.props.addCustomMarkModalWindow(true)}
+          >
+            <Text>Create</Text>
+            <Text>Category</Text>
+          </TouchableOpacity>
+        }
         <View>{this.renderDefaultCategories()}</View>
         {this.state.selectedCustomCategories.length > 0 && (
           <View>
@@ -207,7 +211,8 @@ const mapStateToProps = state => {
       state.groupDefaultMarkCategoryReducer.getGroupDefaultMarkCategoryData,
     getGroupAllCustomMarkCategoryData:
       state.groupCustomMarkCategoryReducer.getGroupAllCustomMarkCategoryData,
-    sortGroupMarkOnClickFlag: state.groupMarkReducer.sortGroupMarkOnClickFlag
+    sortGroupMarkOnClickFlag: state.groupMarkReducer.sortGroupMarkOnClickFlag,
+    permisionLevel: state.groupReducer.getGroupMemberData.memberRole.groupRolePermisionLevel,
   };
 };
 
