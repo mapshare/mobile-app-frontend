@@ -8,7 +8,6 @@ import {API_URL, CHAT_URL} from 'react-native-dotenv'
 // Import Libraries
 
 import Routes from './src/navigation/Router/router';
-import crtPostbtn from './src/screens/Groups/GroupFeed/CreatePostButton'
 
 
 const store = configureStore();
@@ -22,7 +21,7 @@ export default class signIn extends Component {
     console.log(API_URL, CHAT_URL)
     return (
       <Provider store={store}>
-        <Routes />
+        <Routes/>
       </Provider>
     );
   }

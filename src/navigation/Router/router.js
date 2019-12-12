@@ -38,6 +38,7 @@ import BottomWindow from "../../screens/BottomWindow/BottomWindow";
 import AddCustomMark from '../../screens/AddCustomMark/AddCustomMark';
 import CustomMarkOptions from '../../screens/CustomMarkOptions/CustomMarkOptions';
 import ActiveMemberList from "../../screens/Groups/GroupChat/activeMemberList";
+import welcomePage from "../../screens/WelcomeLanding/WelcomeLanding"
 
 // InitialGroupMenu
 import InitialAddGroup from '../../screens/InitialGroupMenu/Menus/AddGroup';
@@ -115,6 +116,7 @@ handleBackButton(){
         navigationBarStyle={{ backgroundColor: '#33C1FF' }}
       >
         <Lightbox key="root" hideNavBar>
+        
           {/* Login & SignUp */}
           <Stack key="Auth">
             <Scene
@@ -123,8 +125,9 @@ handleBackButton(){
               type={ActionConst.RESET}
               hideNavBar
             />
-            <Scene key="signup" component={SignUp} hideNavBar />
+            <Scene key="signup" component={SignUp} hideNavBar />           
           </Stack>
+
 
           {/* OLD NAVIGATION */}
           <Scene key="tester" component={Tester} type={ActionConst.RESET} />

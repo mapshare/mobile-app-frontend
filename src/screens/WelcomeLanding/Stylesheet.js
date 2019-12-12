@@ -6,7 +6,6 @@ const containerStyles = StyleSheet.create({
   mainContainer: {
     width: reponsiveStyle.wp('100%'),
     height: reponsiveStyle.hp('100%'),
-    backgroundColor: '#2196F3',
     position: 'absolute',
     zIndex: 30000,
     elevation: 30000,
@@ -15,22 +14,18 @@ const containerStyles = StyleSheet.create({
   },
 
   contentContainer: {
-    backgroundColor: '#2196F3',
+    
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   welcomeContainer: {
-    width: reponsiveStyle.wp('90%'),
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15
   },
 
   introContainer: {
-    width: reponsiveStyle.wp('90%'),
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: 50
   },
 
@@ -50,7 +45,7 @@ const containerStyles = StyleSheet.create({
   welcomeText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 55,
+    fontSize: 50,
     letterSpacing: 2,
     lineHeight: 58
   },
@@ -58,8 +53,14 @@ const containerStyles = StyleSheet.create({
   introText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 15
-  }
+    fontSize: 15,
+    //alignSelf:'center'
+  },
+  backgroundImage: {
+    width: '100%',
+    height: '100%',
+    justifyContent: "center"
+},
 });
 
 export { containerStyles };
