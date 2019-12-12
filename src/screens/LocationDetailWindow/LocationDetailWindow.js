@@ -115,7 +115,7 @@ class LocationDetailWindow extends Component {
 
     return (
       <View>
-        {this.props.permisionLevel > 2 &&
+        {(this.props.permisionLevel > 2 | this.props.getGroupMemberData.user == this.props.getCurrentOnClickMarkData.groupMarkCreatedBy) &&
           <TouchableOpacity style={locationDetailStyles.optionContainer}
             disabled={this.props.isModalWindowStatus} 
             onPress={() => {
