@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 //Redux actions
 import { addGroupMark } from '../../actions/groupMarkAction';
-import { deleteLocationModalWindow } from "../../actions/modalWindowAction";
+import { deleteLocationModalWindow, isModalWindow } from "../../actions/modalWindowAction";
 import { reviewBottomWindow } from '../../actions/bottomWindowAction'
 
 // Componenets Style
@@ -19,6 +19,7 @@ import {
   locationDetailStyles,
   locationReviewStyles
 } from './Stylesheet';
+import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 
 // Creating Component
 class LocationDetailWindow extends Component {
@@ -30,7 +31,8 @@ class LocationDetailWindow extends Component {
       screenViewPosition: false,
       locationImages: [],
       locationData: {},
-      reviewsData: []
+      reviewsData: [],
+      isModalWindow: false
     };
 
     this.avatar = 'https://source.unsplash.com/60x60/?random';
@@ -80,14 +82,21 @@ class LocationDetailWindow extends Component {
   renderView = data => {
     if (data) {
       return (
-        <TouchableWithoutFeedback onPress={() => this.setState({ ...this.state, imageOption: false })}>
+        <TouchableWithoutFeedback>
           <View style={containerStyles.imageContainer}>
             <View style={imageCarouselStyles.imageOptionStyle}>
               <Text style={imageCarouselStyles.textStyles}>
                 {data.index + 1}/{this.state.locationImages.length}
               </Text>
-              {this.props.permisionLevel > 2 &&
-                <TouchableOpacity onPress={() => this.props.deleteLocationModalWindow({ type: 'image', status: true })}>
+              {(this.props.permisionLevel > 2 | this.props.getGroupMemberData.user == this.props.getCurrentOnClickMarkData.groupMarkCreatedBy) &&
+                <TouchableOpacity 
+                  disabled={this.props.isModalWindowStatus} 
+                  onPress={() => {
+                    console.log('click')
+                    this.props.isModalWindow(true)
+                    this.props.deleteLocationModalWindow({ type: 'image', status: true })
+                  }}
+                >
                   <View style={imageCarouselStyles.imageOptionBackground} />
                   <Icon name="options-vertical" size={25} color="#2196F3" />
                 </TouchableOpacity>
@@ -107,7 +116,13 @@ class LocationDetailWindow extends Component {
     return (
       <View>
         {this.props.permisionLevel > 2 &&
-          <TouchableOpacity style={locationDetailStyles.optionContainer} onPress={() => { this.props.deleteLocationModalWindow({ type: 'location', status: true }) }}>
+          <TouchableOpacity style={locationDetailStyles.optionContainer}
+            disabled={this.props.isModalWindowStatus} 
+            onPress={() => {
+              this.props.isModalWindow(true)
+              this.props.deleteLocationModalWindow({ type: 'location', status: true })
+            }}
+          >
             <Icon name="trash" size={20} />
           </TouchableOpacity>
         }
@@ -160,25 +175,43 @@ class LocationDetailWindow extends Component {
   renderReview = reviewSet => {
     if (reviewSet) {
       let reviewViews = [];
+      let profilePic = require('../../assests/images/default-profile.png');
 
       reviewSet.map((data, index) => {
+        if (Object.keys(data.userProfilePic).length) {
+          try {
+            profilePic = data.userProfilePic ? {
+              uri: 'data:image/png;base64,' + data.userProfilePic
+            }
+              : require('../../assests/images/default-profile.png');
+          } catch (error) {
+            profilePic = require('../../assests/images/default-profile.png');
+          }
+        }
+
         reviewViews.push(
           <View style={locationReviewStyles.mainContainer}>
-            {/* <Image style={locationReviewStyles.profilePic} source={data.userProfilePic ? { uri: 'data:image/png;base64,' + data.userProfilePic } : { uri: this.avatar }} /> */}
+            <Image style={locationReviewStyles.profilePic} source={profilePic} />
             <View style={locationReviewStyles.contentContainer}>
               <View style={locationReviewStyles.reviewHeaderContainer}>
                 <Text style={locationReviewStyles.usernameText}>
                   {data.userFirstName + ' ' + data.userLastName}
                 </Text>
-                {/* {(this.props.permisionLevel > 2 | this.props.getGroupMemberData == data.reviewCreatedBy) &&
-                  <TouchableOpacity onPress={() => { this.props.reviewBottomWindow({status: true, actionType: 'edit', content: data.reviewContent}) }}>
+                {(this.props.permisionLevel > 2 | this.props.getGroupMemberData.user == data.reviewCreatedBy) &&
+                  <TouchableOpacity
+                    disabled={this.props.isModalWindowStatus} 
+                    onPress={() => {
+                      this.props.isModalWindow(true)
+                      this.props.reviewBottomWindow({ status: true, actionType: 'edit', content: data.reviewContent, index: index })
+                    }} 
+                  >
                     <Icon name="wrench" size={18} />
                   </TouchableOpacity>
-                } */}
+                }
               </View>
               <Text style={locationReviewStyles.contentText}>{data.reviewContent}</Text>
               <Text style={locationReviewStyles.reviewDateStyle}>
-                {moment(data.reviewCreatedAt).fromNow()}
+                {moment(parseInt(data.reviewCreatedAt)).fromNow()}
               </Text>
             </View>
           </View>
@@ -194,6 +227,7 @@ class LocationDetailWindow extends Component {
 
     return (
       <View>
+        {this.props.confirmDeleteStatus && <ConfirmDelete/>}
         <ScrollView
           style={containerStyles.mainContainer}
           showsVerticalScrollIndicator={false}
@@ -219,12 +253,12 @@ class LocationDetailWindow extends Component {
                 this.state.screenViewPosition && infoDescriptionStyles.stickyWidth
               ]}
             >
-              <View style={containerStyles.avatarContainer}>
+              {/* <View style={containerStyles.avatarContainer}>
                 <Image
                   style={containerStyles.avatarContainer}
                   source={{ uri: this.avatar }}
                 />
-              </View>
+              </View> */}
               <View style={containerStyles.infoContainer}>
                 <Text style={infoDescriptionStyles.locationNameStyles}>
                   {this.state.locationData && this.state.locationData.markName}
@@ -249,7 +283,13 @@ class LocationDetailWindow extends Component {
           <View style={containerStyles.reviewContainer}>
             <View style={locationReviewStyles.titleContainer}>
               <Text style={locationDetailStyles.textStyle}>Location Reviews</Text>
-              <TouchableOpacity onPress={() => { this.props.reviewBottomWindow({status: true, actionType: 'add'}) }}>
+              <TouchableOpacity
+                disabled={this.props.isModalWindowStatus} 
+                onPress={() => {
+                  this.props.isModalWindow(true)
+                  this.props.reviewBottomWindow({ status: true, actionType: 'add' })
+                }}  
+              >
                 <Icon name="plus" size={20} />
               </TouchableOpacity>
             </View>
@@ -273,6 +313,8 @@ const mapStateToProps = state => {
     permisionLevel: state.groupReducer.getGroupMemberData.memberRole.groupRolePermisionLevel,
     getLocationReviewsData: state.groupMarkReducer.getLocationReviewsData,
     getGroupMemberData: state.groupReducer.getGroupMemberData,
+    confirmDeleteStatus: state.modalWindowReducer.deleteLocation.status,
+    isModalWindowStatus: state.modalWindowReducer.isModalWindowStatus
   };
 };
 
@@ -281,7 +323,8 @@ const mapDispatchToProps = dispatch => {
   return {
     addGroupMark: bool => dispatch(addGroupMark(bool)),
     deleteLocationModalWindow: data => dispatch(deleteLocationModalWindow(data)),
-    reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool))
+    reviewBottomWindow: bool => dispatch(reviewBottomWindow(bool)),
+    isModalWindow: bool => dispatch(isModalWindow(bool))
   };
 };
 

@@ -8,7 +8,7 @@ import { reduxForm, Field, reset } from 'redux-form';
 
 //Redux actions
 import { updateGroupMark } from '../../../actions/groupMarkAction';
-import { deleteLocationModalWindow } from '../../../actions/modalWindowAction';
+import { deleteLocationModalWindow, isModalWindow } from '../../../actions/modalWindowAction';
 
 // Componenets Style
 import { containerStyles } from './Stylesheet';
@@ -70,6 +70,7 @@ class EditGroupMark extends Component {
     };
 
     this.props.deleteLocationModalWindow({ status: false });
+    this.props.isModalWindow(false)
     this.props.updateGroupMark(formValues);
   };
 
@@ -142,7 +143,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     deleteLocationModalWindow: data => (dispatch(deleteLocationModalWindow(data))),
-    updateGroupMark: data => (dispatch(updateGroupMark(data)))
+    updateGroupMark: data => (dispatch(updateGroupMark(data))),
+    isModalWindow: bool => dispatch(isModalWindow(bool))
   };
 };
 

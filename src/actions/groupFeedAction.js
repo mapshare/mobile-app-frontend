@@ -43,7 +43,7 @@ export const connectToGroupFeed = data => {
         groupId: data.groupId,
     }
 
-    return dispatch => {
+    return (dispatch, getState) => {
         console.log(CHAT_URL)
         let socket;
         try {
@@ -55,28 +55,120 @@ export const connectToGroupFeed = data => {
             socket.on('connect', () => {
                 socket.emit('authenticate', newData)
                     .on('authenticated', (data) => {
-                        dispatch(setGroupFeedData(data));
-                        dispatch(groupFeedStatus(true));
+                        try {
+                            let { groupFeedData } = getState().groupFeedReducer;
+                            if (!groupFeedData) {
+                                groupFeedData = [];
+                            }
+
+                            let index = groupFeedData.findIndex((post) => {
+                                return post._id == data._id;
+                            });
+                            if (index != -1) {
+                                groupFeedData[index] = data;
+                            } else {
+                                if (data) {
+                                    groupFeedData.push(data);
+                                }
+                            }
+
+                            dispatch(setGroupFeedData(groupFeedData));
+                            dispatch(groupFeedStatus(true));
+                        } catch (error) {
+                            console.log(error)
+                        }
                     })
                     .on('unauthorized', (msg) => {
                         dispatch(setGroupFeedData([]));
                         dispatch(groupFeedStatus(false));
                     })
                     .on('new post', (data) => {
-                        dispatch(setGroupFeedData(data));
-                        dispatch(groupFeedStatus(true));
+                        try {
+                            let { groupFeedData } = getState().groupFeedReducer;
+                            let index = groupFeedData.findIndex((post) => {
+                                return post._id == data._id;
+                            });
+                            if (index != -1) {
+                                groupFeedData[index] = data;
+                            } else {
+                                groupFeedData.unshift(data);
+                            }
+
+                            dispatch(setGroupFeedData(groupFeedData));
+                            dispatch(groupFeedStatus(true));
+                        } catch (error) {
+                            console.log(error)
+                        }
                     })
                     .on('update post', (data) => {
-                        dispatch(setGroupFeedData(data));
-                        dispatch(groupFeedStatus(true));
+                        try {
+                            let { groupFeedData } = getState().groupFeedReducer;
+                            let index = groupFeedData.findIndex((post) => {
+                                return post._id == data._id;
+                            });
+                            if (index != -1) {
+                                groupFeedData[index] = data;
+                            } else {
+                                groupFeedData.unshift(data);
+                            }
+                            dispatch(setGroupFeedData(groupFeedData));
+                            dispatch(groupFeedStatus(true));
+                        } catch (error) {
+                            console.log(error)
+                        }
                     })
                     .on('update feed', (data) => {
-                        dispatch(setGroupFeedData(data));
+                        try {
+                            console.log("Feed Updated")
+                            let { groupFeedData } = getState().groupFeedReducer;
+                            let index = groupFeedData.findIndex((post) => {
+                                return post._id == data._id;
+                            });
+                            if (index != -1) {
+                                groupFeedData[index] = data;
+                            } else {
+                                groupFeedData.unshift(data);
+                            }
+
+                            dispatch(setGroupFeedData(groupFeedData));
+                            dispatch(groupFeedStatus(true));
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    })
+                    .on('reset post data', (data) => {
+                        dispatch(setGroupFeedData(undefined));
                         dispatch(groupFeedStatus(true));
                     })
                     .on('delete post', (data) => {
-                        dispatch(setGroupFeedData(data));
-                        dispatch(groupFeedStatus(true));
+                        try {
+                            let { groupFeedData } = getState().groupFeedReducer;
+                            if (!groupFeedData) {
+                                groupFeedData = [];
+                            }
+
+                            let index = groupFeedData.findIndex((post) => {
+                                return post._id == data._id;
+                            });
+                            if (index != -1) {
+                                groupFeedData[index] = data;
+                            } else {
+                                if (data) {
+                                    groupFeedData.push(data);
+                                }
+                            }
+
+                            dispatch(setGroupFeedData(groupFeedData));
+                            dispatch(groupFeedStatus(true));
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    })
+                    .on('disconnect', () => {
+                        console.log("Disconnect Group Feed")
+                        socket.disconnect();
+                        // Reconnect
+                        dispatch(connectToGroupFeed(data));
                     });
             });
         } catch (error) {
@@ -192,8 +284,7 @@ export const updatePostInGroupFeed = data => {
 export const updateGroupFeed = data => {
     return dispatch => {
         try {
-            data.groupFeedSocket.emit('update feed');
-            dispatch(groupFeedStatus(true));
+            data.groupFeedSocket.emit('update feed', 'update');
         } catch (error) {
             console.log(error);
         }

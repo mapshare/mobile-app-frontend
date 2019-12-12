@@ -40,7 +40,8 @@ class ModalWindow extends Component {
       eventDescriptionError: "",
       eventMarkError: "",
       modalVisible: false,
-      CreatingNewEvent: false,
+      creatingNewEvent: false,
+      eventExist: true,
     };
   }
 
@@ -72,7 +73,7 @@ class ModalWindow extends Component {
               <TextInput style={eventModalWindow.inputBox}
                         onChangeText={eventName =>
                           this.setState({
-                            user: { ...this.state.user, eventName: eventName }
+                            user: { ...this.state.user, eventName: eventName.trim() }
                           })
                         }
                         placeholder="Event Name"
@@ -103,7 +104,7 @@ class ModalWindow extends Component {
               <TextInput style={[eventModalWindow.inputBox, eventModalWindow.inputBoxDescription]}
                         onChangeText={eventDescription =>
                           this.setState({
-                            user: { ...this.state.user, eventDescription: eventDescription }
+                            user: { ...this.state.user, eventDescription: eventDescription.trim() }
                           })
                         }
                         placeholder="Event Description"
@@ -186,22 +187,8 @@ class ModalWindow extends Component {
     }
   };
 
-  async creatingNewMarker(data) {
-    await AsyncStorage.getItem('CreatingNewEvent').then((result) => {
-      if (result === null) {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }else {
-        AsyncStorage.setItem('CreatingNewEvent', JSON.stringify(data))
-      }
-      this.setState({
-        creatingNewEvent: result
-      })
-    })
-  }
-
   render() { 
-    
-    this.creatingNewMarker(false)
+
     return (
       <View style={containerStyles.mainContainer}>
         <TouchableOpacity
@@ -210,14 +197,14 @@ class ModalWindow extends Component {
         >
           <Icon name="close" size={30} />
         </TouchableOpacity>
-        {!this.state.creatingNewEvent &&
+      {this.props.onClickMarkStatus && 
         <TouchableOpacity
           style={containerStyles.AddEventButtonContainer}
           onPress={() => this.eventModalOpen()}
         >
           <Text style={containerStyles.Text}>Add Event</Text>
         </TouchableOpacity>
-        }
+      }
         {this.eventModal()}
         <ScrollView style={containerStyles.contentContainer}>
           {this.content(this.props.modalContent)}
@@ -233,7 +220,7 @@ const mapStateToProps = state => {
   return {
     getActiveGroupData: state.groupReducer.getActiveGroupData,
     token: state.logInReducer.token,
-    modalWindowStatus: state.modalWindowReducer.status,
+    onClickMarkStatus: state.modalWindowReducer.onClickMarkStatus,
     getCurrentOnClickMarkData: state.groupMarkReducer.getCurrentOnClickMarkData,
     deleteLocation: state.modalWindowReducer.deleteLocation
 

@@ -182,7 +182,7 @@ class EventsView extends Component {
                 >{counter + ": " + item.userFirstName + " " + item.userLastName}
                 </Text>
                 {((data.eventCreatedBy === this.props.getGroupMemberData._id || permission >= 3) && (this.props.getGroupMemberData._id !== item.mbrId)) && 
-                  <TouchableOpacity onPress={()=>this.removeUserFromEvent(data,item.usrId) }><Text style={eventModalWindow.KickUserEvent}>Kick User</Text></TouchableOpacity>}
+                  <TouchableOpacity style={eventModalWindow.KickUserEvent} onPress={()=>this.removeUserFromEvent(data,item.usrId) }><Text style={{color:"red"}}>Kick User</Text></TouchableOpacity>}
                 </View>
                 )
                 })}
@@ -228,7 +228,7 @@ class EventsView extends Component {
               <TextInput style={eventModalWindow.inputBox}
                         onChangeText={eventName =>
                           this.setState({
-                            user: { ...this.state.user, eventName: eventName }
+                            user: { ...this.state.user, eventName: eventName.trim() }
                           })
                         }
                         defaultValue={data.eventName}
@@ -260,7 +260,7 @@ class EventsView extends Component {
               <TextInput style={[eventModalWindow.inputBox, eventModalWindow.inputBoxDescription]}
                         onChangeText={eventDescription =>
                           this.setState({
-                            user: { ...this.state.user, eventDescription: eventDescription }
+                            user: { ...this.state.user, eventDescription: eventDescription.trim() }
                           })
                         }
                         defaultValue={data.eventDescription}
@@ -343,6 +343,7 @@ class EventsView extends Component {
   }
 
   removeUserFromEvent(data,user) {
+    console.log("Kick")
     const selectEvent = {
       token: this.props.token,
       groupId: this.props.getActiveGroupData._id,

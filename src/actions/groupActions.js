@@ -361,7 +361,7 @@ export const getActiveGroupRefreshDataOnly = data => {
 
       dispatch(getActiveGroupDataSuccess(res.data));
       dispatch(getActiveGroupSuccess(true));
-      dispatch(updateGroupFeed({ groupFeedSocket: data.groupFeedSocket }));
+      //dispatch(updateGroupFeed({ groupFeedSocket: data.groupFeedSocket }));
 
       // Save Group Id to local Storage
       AsyncStorage.setItem('lastActiveGroupId', data.groupId);

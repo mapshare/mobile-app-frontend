@@ -5,7 +5,8 @@ const INITIAL_MODAL_WINDOW_STATE = {
   onClickMarkStatus: false,
   deleteLocation: {},
   addCustomMarkStatus: false,
-  customMarkOptionStatus: false
+  customMarkOptionStatus: false,
+  isModalWindowStatus: false
 };
 
 export const modalWindowReducer = (
@@ -26,6 +27,11 @@ export const modalWindowReducer = (
         ...state,
         customMarkOptionStatus: action.customMarkOptionStatus
       };
+    case keys.IS_MODAL_WINDOW:
+      return {
+        ...state,
+        isModalWindowStatus: action.isModalWindowStatus
+      }
     default:
       return state;
   }

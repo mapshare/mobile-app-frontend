@@ -196,7 +196,8 @@ class Profile extends Component {
               userFirstName: this.state.user.userFirstName,
               userLastName: this.state.user.userLastName,
               userProfilePic: this.state.user.userImages.data,
-              token: this.props.token
+              token: this.props.token,
+              groupFeedSocket: this.props.groupFeedSocket,
             }
             this.props.updateUser(data);
   
@@ -302,6 +303,7 @@ class Profile extends Component {
     [
       {text: 'Yes', onPress: () => this.deleteUserAccount()},
       {text: 'No', style: 'cancel'},
+      
     ])
   }
 
@@ -372,7 +374,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={NewPassword =>
                           this.setState({
-                            user: { ...this.state.user, userNewPassword: NewPassword }
+                            user: { ...this.state.user, userNewPassword: NewPassword.trim() }
                           })
                         }
                         placeholder="New Password"
@@ -389,7 +391,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={CNewPassword =>
                           this.setState({
-                            user: { ...this.state.user, userCNewPassword: CNewPassword }
+                            user: { ...this.state.user, userCNewPassword: CNewPassword.trim() }
                           })
                         }
                         placeholder="Confirm New Password"
@@ -427,7 +429,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={FirstName =>
                           this.setState({
-                            user: { ...this.state.user, userFirstName: FirstName }
+                            user: { ...this.state.user, userFirstName: FirstName.trim() }
                           })
                         }
                         placeholder="First Name"
@@ -447,7 +449,7 @@ class Profile extends Component {
               <TextInput style={styles.inputBox}
                         onChangeText={LastName =>
                           this.setState({
-                            user: { ...this.state.user, userLastName: LastName }
+                            user: { ...this.state.user, userLastName: LastName.trim() }
                           })
                         }
                         placeholder="Last Name"
@@ -510,7 +512,8 @@ const mapStateToProps = state => {
     token: state.logInReducer.token,
     socket: state.groupChatRoomReducer.socket,
     groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
-    comparePasswordResults: state.userReducer.comparePasswordResults
+    comparePasswordResults: state.userReducer.comparePasswordResults,
+    groupFeedSocket: state.groupFeedReducer.groupFeedSocket,
   };
 };
 

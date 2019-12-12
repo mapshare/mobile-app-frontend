@@ -28,7 +28,7 @@ class AddMark extends Component {
   render() {
     return (
       <View style={containerStyles.mainContainer}>
-        <TouchableHighlight onPress={() => {this.addLocationOnClick(), this.creatingNewMarker(true)}}>
+        <TouchableHighlight onPress={() => this.addLocationOnClick()}>
           <View style={containerStyles.contentContainer}>
             <Icon name="plus" size={25} color="white" />
           </View>

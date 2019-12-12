@@ -49,7 +49,7 @@ class changeGroupDiscriptionForm extends Component {
         if (!changeGroupDescriptionError) {
             const data = {
                 token: this.props.token,
-                groupDescription: this.state.groupDescription.trim(),
+                groupDescription: this.state.groupDescription.slice(0, 50).replace(/\n/g, '').trim(),
                 groupId: this.props.currentEditingGroupData._id,
                 activeGroupId: this.props.getActiveGroupData._id,
             }
@@ -87,7 +87,8 @@ class changeGroupDiscriptionForm extends Component {
                 <TextInput
                     autoFocus={true}
                     style={styles.addGroupInputBox}
-                    onChangeText={GroupDescription => this.setState({ groupDescription: GroupDescription })}
+                    onChangeText={GroupDescription => this.setState({ groupDescription: GroupDescription.slice(0, 50).replace(/\n/g, '') })}
+                    value={this.state.groupDescription}
                     placeholder="Enter Group Description"
                     placeholderTextColor="#B8B8B8"
                     selectionColor="#fff"

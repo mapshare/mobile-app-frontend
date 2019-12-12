@@ -5,7 +5,6 @@ import { reponsiveStyle } from '../../util/sharedStyles';
 const containerStyles = StyleSheet.create({
   mainContainer: {
     display: 'flex',
-    width: reponsiveStyle.wp('90%'),
     margin: 10
   },
 
